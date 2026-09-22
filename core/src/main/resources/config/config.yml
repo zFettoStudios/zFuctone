@@ -1,0 +1,18 @@
+version: ""
+
+language:
+  player:
+    type: "en_us"
+    by_player: true
+  console:
+    type: "ru_ru"
+  command_block:
+    type: "en_us"
+    by_player: true
+    by_console: false
+
+logger:
+  format: "<dark_purple>[<time:h>:<time:m>:<time:S>]</dark_purple> <message>"
+
+logger_ten:
+  enable: true

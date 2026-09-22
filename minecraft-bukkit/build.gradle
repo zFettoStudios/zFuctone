@@ -1,0 +1,31 @@
+plugins {
+    id "io.papermc.paperweight.userdev" version "$paperweight_userdev"
+}
+
+dependencies {
+    implementation project(":$module_core")
+
+    paperweightDevelopmentBundle "io.papermc.paper:dev-bundle:$paper_version"
+}
+
+processResources {
+    def props = [
+            "name": "$project_name",
+            "description": "$project_description",
+            "prefix": "$project_name",
+            "version": "$project_version",
+            "main": "${project_group}.bukkit.BukkitZFuctone",
+            "api_version": "1.8",
+            "load": "POSTWORLD",
+            "folia_supported": true,
+            "author": "$project_authors",
+            "website": "$project_website"
+    ]
+
+    inputs.properties props
+    filteringCharset = "UTF-8"
+
+    filesMatching("plugin.yml") {
+        expand props
+    }
+}

@@ -1,0 +1,9 @@
+dependencies {
+    implementation project(":$module_core")
+}
+
+shadowJar {
+    manifest {
+        attributes("Main-Class": "${project_group}.Launcher")
+    }
+}

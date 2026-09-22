@@ -1,0 +1,56 @@
+package com.zfettostudios.zfuctone.util.library;
+
+import com.zfettostudios.zfuctone.config.BuildConfig;
+
+import java.nio.charset.StandardCharsets;
+
+public enum LibraryPaths {
+    ADVENTURE_GROUP(110, 101, 116, 46, 107, 121, 111, 114, 105),
+    ADVENTURE_RELOCATION_FROM(110, 101, 116, 46, 107, 121, 111, 114, 105, 46),
+    ADVENTURE_RELOCATION_TO(BuildConfig.PROJECT_PATH_LIBRARIES, 46),
+    ADVENTURE_API_NAME(97, 100, 118, 101, 110, 116, 117, 114, 101, 45, 97, 112, 105),
+    ADVENTURE_KEY_NAME(97, 100, 118, 101, 110, 116, 117, 114, 101, 45, 107, 101, 121),
+    ADVENTURE_TEXT_MINIMESSAGE_NAME(97, 100, 118, 101, 110, 116, 117, 114, 101, 45, 116, 101, 120, 116, 45, 109, 105, 110, 105, 109, 101, 115, 115, 97, 103, 101),
+    ADVENTURE_TEXT_SERIALIZER_LEGACY_NAME(97, 100, 118, 101, 110, 116, 117, 114, 101, 45, 116, 101, 120, 116, 45, 115, 101, 114, 105, 97, 108, 105, 122, 101, 114, 45, 108, 101, 103, 97, 99, 121),
+    ADVENTURE_TEXT_SERIALIZER_GSON_NAME(97, 100, 118, 101, 110, 116, 117, 114, 101, 45, 116, 101, 120, 116, 45, 115, 101, 114, 105, 97, 108, 105, 122, 101, 114, 45, 103, 115, 111, 110),
+    ADVENTURE_TEXT_SERIALIZER_PLAIN_NAME(97, 100, 118, 101, 110, 116, 117, 114, 101, 45, 116, 101, 120, 116, 45, 115, 101, 114, 105, 97, 108, 105, 122, 101, 114, 45, 112, 108, 97, 105, 110),
+    ADVENTURE_TEXT_SERIALIZER_ANSI_NAME(97, 100, 118, 101, 110, 116, 117, 114, 101, 45, 116, 101, 120, 116, 45, 115, 101, 114, 105, 97, 108, 105, 122, 101, 114, 45, 97, 110, 115, 105),
+    ANSI_NAME(97, 110, 115, 105),
+
+    JACKSON_DATAFORMAT_GROUP(116, 111, 111, 108, 115, 46, 106, 97, 99, 107, 115, 111, 110, 46, 100, 97, 116, 97, 102, 111, 114, 109, 97, 116),
+    JACKSON_DATAFORMAT_NAME(106, 97, 99, 107, 115, 111, 110, 45, 100, 97, 116, 97, 102, 111, 114, 109, 97, 116, 45, 121, 97, 109, 108),
+    JACKSON_CORE_GROUP(116, 111, 111, 108, 115, 46, 106, 97, 99, 107, 115, 111, 110, 46, 99, 111, 114, 101),
+    JACKSON_CORE_NAME(106, 97, 99, 107, 115, 111, 110, 45, 99, 111, 114, 101),
+    JACKSON_CORE_GROUP_2(99, 111, 109, 46, 102, 97, 115, 116, 101, 114, 120, 109, 108, 46, 106, 97, 99, 107, 115, 111, 110, 46, 99, 111, 114, 101),
+    JACKSON_ANNOTATIONS_NAME(106, 97, 99, 107, 115, 111, 110, 45, 97, 110, 110, 111, 116, 97, 116, 105, 111, 110, 115),
+    JACKSON_DATABIND_NAME(106, 97, 99, 107, 115, 111, 110, 45, 100, 97, 116, 97, 98, 105, 110, 100),
+    JACKSON_RELOCATION_FROM(116, 111, 111, 108, 115, 46, 106, 97, 99, 107, 115, 111, 110),
+    JACKSON_RELOCATION_TO(BuildConfig.PROJECT_PATH_LIBRARIES, 46, 106, 97, 99, 107, 115, 111, 110),
+    JACKSON_RELOCATION_FROM_2(99, 111, 109, 46, 102, 97, 115, 116, 101, 114, 120, 109, 108, 46, 106, 97, 99, 107, 115, 111, 110),
+
+    SNAKEYAML_GROUP(111, 114, 103, 46, 115, 110, 97, 107, 101, 121, 97, 109, 108),
+    SNAKEYAML_NAME(115, 110, 97, 107, 101, 121, 97, 109, 108, 45, 101, 110, 103, 105, 110, 101),
+    SNAKEYAML_RELOCATION_FROM(111, 114, 103, 46, 115, 110, 97, 107, 101, 121, 97, 109, 108),
+    SNAKEYAML_RELOCATION_TO(BuildConfig.PROJECT_PATH_LIBRARIES, 46, 115, 110, 97, 107, 101, 121, 97, 109, 108);
+
+    private final String path;
+
+    LibraryPaths(int... bytes) {
+        this.path = bytesToString(bytes);
+    }
+
+    LibraryPaths(String pathLibraries, int... bytes) {
+        this.path = pathLibraries + bytesToString(bytes);
+    }
+
+    private String bytesToString(int... bytes) {
+        byte[] converted = new byte[bytes.length];
+        for (int i = 0; i < bytes.length; i++) converted[i] = (byte) bytes[i];
+
+        return new String(converted, StandardCharsets.UTF_8);
+    }
+
+    public String get() {
+        return path;
+    }
+}

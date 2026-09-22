@@ -1,0 +1,121 @@
+plugins {
+    id "java"
+    id "java-library"
+    id "com.gradleup.shadow" version "$gradle_shadow_version"
+    id "com.github.gmazzo.buildconfig" version "$buildconfig_version"
+}
+
+group = project_group
+version = project_version
+
+subprojects {
+    apply plugin: "java"
+    apply plugin: "java-library"
+    apply plugin: "com.gradleup.shadow"
+    apply plugin: "com.github.gmazzo.buildconfig"
+
+    java {
+        withSourcesJar()
+
+        toolchain {
+            languageVersion = JavaLanguageVersion.of(java_version)
+        }
+    }
+
+    tasks.withType(JavaCompile).configureEach {
+        options.encoding = "UTF-8"
+        options.release.set(Integer.parseInt(java_version))
+    }
+
+    tasks.withType(Javadoc).configureEach {
+        options.addStringOption("Xdoclint:none", "-quiet")
+        options.addStringOption("encoding", "UTF-8")
+        options.addStringOption("charSet", "UTF-8")
+    }
+
+    repositories {
+        mavenCentral()
+        gradlePluginPortal()
+
+        maven { url = maven_2_repository }
+        maven { url = sonatype_repository }
+        maven { url = papermc_repository }
+        maven { url = spigotmc_repository }
+        maven { url = jitpack_repository }
+    }
+
+    dependencies {
+        compileOnly "org.projectlombok:lombok:$lombok_version"
+        annotationProcessor "org.projectlombok:lombok:$lombok_version"
+
+        implementation files("D:\\Libs\\Java\\repository\\com\\zfettostudios\\zjanots\\$zjanots_version\\zjanots-${zjanots_version}.jar")
+        implementation files("D:\\Libs\\Java\\repository\\com\\zfettostudios\\zjtime\\$zjtime_version\\zjtime-${zjtime_version}.jar")
+
+        implementation "org.ow2.asm:asm:$asm_version"
+        implementation "org.ow2.asm:asm-commons:$asm_version"
+        implementation "me.lucko:jar-relocator:$lucko_jar_relocator_version"
+        implementation "net.bytebuddy:byte-buddy:$bytebuddy_version"
+        implementation "net.bytebuddy:byte-buddy-agent:$bytebuddy_version"
+
+        compileOnly "net.kyori:adventure-api:$adventure_version"
+        compileOnly "net.kyori:adventure-key:$adventure_version"
+        compileOnly "net.kyori:adventure-text-minimessage:$adventure_version"
+        compileOnly "net.kyori:adventure-text-serializer-legacy:$adventure_version"
+        compileOnly "net.kyori:adventure-text-serializer-gson:$adventure_version"
+        compileOnly "net.kyori:adventure-text-serializer-plain:$adventure_version"
+        compileOnly "net.kyori:adventure-text-serializer-ansi:$adventure_version"
+        compileOnly "net.kyori:ansi:$ansi_version"
+
+        implementation "tools.jackson.dataformat:jackson-dataformat-yaml:$jackson_version"
+        implementation "tools.jackson.core:jackson-databind:$jackson_version"
+        implementation "tools.jackson.core:jackson-core:$jackson_version"
+        implementation "com.fasterxml.jackson.core:jackson-annotations:$jackson_annotations_version"
+        implementation "org.snakeyaml:snakeyaml-engine:$snakeyaml_version"
+    }
+
+    shadowJar {
+        String moduleName = project.name
+
+        if (moduleName == module_minecraft_bukkit) moduleName = "Bukkit"
+        else if (moduleName == module_java) moduleName = "Java"
+
+        archiveFileName = "$project_name-$moduleName-${project_version}.jar"
+        destinationDirectory = file("$rootDir/build/compiled")
+
+        if (project.name != module_minecraft_bukkit) {
+            relocate("net.kyori", "${project_path_libraries}")
+        }
+
+        relocate("tools.jackson", "${project_path_libraries}.jackson")
+        relocate("com.fasterxml.jackson", "${project_path_libraries}.jackson")
+        relocate("org.snakeyaml", "${project_path_libraries}.snakeyaml")
+        relocate("com.zfettostudios.zjanots", "${project_path_libraries}.zjanots")
+        relocate("com.zfettostudios.zjtime", "${project_path_libraries}.zjtime")
+        relocate("org.objectweb.asm", "${project_path_libraries}.asm")
+        relocate("me.lucko.jarrelocator", "${project_path_libraries}.jarrelocator")
+        relocate("net.bytebuddy", "${project_path_libraries}.bytebuddy")
+        relocate("win32-x86", "${project_path_libraries}.bytebuddy.win32-x86")
+        relocate("win32-x86-64", "${project_path_libraries}.bytebuddy.win32-x86-64")
+        relocate("win32-aarch64", "${project_path_libraries}.bytebuddy.win32-aarch64")
+
+        from(rootProject.file("LICENSE")) {
+            into("/")
+        }
+
+        outputs.cacheIf {
+            true
+        }
+
+        mergeServiceFiles()
+    }
+
+    buildConfig {
+        className("BuildConfig")
+        packageName("${project_group}.config")
+        rootProject.ext.properties.findAll { key, value ->
+            !key.toString().contains(".") && !key.toString().contains("-")
+        }.each { key, value ->
+            buildConfigField("String", key.toString().toUpperCase(), "\"${value.toString().replace("\"", "\\\"").replace("\\", "\\\\")}\"")
+        }
+    }
+}
