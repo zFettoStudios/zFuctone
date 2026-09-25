@@ -2,7 +2,6 @@ package com.zfettostudios.zfuctone.config;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.zfettostudios.zfuctone.bukkit.BukkitZFuctone;
-import lombok.Getter;
 import tools.jackson.databind.DeserializationFeature;
 import tools.jackson.databind.JsonNode;
 import tools.jackson.databind.MapperFeature;
@@ -19,211 +18,186 @@ import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
 public class ConfigManager {
-    private final File dataFolder;
-    private final YAMLMapper mapper;
-    @Getter
-    private final Map<String, Object> cache = new ConcurrentHashMap<>();
+    private final File dataFolder = BukkitZFuctone.getInstance().getDataPath().toFile();
+    private final YAMLMapper mapper = YAMLMapper.builder()
+        .changeDefaultPropertyInclusion(incl -> incl.withValueInclusion(JsonInclude.Include.NON_NULL))
+        .disable(YAMLWriteFeature.WRITE_DOC_START_MARKER)
+        .enable(SerializationFeature.INDENT_OUTPUT)
+        .enable(MapperFeature.ACCEPT_CASE_INSENSITIVE_ENUMS)
+        .configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false)
+        .build();
+    private final Map<String, Object> configs = new ConcurrentHashMap<>();
 
     public ConfigManager() {
-        this.dataFolder = BukkitZFuctone.getInstance().getDataPath().toFile();
         if (!dataFolder.exists()) dataFolder.mkdirs();
-
-        this.mapper = YAMLMapper.builder()
-            .changeDefaultPropertyInclusion(incl -> incl.withValueInclusion(JsonInclude.Include.NON_NULL))
-            .disable(YAMLWriteFeature.WRITE_DOC_START_MARKER)
-            .enable(SerializationFeature.INDENT_OUTPUT)
-            .enable(MapperFeature.ACCEPT_CASE_INSENSITIVE_ENUMS)
-            .configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false)
-            .build();
     }
 
-    public <T> T load(Class<T> clazz) {
-        ConfigFile annotation = getRequiredAnnotation(clazz);
-        return load(clazz, annotation.name());
+    public <T> T load(Class<T> target) {
+        return load(target, getFileName(target));
     }
 
-    /**
-     * Загрузка конфигурации по кастомному пути внутри плагина
-     */
-    public <T> T load(Class<T> clazz, String relativePath) {
-        if (cache.containsKey(relativePath)) {
-            return clazz.cast(cache.get(relativePath));
-        }
+    public <T> T load(Class<T> target, String relativePath) {
+        Object cached = configs.get(relativePath);
+        if (cached != null) return target.cast(cached);
 
         File file = new File(dataFolder, relativePath);
         File parentDir = file.getParentFile();
-        if (parentDir != null && !parentDir.exists()) {
-            parentDir.mkdirs();
-        }
+        if (parentDir != null && !parentDir.exists()) parentDir.mkdirs();
 
-        if (!file.exists()) {
-            copyDefaultFromJar(clazz, relativePath, file);
-        }
+        boolean isNewFile = !file.exists();
+        if (isNewFile) copyFromJar(relativePath, file);
 
         try {
             JsonNode defaultTree = loadDefaultTreeFromJar(relativePath);
-            JsonNode userTree = mapper.readTree(file);
-            JsonNode finalTree;
+            JsonNode userTree = null;
 
+            if (!isNewFile) userTree = mapper.readTree(file);
+
+            JsonNode finalTree;
             if (defaultTree != null && userTree != null) {
                 mergeNodes(defaultTree, userTree);
                 finalTree = defaultTree;
-            } else {
-                finalTree = userTree != null ? userTree : defaultTree;
+            }
+            else finalTree = userTree != null ? userTree : defaultTree;
+
+            if (finalTree == null) {
+                System.out.println("[zFuctone] Предупреждение: Не удалось найти YAML дерево для: " + relativePath);
+                return null;
             }
 
-            T config = null;
-            if (finalTree != null) {
-                config = mapper.treeToValue(finalTree, clazz);
-            }
+            T config = mapper.treeToValue(finalTree, target);
 
             if (config != null) {
-                mapper.writeValue(file, config);
-                cache.put(relativePath, config); // Запись только если не null
-            } else {
-                System.err.println("[zFuctone] Предупреждение: Не удалось распарсить объект конфигурации для: " + relativePath);
+                if (!isNewFile && defaultTree != null) mapper.writeValue(file, config);
+                configs.put(relativePath, config);
             }
+            else System.out.println("[zFuctone] Предупреждение: Не удалось распарсить объект конфигурации для: " + relativePath);
 
             return config;
         } catch (Exception e) {
-            throw new RuntimeException("Не удалось загрузить YML конфигурацию: " + relativePath, e);
+            throw new RuntimeException("Ошибка при загрузке конфигурации: " + relativePath, e);
         }
     }
 
     private void mergeNodes(JsonNode targetNode, JsonNode sourceNode) {
-        if (!(targetNode instanceof ObjectNode targetObject) || !(sourceNode instanceof ObjectNode sourceObject)) {
-            return;
-        }
+        if (targetNode instanceof ObjectNode targetObject && sourceNode instanceof ObjectNode sourceObject)
+            mergeObjects(targetObject, sourceObject);
+    }
 
-        for (Map.Entry<String, JsonNode> entry : sourceObject.properties()) {
-            String fieldName = entry.getKey();
-            JsonNode sourceValue = entry.getValue();
+    private void mergeObjects(ObjectNode targetObject, ObjectNode sourceObject) {
+        sourceObject.forEachEntry((fieldName, sourceValue) -> {
+            if (sourceValue.isNull()) return;
+
             JsonNode targetValue = targetObject.get(fieldName);
 
-            if (targetValue != null && targetValue.isObject() && sourceValue.isObject()) {
-                mergeNodes(targetValue, sourceValue);
-            } else if (!sourceValue.isNull()) {
-                targetObject.replace(fieldName, sourceValue);
-            }
-        }
+            if (targetValue instanceof ObjectNode targetSubObject && sourceValue instanceof ObjectNode sourceSubObject)
+                mergeObjects(targetSubObject, sourceSubObject);
+            else targetObject.replace(fieldName, sourceValue);
+        });
     }
 
     private JsonNode loadDefaultTreeFromJar(String relativePath) {
-        String cleanPath = relativePath.startsWith("/") ? relativePath.substring(1) : relativePath;
-        String resourcePath = cleanPath.startsWith("config/") ? cleanPath : "config/" + cleanPath;
-
-        try (InputStream in = getClass().getClassLoader().getResourceAsStream(resourcePath)) {
-            if (in != null) return mapper.readTree(in);
+        String resourcePath = normalizeResourcePath(relativePath);
+        try (InputStream in = getResourceStream(resourcePath)) {
+            return in != null ? mapper.readTree(in) : null;
         } catch (Exception ignored) {
+            return null;
         }
-        return null;
     }
 
-    private void copyDefaultFromJar(Class<?> clazz, String relativePath, File targetFile) {
-        try {
-            String cleanPath = relativePath.startsWith("/") ? relativePath.substring(1) : relativePath;
-            String resourcePath = cleanPath.startsWith("config/") ? cleanPath : "config/" + cleanPath;
-
-            try (InputStream in = clazz.getClassLoader().getResourceAsStream(resourcePath)) {
-                if (in != null) {
-                    Files.copy(in, targetFile.toPath(), StandardCopyOption.REPLACE_EXISTING);
-                } else {
-                    Object defaultInstance = mapper.readValue("{}", clazz);
-                    mapper.writeValue(targetFile, defaultInstance);
-                }
-            }
+    private void copyFromJar(String relativePath, File targetFile) {
+        String resourcePath = normalizeResourcePath(relativePath);
+        try (InputStream in = getResourceStream(resourcePath)) {
+            if (in != null) Files.copy(in, targetFile.toPath(), StandardCopyOption.REPLACE_EXISTING);
+            else mapper.writeValue(targetFile, mapper.createObjectNode());
         } catch (Exception e) {
-            throw new RuntimeException("Не удалось создать YML из ресурсов: " + relativePath, e);
+            throw new RuntimeException("Не удалось создать файл из ресурсов: " + relativePath, e);
         }
     }
 
-    private ConfigFile getRequiredAnnotation(Class<?> clazz) {
-        ConfigFile annotation = clazz.getAnnotation(ConfigFile.class);
-        if (annotation == null) {
-            throw new IllegalArgumentException("Класс " + clazz.getSimpleName() + " не имеет аннотации @ConfigFile!");
-        }
-        return annotation;
+    private String normalizeResourcePath(String relativePath) {
+        int offset = relativePath.startsWith("/") ? 1 : 0;
+        if (relativePath.startsWith("config/", offset)) return offset == 1 ? relativePath.substring(1) : relativePath;
+
+        return offset == 1 ? "config" + relativePath : "config/" + relativePath;
     }
 
-    public <T> T get(Class<T> clazz) {
-        String relativePath = getRequiredAnnotation(clazz).name();
-        return get(relativePath, clazz);
+    private InputStream getResourceStream(String resourcePath) {
+        ClassLoader classLoader = Thread.currentThread().getContextClassLoader();
+        if (classLoader == null) classLoader = getClass().getClassLoader();
+
+        return classLoader.getResourceAsStream(resourcePath);
     }
 
-    public <T> T get(String relativePath, Class<T> clazz) {
-        Object config = cache.get(relativePath);
-        if (config == null) {
-            throw new IllegalStateException("Конфигурация " + relativePath + " еще не была загружена!");
-        }
-        return clazz.cast(config);
+    private String getFileName(Class<?> target) {
+        FileName annotation = target.getAnnotation(FileName.class);
+        if (annotation == null) throw new IllegalArgumentException("Класс " + target.getSimpleName() + " не имеет аннотации @FileName!");
+
+        return annotation.value();
     }
 
-    public <T> void save(Class<T> clazz) {
-        T config = get(clazz);
-        saveFileGeneric(config, getRequiredAnnotation(clazz).name());
+    public <T> T get(Class<T> target) {
+        return get(getFileName(target), target);
+    }
+
+    public <T> T get(String relativePath, Class<T> target) {
+        Object config = configs.get(relativePath);
+        if (config == null) throw new IllegalStateException("Конфигурация " + relativePath + " еще не была загружена!");
+
+        return target.cast(config);
+    }
+
+    public <T> void save(Class<T> target) {
+        save(get(target), getFileName(target));
     }
 
     public <T> void save(T config) {
-        Class<?> rawClass = config.getClass();
-        ConfigFile annotation = getRequiredAnnotation(rawClass);
-        saveFileGeneric(config, annotation.name());
+        if (config == null) throw new IllegalArgumentException("Невозможно сохранить null конфигурацию");
+
+        save(config, getFileName(config.getClass()));
     }
 
     public void save(Object config, String relativePath) {
-        saveFileGeneric(config, relativePath);
-    }
+        if (config == null) throw new IllegalArgumentException("Невозможно сохранить null конфигурацию для: " + relativePath);
 
-    private void saveFileGeneric(Object config, String relativePath) {
-        if (config == null) {
-            throw new IllegalArgumentException("Невозможно сохранить конфигурацию null для: " + relativePath);
-        }
         File file = new File(dataFolder, relativePath);
+        File parentDir = file.getParentFile();
+        if (parentDir != null && !parentDir.exists()) parentDir.mkdirs();
+
         try {
             mapper.writeValue(file, config);
-            cache.put(relativePath, config);
+            configs.put(relativePath, config);
         } catch (Exception e) {
-            throw new RuntimeException("Не удалось сохранить YML конфигурацию: " + relativePath, e);
+            throw new RuntimeException("Не удалось сохранить конфигурацию: " + relativePath, e);
         }
     }
 
     public void reload() {
-        if (cache.isEmpty()) {
-            return;
-        }
+        if (configs.isEmpty()) return;
 
-        // Временная копия кэша во избежание ConcurrentModificationException
-        Map<String, Object> currentCache = new ConcurrentHashMap<>(cache);
+        for (String relativePath : configs.keySet().toArray(new String[0])) {
+            Object existingConfig = configs.get(relativePath);
+            if (existingConfig == null) continue;
 
-        for (Map.Entry<String, Object> entry : currentCache.entrySet()) {
-            String relativePath = entry.getKey();
-            Object existingConfig = entry.getValue();
-
-            if (existingConfig == null) {
-                continue;
-            }
-
-            // Удаляем из кэша, чтобы метод load() не вернул старое значение
-            cache.remove(relativePath);
-
-            try {
-                // Перезагружаем с диска, сохраняя оригинальный класс объекта
-                load(existingConfig.getClass(), relativePath);
-            } catch (Exception e) {
-                // Если файл поврежден при релоаде, восстанавливаем рабочий объект в кэш
-                cache.put(relativePath, existingConfig);
-                System.err.println("[zFuctone] Ошибка при перезагрузке конфигурации: " + relativePath);
-                e.printStackTrace();
-            }
+            reload(existingConfig.getClass(), relativePath);
         }
     }
 
-    public <T> T reload(Class<T> clazz) {
-        ConfigFile annotation = getRequiredAnnotation(clazz);
-        return reload(clazz, annotation.name());
+    public <T> T reload(Class<T> target) {
+        return reload(target, getFileName(target));
     }
 
-    public <T> T reload(Class<T> clazz, String relativePath) {
-        cache.remove(relativePath);
-        return load(clazz, relativePath);
+    public <T> T reload(Class<T> target, String relativePath) {
+        Object previousConfig = configs.remove(relativePath);
+
+        try {
+            return load(target, relativePath);
+        } catch (Exception e) {
+            if (previousConfig != null) configs.put(relativePath, previousConfig);
+
+            System.err.println("[zFuctone] Ошибка при перезагрузке конфигурации: " + relativePath);
+            e.printStackTrace();
+            return null;
+        }
     }
 }

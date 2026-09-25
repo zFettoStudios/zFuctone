@@ -1,13 +1,13 @@
 package com.zfettostudios.zfuctone.config.model;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
-import com.zfettostudios.zfuctone.config.ConfigFile;
+import com.zfettostudios.zfuctone.config.FileName;
 import lombok.Builder;
 import lombok.With;
 
 @With
 @Builder(toBuilder = true)
-@ConfigFile(name = "config.yml")
+@FileName("config.yml")
 public record Config(
     String version,
 

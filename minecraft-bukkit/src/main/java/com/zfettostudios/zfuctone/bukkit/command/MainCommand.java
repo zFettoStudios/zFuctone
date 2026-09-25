@@ -5,11 +5,9 @@ import com.zfettostudios.zfuctone.config.model.Localization;
 import com.zfettostudios.zfuctone.config.model.Permission;
 import com.zfettostudios.zfuctone.util.SenderUtil;
 import com.zfettostudios.zfuctone.util.StringUtil;
-import net.kyori.adventure.text.minimessage.MiniMessage;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
-import org.bukkit.command.ConsoleCommandSender;
 import org.bukkit.command.TabCompleter;
 import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
@@ -19,8 +17,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class MainCommand implements CommandExecutor, TabCompleter {
-    private static final MiniMessage mm = MiniMessage.miniMessage();
-
     private final Permission.ZFuctone permission;
     private final Localization consoleLocalization;
 

@@ -3,6 +3,8 @@ plugins {
 }
 
 dependencies {
+    compileOnly "me.clip:placeholderapi:$placeholderapi_version"
+
     paperweightDevelopmentBundle "io.papermc.paper:dev-bundle:$paper_version"
 }
 

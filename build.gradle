@@ -42,6 +42,8 @@ subprojects {
         maven { url = papermc_repository }
         maven { url = spigotmc_repository }
         maven { url = jitpack_repository }
+        maven { url = helpch_repository }
+        maven { url = extendedclip_repository }
     }
 
     dependencies {

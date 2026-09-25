@@ -1,6 +1,6 @@
 package com.zfettostudios.zfuctone.config.model;
 
-import com.zfettostudios.zfuctone.config.ConfigFile;
+import com.zfettostudios.zfuctone.config.FileName;
 import com.zfettostudios.zfuctone.config.model.setting.PermissionSetting;
 import lombok.Builder;
 import lombok.With;
@@ -8,7 +8,7 @@ import org.bukkit.permissions.PermissionDefault;
 
 @With
 @Builder(toBuilder = true)
-@ConfigFile(name = "permission.yml")
+@FileName("permission.yml")
 public record Permission(
     ZFuctone zfuctone
 ) {
