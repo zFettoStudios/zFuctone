@@ -17,11 +17,8 @@ public class LocalizationManager {
     private final ConfigManager configManager;
     @Setter
     private Config config;
-    @Getter
     private final Path directory;
-    @Getter
     private final String relativeFolderPath;
-
     private final Map<String, Localization> loadedLocalizations = new ConcurrentHashMap<>();
 
     public LocalizationManager(@NonNull String relativeFolderPath) {
@@ -32,50 +29,36 @@ public class LocalizationManager {
         this.directory = dataPath.resolve(relativeFolderPath);
     }
 
-    /**
-     * Инициализирует и загружает все языковые файлы.
-     */
     public void init() {
         this.loadedLocalizations.clear();
 
-        // 1. Гарантируем распаковку бандловых языковых ресурсов из JAR
         ensureDefaultResource("ru_ru.yml");
         ensureDefaultResource("en_us.yml");
 
-        // 2. Сканируем папку локализации
         File dir = directory.toFile();
-        if (!dir.exists() || !dir.isDirectory()) {
-            return;
-        }
+        if (!dir.exists() || !dir.isDirectory()) return;
 
-        File[] files = dir.listFiles((directory, name) -> name.toLowerCase().endsWith(".yml"));
-        if (files == null) {
-            return;
-        }
+        File[] files = dir.listFiles((_, name) -> name.regionMatches(true, name.length() - 4, ".yml", 0, 4));
+        if (files == null) return;
+
+        StringBuilder pathBuilder = new StringBuilder(relativeFolderPath.length() + 32);
 
         for (File file : files) {
             String fileName = file.getName();
             String langKey = extractLangKey(fileName);
-            String relativePath = relativeFolderPath + "/" + fileName;
 
-            Localization localization = configManager.load(Localization.class, relativePath);
-            if (localization != null) {
-                loadedLocalizations.put(langKey, localization);
-            }
+            pathBuilder.setLength(0);
+            pathBuilder.append(relativeFolderPath).append('/').append(fileName);
+
+            Localization localization = configManager.load(Localization.class, pathBuilder.toString());
+            if (localization != null) loadedLocalizations.put(langKey, localization);
         }
     }
 
-    /**
-     * Получает локализацию по ключу с возможностью указывать запасной (default) язык.
-     *
-     * @param langKey  Запрашиваемый язык (например, "ru_ru")
-     * @param fallback Запасной язык (например, "en_us"), если основной не найден
-     * @return Объект Localization
-     */
     public Localization get(String langKey, String fallback) {
         if (langKey != null) {
-            Localization loc = loadedLocalizations.get(langKey.toLowerCase());
-            if (loc != null) return loc;
+            Localization localization = loadedLocalizations.get(langKey.toLowerCase());
+            if (localization != null) return localization;
         }
 
         if (fallback != null) {
@@ -86,56 +69,41 @@ public class LocalizationManager {
         return getAnyFallback();
     }
 
-    /**
-     * Перегрузка для быстрого получения локализации по ключу (с фолбэком на en_us).
-     */
     public Localization get(String langKey) {
         return get(langKey, "en_us");
     }
 
-    /**
-     * Возвращает неизменяемую Map всех загруженных локализаций.
-     */
     public Map<String, Localization> getAllLocalizations() {
         return Collections.unmodifiableMap(loadedLocalizations);
     }
 
-    /**
-     * Гарантирует создание базовых локализаций из JAR-файла.
-     */
     private void ensureDefaultResource(String fileName) {
         String relativePath = relativeFolderPath + "/" + fileName;
         configManager.load(Localization.class, relativePath);
     }
 
-    /**
-     * Извлекает ключ языка из имени файла (например, "ru_ru.yml" -> "ru_ru").
-     */
     private String extractLangKey(String fileName) {
         int lastDotIndex = fileName.lastIndexOf('.');
-        if (lastDotIndex > 0) {
-            return fileName.substring(0, lastDotIndex).toLowerCase();
-        }
+        if (lastDotIndex > 0) return fileName.substring(0, lastDotIndex).toLowerCase();
+
         return fileName.toLowerCase();
     }
 
-    /**
-     * Возвращает первую попавшуюся доступную локализацию, если ничего не найдено.
-     */
     private Localization getAnyFallback() {
-        return loadedLocalizations.values().stream()
-            .findFirst()
-            .orElse(null);
+        if (loadedLocalizations.isEmpty()) return null;
+        return loadedLocalizations.values().iterator().next();
     }
 
     public void reload() {
-        // 1. Сбрасываем кэш текущих файлов локализации в ConfigManager
+        StringBuilder pathBuilder = new StringBuilder(relativeFolderPath.length() + 32);
+
         for (String langKey : loadedLocalizations.keySet()) {
-            String relativePath = relativeFolderPath + "/" + langKey + ".yml";
-            configManager.reload(Localization.class, relativePath);
+            pathBuilder.setLength(0);
+            pathBuilder.append(relativeFolderPath).append('/').append(langKey).append(".yml");
+
+            configManager.reload(Localization.class, pathBuilder.toString());
         }
 
-        // 2. Очищаем локальную мапу и считываем файлы заново
         init();
     }
 }
