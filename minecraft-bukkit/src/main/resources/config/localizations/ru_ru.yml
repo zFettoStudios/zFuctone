@@ -1,0 +1,9 @@
+project:
+  enable: "<green>zFuctone успешно запустился!</green>"
+  disable: "<red>zFuctone успешно выключился!</red>"
+  prefix: "zFuctone"
+command:
+  zfuctone:
+    not_permission: "<red>У вас не достаточно прав!</red>"
+    invalid_arguments: "<red>Неправильные аргументы!</red>"
+    reload: "<red>Успешная перезагрузка!</red>"

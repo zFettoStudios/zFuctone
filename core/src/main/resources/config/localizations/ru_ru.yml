@@ -1,3 +1,0 @@
-project:
-  enable: "<green>zFuctone успешно запустился!</green>"
-  disable: "<red>zFuctone успешно выключился!</red>"

@@ -7,12 +7,6 @@ pluginManagement {
     }
 }
 
-plugins {
-    id "org.gradle.toolchains.foojay-resolver-convention" version "$gradle_toolchains_version"
-}
-
 rootProject.name = project_name
 
-include module_core
-include module_java
 include module_minecraft_bukkit

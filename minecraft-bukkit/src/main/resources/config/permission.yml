@@ -1,0 +1,6 @@
+zfuctone:
+  name: "zfuctone.command.zfuctone"
+  type: "OP"
+  reload:
+    name: "zfuctone.command.zfuctone.reload"
+    type: "OP"

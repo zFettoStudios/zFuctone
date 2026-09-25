@@ -3,8 +3,6 @@ plugins {
 }
 
 dependencies {
-    implementation project(":$module_core")
-
     paperweightDevelopmentBundle "io.papermc.paper:dev-bundle:$paper_version"
 }
 

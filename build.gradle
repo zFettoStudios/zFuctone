@@ -48,8 +48,8 @@ subprojects {
         compileOnly "org.projectlombok:lombok:$lombok_version"
         annotationProcessor "org.projectlombok:lombok:$lombok_version"
 
-        implementation files("D:\\Libs\\Java\\repository\\com\\zfettostudios\\zjanots\\$zjanots_version\\zjanots-${zjanots_version}.jar")
-        implementation files("D:\\Libs\\Java\\repository\\com\\zfettostudios\\zjtime\\$zjtime_version\\zjtime-${zjtime_version}.jar")
+        implementation "com.github.zfettostudios:zjtime:$zjtime_version"
+        implementation "com.github.zfettostudios:zjanots:$zjanots_version"
 
         implementation "org.ow2.asm:asm:$asm_version"
         implementation "org.ow2.asm:asm-commons:$asm_version"
@@ -105,6 +105,8 @@ subprojects {
         outputs.cacheIf {
             true
         }
+
+        minimize()
 
         mergeServiceFiles()
     }
