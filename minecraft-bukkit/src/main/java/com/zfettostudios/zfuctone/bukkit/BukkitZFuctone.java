@@ -1,10 +1,11 @@
 package com.zfettostudios.zfuctone.bukkit;
 
-import com.zfettostudios.zfuctone.bukkit.command.MainCommand;
+import com.zfettostudios.zfuctone.bukkit.command.CommandManager;
 import com.zfettostudios.zfuctone.bukkit.sender.ZConsole;
 import com.zfettostudios.zfuctone.config.BuildConfig;
 import com.zfettostudios.zfuctone.config.ConfigManager;
 import com.zfettostudios.zfuctone.config.LocalizationManager;
+import com.zfettostudios.zfuctone.config.model.Command;
 import com.zfettostudios.zfuctone.config.model.Config;
 import com.zfettostudios.zfuctone.config.model.Localization;
 import com.zfettostudios.zfuctone.config.model.Permission;
@@ -25,11 +26,13 @@ public class BukkitZFuctone extends JavaPlugin {
     @Accessors(fluent = false)
     private static BukkitZFuctone instance;
 
-    private ConfigManager configManager;
-    private LocalizationManager localizationManager;
     private final ZConsole console = new ZConsole(Bukkit.getConsoleSender());
     @Getter(AccessLevel.NONE)
     private final PluginManager pm = Bukkit.getPluginManager();
+
+    private ConfigManager configManager;
+    private LocalizationManager localizationManager;
+    private CommandManager commandManager;
 
     @Override
     public void onEnable() {
@@ -42,21 +45,25 @@ public class BukkitZFuctone extends JavaPlugin {
 
         Config config = configManager.get(Config.class);
         Permission permission = configManager.get(Permission.class);
+        Command command = configManager.get(Command.class);
 
         localizationManager.setConfig(config);
         localizationManager.init();
 
-        Localization consoleLocalization = localizationManager.get(config.language().console().type());
+        console.setLocalization(localizationManager.get(config.language().console().type()))
+
+        this.commandManager = new CommandManager();
+        commandManager.init(command, permission);
 
         registerPermissions(permission);
-        registerCommands(permission, consoleLocalization);
 
-        console.sendMessage(consoleLocalization.project().enable());
+        console.sendMessage(console.getLocalization().project().enable());
     }
 
     private void loadConfig() {
         configManager.save(configManager.load(Config.class).withVersion(BuildConfig.PROJECT_VERSION));
         configManager.load(Permission.class);
+        configManager.load(Command.class);
     }
 
     private void registerCommands(Permission permission, Localization consoleLocalization) {

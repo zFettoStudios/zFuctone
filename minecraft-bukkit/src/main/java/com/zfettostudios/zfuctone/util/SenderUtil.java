@@ -10,9 +10,10 @@ import org.bukkit.entity.Player;
 
 public class SenderUtil {
     private static final MiniMessage mm = MiniMessage.miniMessage();
+    private static final BukkitZFuctone zfuctone = BukkitZFuctone.getInstance();
 
     public static void sendMessage(CommandSender sender, String... message) {
-        if (sender instanceof ConsoleCommandSender) BukkitZFuctone.getInstance().console().sendMessage(PlaceholderAPIIntegration.setPlaceholder(message));
+        if (sender instanceof ConsoleCommandSender) zfuctone.console().sendMessage(PlaceholderAPIIntegration.setPlaceholder(message));
         else if (sender instanceof Player player) player.sendMessage(mm.deserialize(PlaceholderAPIIntegration.setPlaceholder(player, message)));
     }
 }

@@ -1,0 +1,70 @@
+zfuctone:
+  enable: true
+  aliases:
+    - "zfuctone"
+  cooldown:
+    enable: false
+    duration: 0
+    time_unit: "MINECRAFT_TICKS"
+  sound:
+    enable: false
+    volume: 1.0
+    pitch: 1.0
+    category: "HOSTILE"
+    name: "minecraft:entity.llama.spit"
+  reload:
+    enable: true
+    aliases:
+      - "reload"
+    cooldown:
+      enable: false
+      duration: 0
+      time_unit: "MINECRAFT_TICKS"
+    sound:
+      enable: false
+      volume: 1.0
+      pitch: 1.0
+      category: "HOSTILE"
+      name: "minecraft:entity.llama.spit"
+spawn:
+  enable: true
+  aliases:
+    - "spawn"
+  cooldown:
+    enable: false
+    duration: 0
+    time_unit: "MINECRAFT_TICKS"
+  sound:
+    enable: false
+    volume: 1.0
+    pitch: 1.0
+    category: "HOSTILE"
+    name: "minecraft:entity.llama.spit"
+  other:
+    enable: true
+    aliases:
+      - "other"
+    cooldown:
+      enable: false
+      duration: 0
+      time_unit: "MINECRAFT_TICKS"
+    sound:
+      enable: false
+      volume: 1.0
+      pitch: 1.0
+      category: "HOSTILE"
+      name: "minecraft:entity.llama.spit"
+setspawn:
+  enable: true
+  aliases:
+    - "setspawn"
+  cooldown:
+    enable: true
+    duration: 0
+    time_unit: "MINECRAFT_TICKS"
+  sound:
+    enable: false
+    volume: 1.0
+    pitch: 1.0
+    category: "HOSTILE"
+    name: "minecraft:entity.llama.spit"

@@ -8,6 +8,3 @@ load: ${load}
 folia-supported: ${folia_supported}
 author: ${author}
 website: ${website}
-commands:
-  zfuctone:
-    description: ""

@@ -1,6 +1,46 @@
-zfuctone:
-  name: "zfuctone.command.zfuctone"
-  type: "OP"
-  reload:
-    name: "zfuctone.command.zfuctone.reload"
+command:
+  zfuctone:
+    name: "zfuctone.command.zfuctone"
     type: "OP"
+    cooldown_bypass:
+      name: "zfuctone.command.zfuctone.cooldown.bypass"
+      type: "OP"
+    sound:
+      name: "zfuctone.command.zfuctone.sound"
+      type: "OP"
+    reload:
+      name: "zfuctone.command.zfuctone.reload"
+      type: "OP"
+      cooldown_bypass:
+        name: "zfuctone.command.zfuctone.reload.cooldown.bypass"
+        type: "OP"
+      sound:
+        name: "zfuctone.command.zfuctone.sound"
+        type: "OP"
+  spawn:
+    name: "zfuctone.command.spawn"
+    type: "TRUE"
+    cooldown_bypass:
+      name: "zfuctone.command.spawn.cooldown.bypass"
+      type: "OP"
+    sound:
+      name: "zfuctone.command.spawn.sound"
+      type: "TRUE"
+    other:
+      name: "zfuctone.command.spawn.other"
+      type: "OP"
+      cooldown_bypass:
+        name: "zfuctone.command.spawn.other.cooldown.bypass"
+        type: "OP"
+      sound:
+        name: "zfuctone.command.spawn.other.sound"
+        type: "OP"
+  setspawn:
+    name: "zfuctone.command.setspawn"
+    type: "OP"
+    cooldown_bypass:
+      name: "zfuctone.command.setspawn.cooldown.bypass"
+      type: "OP"
+    sound:
+      name: "zfuctone.command.setspawn.sound"
+      type: "OP"
