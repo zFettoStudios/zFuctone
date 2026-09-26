@@ -1,6 +1,7 @@
 package com.zfettostudios.zfuctone.bukkit;
 
 import com.zfettostudios.zfuctone.bukkit.command.CommandManager;
+import com.zfettostudios.zfuctone.bukkit.permission.PermissionManager;
 import com.zfettostudios.zfuctone.bukkit.sender.ZConsole;
 import com.zfettostudios.zfuctone.config.BuildConfig;
 import com.zfettostudios.zfuctone.config.ConfigManager;
@@ -13,8 +14,6 @@ import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.experimental.Accessors;
 import org.bukkit.Bukkit;
-import org.bukkit.command.CommandExecutor;
-import org.bukkit.command.PluginCommand;
 import org.bukkit.permissions.PermissionDefault;
 import org.bukkit.plugin.PluginManager;
 import org.bukkit.plugin.java.JavaPlugin;
@@ -33,56 +32,33 @@ public class BukkitZFuctone extends JavaPlugin {
     private ConfigManager configManager;
     private LocalizationManager localizationManager;
     private CommandManager commandManager;
+    private PermissionManager permissionManager;
 
     @Override
     public void onEnable() {
         instance = this;
 
-        this.configManager = new ConfigManager();
-        this.localizationManager = new LocalizationManager("localizations");
+        configManager = new ConfigManager();
+        localizationManager = new LocalizationManager("localizations");
 
-        loadConfig();
+        Config config = configManager.load(Config.class);
+        Permission permission = configManager.load(Permission.class);
+        Command command = configManager.load(Command.class);
 
-        Config config = configManager.get(Config.class);
-        Permission permission = configManager.get(Permission.class);
-        Command command = configManager.get(Command.class);
+        configManager.save(config.withVersion(BuildConfig.PROJECT_VERSION));
 
         localizationManager.setConfig(config);
         localizationManager.init();
 
-        console.setLocalization(localizationManager.get(config.language().console().type()))
+        console.setLocalization(localizationManager.get(config.language().console().type()));
 
-        this.commandManager = new CommandManager();
+        commandManager = new CommandManager();
+        permissionManager = new PermissionManager();
+
         commandManager.init(command, permission);
-
-        registerPermissions(permission);
+        permissionManager.init(permission);
 
         console.sendMessage(console.getLocalization().project().enable());
-    }
-
-    private void loadConfig() {
-        configManager.save(configManager.load(Config.class).withVersion(BuildConfig.PROJECT_VERSION));
-        configManager.load(Permission.class);
-        configManager.load(Command.class);
-    }
-
-    private void registerCommands(Permission permission, Localization consoleLocalization) {
-        registerCommand("zfuctone", new MainCommand(permission.zfuctone(), consoleLocalization));
-    }
-
-    private void registerCommand(String commandName, CommandExecutor commandExecutor) {
-        PluginCommand command = getCommand(commandName);
-        if (command != null) command.setExecutor(commandExecutor);
-    }
-
-    private void registerPermissions(Permission permission) {
-        registerPermission(permission.zfuctone().name(), permission.zfuctone().type());
-        registerPermission(permission.zfuctone().reload().name(), permission.zfuctone().reload().type());
-    }
-
-    private void registerPermission(String name, PermissionDefault type) {
-        if (pm.getPermission(name) != null) pm.removePermission(name);
-        pm.addPermission(new org.bukkit.permissions.Permission(name, type));
     }
 
     @Override
@@ -98,13 +74,12 @@ public class BukkitZFuctone extends JavaPlugin {
         localizationManager.reload();
 
         Config config = configManager.get(Config.class);
-        Permission permission = configManager.get(Permission.class);
 
         localizationManager.setConfig(config);
 
-        Localization consoleLocalization = localizationManager.get(config.language().console().type());
+        console.setLocalization(localizationManager.get(config.language().console().type());
 
-        registerPermissions(permission);
-        registerCommands(permission, consoleLocalization);
+        permissionManager.reload();
+        commandManager.reload();
     }
 }
