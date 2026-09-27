@@ -11,7 +11,7 @@ import org.bukkit.permissions.PermissionDefault;
 @With
 @Builder(toBuilder = true)
 @FileName("permission.yml")
-public record Permission(
+public record PermissionConfig(
     Command command
 ) {
     @With

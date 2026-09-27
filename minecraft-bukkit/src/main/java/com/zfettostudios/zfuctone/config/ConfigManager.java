@@ -2,6 +2,15 @@ package com.zfettostudios.zfuctone.config;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.zfettostudios.zfuctone.bukkit.BukkitZFuctone;
+import com.zfettostudios.zfuctone.config.model.CommandConfig;
+import com.zfettostudios.zfuctone.config.model.Config;
+import com.zfettostudios.zfuctone.config.model.PermissionConfig;
+import com.zfettostudios.zfuctone.config.model.data.Spawn;
+import lombok.AccessLevel;
+import lombok.Builder;
+import lombok.Getter;
+import lombok.With;
+import lombok.experimental.Accessors;
 import tools.jackson.databind.DeserializationFeature;
 import tools.jackson.databind.JsonNode;
 import tools.jackson.databind.MapperFeature;
@@ -28,14 +37,38 @@ public class ConfigManager {
         .build();
     private final Map<String, Object> configs = new ConcurrentHashMap<>();
 
-    public ConfigManager() {
+    @Getter
+    @Accessors(fluent = true)
+    private volatile StaticConfig staticConfig;
+
+    public void init() {
         if (!dataFolder.exists()) dataFolder.mkdirs();
+
+        Config loadedConfig = load(Config.class);
+
+        if (!BuildConfig.PROJECT_VERSION.equals(loadedConfig.version())) {
+            loadedConfig = loadedConfig.withVersion(BuildConfig.PROJECT_VERSION);
+            save(loadedConfig);
+        }
+
+        refreshStaticConfig(loadedConfig);
+    }
+
+    private void refreshStaticConfig(Config config) {
+        this.staticConfig = StaticConfig.builder()
+            .config(config != null ? config : load(Config.class))
+            .command(load(CommandConfig.class))
+            .permission(load(PermissionConfig.class))
+            .data(StaticConfig.Data.builder()
+                .spawn(load(Spawn.class))
+                .build()
+            )
+            .build();
     }
 
     public <T> T load(Class<T> target) {
         return load(target, getFileName(target));
     }
-
     public <T> T load(Class<T> target, String relativePath) {
         Object cached = configs.get(relativePath);
         if (cached != null) return target.cast(cached);
@@ -66,7 +99,6 @@ public class ConfigManager {
             }
 
             T config = mapper.treeToValue(finalTree, target);
-
             if (config != null) {
                 if (!isNewFile && defaultTree != null) mapper.writeValue(file, config);
                 configs.put(relativePath, config);
@@ -83,7 +115,6 @@ public class ConfigManager {
         if (targetNode instanceof ObjectNode targetObject && sourceNode instanceof ObjectNode sourceObject)
             mergeObjects(targetObject, sourceObject);
     }
-
     private void mergeObjects(ObjectNode targetObject, ObjectNode sourceObject) {
         sourceObject.forEachEntry((fieldName, sourceValue) -> {
             if (sourceValue.isNull()) return;
@@ -139,7 +170,6 @@ public class ConfigManager {
     public <T> T get(Class<T> target) {
         return get(getFileName(target), target);
     }
-
     public <T> T get(String relativePath, Class<T> target) {
         Object config = configs.get(relativePath);
         if (config == null) throw new IllegalStateException("Конфигурация " + relativePath + " еще не была загружена!");
@@ -150,13 +180,11 @@ public class ConfigManager {
     public <T> void save(Class<T> target) {
         save(get(target), getFileName(target));
     }
-
     public <T> void save(T config) {
         if (config == null) throw new IllegalArgumentException("Невозможно сохранить null конфигурацию");
 
         save(config, getFileName(config.getClass()));
     }
-
     public void save(Object config, String relativePath) {
         if (config == null) throw new IllegalArgumentException("Невозможно сохранить null конфигурацию для: " + relativePath);
 
@@ -181,23 +209,45 @@ public class ConfigManager {
 
             reload(existingConfig.getClass(), relativePath);
         }
-    }
 
+        refreshStaticConfig(null);
+    }
     public <T> T reload(Class<T> target) {
         return reload(target, getFileName(target));
     }
-
     public <T> T reload(Class<T> target, String relativePath) {
         Object previousConfig = configs.remove(relativePath);
 
         try {
-            return load(target, relativePath);
+            T reloaded = load(target, relativePath);
+
+            if (staticConfig != null) refreshStaticConfig(null);
+
+            return reloaded;
         } catch (Exception e) {
             if (previousConfig != null) configs.put(relativePath, previousConfig);
 
             System.err.println("[zFuctone] Ошибка при перезагрузке конфигурации: " + relativePath);
             e.printStackTrace();
             return null;
+        }
+    }
+
+    @Getter
+    @Accessors(fluent = true)
+    @Builder(toBuilder = true)
+    public static class StaticConfig {
+        private Config config;
+        private CommandConfig command;
+        private PermissionConfig permission;
+        @With(AccessLevel.NONE)
+        private Data data;
+
+        @Getter
+        @Accessors(fluent = true)
+        @Builder(toBuilder = true)
+        public static class Data {
+            private Spawn spawn;
         }
     }
 }

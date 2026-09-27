@@ -16,35 +16,36 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Setter
-public class ZFuctoneCommand extends Command {
+public class SpawnCommand extends Command {
     private static final BukkitZFuctone zfuctone = BukkitZFuctone.getInstance();
 
-    public ZFuctoneCommand() {
-        CommandConfig.ZFuctone commandConfig = zfuctone.configManager().staticConfig().command().zfuctone();
+    private CommandConfig.Spawn commandConfig;
+    private PermissionConfig.Command.Spawn permissionConfig;
+
+    public SpawnCommand(CommandConfig.Spawn commandConfig, PermissionConfig.Command.Spawn permissionConfig) {
         List<String> aliases = new ArrayList<>(commandConfig.aliases());
         aliases.removeFirst();
 
         super(commandConfig.aliases().getFirst(), "", "", aliases);
+
+        this.commandConfig = commandConfig;
+        this.permissionConfig = permissionConfig;
     }
 
     @Override
     public boolean execute(@NotNull CommandSender sender, @NotNull String commandLabel, @NotNull String @NotNull [] args) {
-        CommandConfig.ZFuctone commandConfig = zfuctone.configManager().staticConfig().command().zfuctone();
-        PermissionConfig.Command.ZFuctone permissionConfig = zfuctone.configManager().staticConfig().permission().command().zfuctone();
         Localization localization = zfuctone.console().getLocalization();
         if (sender instanceof Player player) localization = zfuctone.localizationManager().get(StringUtil.localeToString(player.locale()));
 
         if (!sender.hasPermission(permissionConfig.name())) {
-            SenderUtil.sendMessage(sender, localization.command().zfuctone().notPermission());
+            SenderUtil.sendMessage(sender, localization.command().spawn().notPermission());
             return false;
         }
 
-        if (args.length != 0 && commandConfig.reload().aliases().stream().anyMatch(alias -> alias.equals(args[0]))) {
-            zfuctone.reload();
-            SenderUtil.sendMessage(sender, localization.command().zfuctone().reload());
+        if (args.length != 0 && commandConfig.other().aliases().stream().anyMatch(alias -> alias.equals(args[0]))) {
         }
         else {
-            SenderUtil.sendMessage(sender, localization.command().zfuctone().invalidArguments());
+            SenderUtil.sendMessage(sender, localization.command().spawn().invalidArguments());
             return false;
         }
 
@@ -52,18 +53,8 @@ public class ZFuctoneCommand extends Command {
     }
 
     @Override
-    public @NotNull List<String> tabComplete(@NotNull CommandSender sender, @NotNull String alias, @NotNull String @NotNull [] args) {
-        CommandConfig.ZFuctone commandConfig = zfuctone.configManager().staticConfig().command().zfuctone();
-        PermissionConfig.Command.ZFuctone permissionConfig = zfuctone.configManager().staticConfig().permission().command().zfuctone();
+    public @NotNull List<String> tabComplete(@NotNull CommandSender sender, @NotNull String alias, @NotNull String @NotNull [] args) throws IllegalArgumentException {
         List<String> tab = new ArrayList<>();
-
-        if (!sender.hasPermission(permissionConfig.name())) return tab;
-
-        switch (args.length) {
-            case 0 -> {
-                if (sender.hasPermission(permissionConfig.reload().name())) tab.addAll(commandConfig.reload().aliases());
-            }
-        }
 
         return tab;
     }

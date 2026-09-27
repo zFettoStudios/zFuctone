@@ -1,46 +1,46 @@
 command:
   zfuctone:
-    name: "zfuctone.command.zfuctone"
+    name: "zfuctone.commandConfig.zfuctone"
     type: "OP"
     cooldown_bypass:
-      name: "zfuctone.command.zfuctone.cooldown.bypass"
+      name: "zfuctone.commandConfig.zfuctone.cooldown.bypass"
       type: "OP"
     sound:
-      name: "zfuctone.command.zfuctone.sound"
+      name: "zfuctone.commandConfig.zfuctone.sound"
       type: "OP"
     reload:
-      name: "zfuctone.command.zfuctone.reload"
+      name: "zfuctone.commandConfig.zfuctone.reload"
       type: "OP"
       cooldown_bypass:
-        name: "zfuctone.command.zfuctone.reload.cooldown.bypass"
+        name: "zfuctone.commandConfig.zfuctone.reload.cooldown.bypass"
         type: "OP"
       sound:
-        name: "zfuctone.command.zfuctone.sound"
+        name: "zfuctone.commandConfig.zfuctone.sound"
         type: "OP"
   spawn:
-    name: "zfuctone.command.spawn"
+    name: "zfuctone.commandConfig.spawn"
     type: "TRUE"
     cooldown_bypass:
-      name: "zfuctone.command.spawn.cooldown.bypass"
+      name: "zfuctone.commandConfig.spawn.cooldown.bypass"
       type: "OP"
     sound:
-      name: "zfuctone.command.spawn.sound"
+      name: "zfuctone.commandConfig.spawn.sound"
       type: "TRUE"
     other:
-      name: "zfuctone.command.spawn.other"
+      name: "zfuctone.commandConfig.spawn.other"
       type: "OP"
       cooldown_bypass:
-        name: "zfuctone.command.spawn.other.cooldown.bypass"
+        name: "zfuctone.commandConfig.spawn.other.cooldown.bypass"
         type: "OP"
       sound:
-        name: "zfuctone.command.spawn.other.sound"
+        name: "zfuctone.commandConfig.spawn.other.sound"
         type: "OP"
   setspawn:
-    name: "zfuctone.command.setspawn"
+    name: "zfuctone.commandConfig.setspawn"
     type: "OP"
     cooldown_bypass:
-      name: "zfuctone.command.setspawn.cooldown.bypass"
+      name: "zfuctone.commandConfig.setspawn.cooldown.bypass"
       type: "OP"
     sound:
-      name: "zfuctone.command.setspawn.sound"
+      name: "zfuctone.commandConfig.setspawn.sound"
       type: "OP"

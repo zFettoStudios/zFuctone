@@ -3,18 +3,12 @@ package com.zfettostudios.zfuctone.bukkit;
 import com.zfettostudios.zfuctone.bukkit.command.CommandManager;
 import com.zfettostudios.zfuctone.bukkit.permission.PermissionManager;
 import com.zfettostudios.zfuctone.bukkit.sender.ZConsole;
-import com.zfettostudios.zfuctone.config.BuildConfig;
 import com.zfettostudios.zfuctone.config.ConfigManager;
 import com.zfettostudios.zfuctone.config.LocalizationManager;
-import com.zfettostudios.zfuctone.config.model.Command;
-import com.zfettostudios.zfuctone.config.model.Config;
-import com.zfettostudios.zfuctone.config.model.Localization;
-import com.zfettostudios.zfuctone.config.model.Permission;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.experimental.Accessors;
 import org.bukkit.Bukkit;
-import org.bukkit.permissions.PermissionDefault;
 import org.bukkit.plugin.PluginManager;
 import org.bukkit.plugin.java.JavaPlugin;
 
@@ -41,43 +35,30 @@ public class BukkitZFuctone extends JavaPlugin {
         configManager = new ConfigManager();
         localizationManager = new LocalizationManager("localizations");
 
-        Config config = configManager.load(Config.class);
-        Permission permission = configManager.load(Permission.class);
-        Command command = configManager.load(Command.class);
-
-        configManager.save(config.withVersion(BuildConfig.PROJECT_VERSION));
-
-        localizationManager.setConfig(config);
         localizationManager.init();
+        console.init();
 
-        console.setLocalization(localizationManager.get(config.language().console().type()));
+        console.setLocalization(localizationManager.get(configManager.staticConfig().config().language().console().type()));
 
         commandManager = new CommandManager();
         permissionManager = new PermissionManager();
 
-        commandManager.init(command, permission);
-        permissionManager.init(permission);
+        commandManager.init();
+        permissionManager.init();
 
         console.sendMessage(console.getLocalization().project().enable());
     }
 
     @Override
     public void onDisable() {
-        Config config = configManager.get(Config.class);
-        Localization consoleLocalization = localizationManager.get(config.language().console().type());
-
-        console.sendMessage(consoleLocalization.project().disable());
+        console.sendMessage(console.getLocalization().project().disable());
     }
 
     public void reload() {
         configManager.reload();
         localizationManager.reload();
 
-        Config config = configManager.get(Config.class);
-
-        localizationManager.setConfig(config);
-
-        console.setLocalization(localizationManager.get(config.language().console().type());
+        console.setLocalization(localizationManager.get(configManager.staticConfig().config().language().console().type()));
 
         permissionManager.reload();
         commandManager.reload();

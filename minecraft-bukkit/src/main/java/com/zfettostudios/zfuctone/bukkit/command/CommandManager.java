@@ -1,49 +1,49 @@
 package com.zfettostudios.zfuctone.bukkit.command;
 
+import com.zfettostudios.zfuctone.bukkit.BukkitZFuctone;
 import com.zfettostudios.zfuctone.config.BuildConfig;
-import com.zfettostudios.zfuctone.config.model.Permission;
+import com.zfettostudios.zfuctone.config.model.CommandConfig;
 import org.bukkit.Bukkit;
 import org.bukkit.command.Command;
-import org.bukkit.command.CommandMap;
 
-import java.util.HashMap;
 import java.util.Map;
-import java.util.concurrent.ConcurrentHashMap;
 
 public class CommandManager {
-    private static final CommandMap commandMap = Bukkit.getCommandMap();
+    private static final String PROJECT_PREFIX = BuildConfig.PROJECT_NAME.toLowerCase() + ":";
 
-    private final Map<String, Command> commands = new ConcurrentHashMap<>();
+    public void init() {
+        CommandConfig commandConfig = BukkitZFuctone.getInstance().configManager().staticConfig().command();
 
-    public void init(com.zfettostudios.zfuctone.config.model.Command commandConfig, Permission permissionConfig) {
-        register(new ZFuctoneCommand(commandConfig.zfuctone(), permissionConfig.command().zfuctone()));
+        update(new ZFuctoneCommand(), commandConfig.zfuctone().enable());
+    }
+
+    public void update(Command command, boolean enable) {
+        if (enable) register(command);
+        else unregister(command);
     }
 
     public void register(Command command) {
         if (command.isRegistered()) unregister(command);
-
-        command.register(commandMap);
-        commands.put(command.getName(), command);
+        command.register(Bukkit.getCommandMap());
     }
 
     public void unregister(Command command) {
-        command.unregister(commandMap);
+        command.unregister(Bukkit.getCommandMap());
 
-        commandMap.getKnownCommands().remove(command.getName());
-        commandMap.getKnownCommands().remove(BuildConfig.PROJECT_NAME.toLowerCase() + command.getName());
+        Map<String, Command> knownCommands = Bukkit.getCommandMap().getKnownCommands();
 
-        command.getAliases().forEach(alias -> {
-            commandMap.getKnownCommands().remove(alias);
-            commandMap.getKnownCommands().remove(BuildConfig.PROJECT_NAME.toLowerCase() + alias);
-        });
+        knownCommands.remove(command.getName());
+        knownCommands.remove(PROJECT_PREFIX + command.getName());
 
-        commands.remove(command.getName());
+        for (String alias : command.getAliases()) {
+            knownCommands.remove(alias);
+            knownCommands.remove(PROJECT_PREFIX + alias);
+        }
     }
 
     public void reload() {
-        new HashMap<>(commands).forEach((_, command) -> {
-            unregister(command);
-            register(command);
-        });
+        CommandConfig commandConfig = BukkitZFuctone.getInstance().configManager().staticConfig().command();
+
+        update(new ZFuctoneCommand(), commandConfig.zfuctone().enable());
     }
 }

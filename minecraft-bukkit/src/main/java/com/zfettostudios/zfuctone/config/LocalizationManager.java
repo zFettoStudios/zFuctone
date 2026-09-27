@@ -15,8 +15,6 @@ import java.util.concurrent.ConcurrentHashMap;
 
 public class LocalizationManager {
     private final ConfigManager configManager;
-    @Setter
-    private Config config;
     private final Path directory;
     private final String relativeFolderPath;
     private final Map<String, Localization> loadedLocalizations = new ConcurrentHashMap<>();
