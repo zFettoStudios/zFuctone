@@ -35,6 +35,7 @@ public class BukkitZFuctone extends JavaPlugin {
         configManager = new ConfigManager();
         localizationManager = new LocalizationManager("localizations");
 
+        configManager.init();
         localizationManager.init();
         console.init();
 
@@ -49,10 +50,16 @@ public class BukkitZFuctone extends JavaPlugin {
 
     @Override
     public void onDisable() {
+        commandManager.unregisterAll();
+        permissionManager.unregisterAll();
+
         console.sendMessage(console.getLocalization().project().disable());
     }
 
     public void reload() {
+        commandManager.unregisterAll();
+        permissionManager.unregisterAll();
+
         configManager.reload();
         localizationManager.reload();
         console.reload();

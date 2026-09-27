@@ -41,9 +41,20 @@ public class CommandManager {
         }
     }
 
+    public void unregister(String commandName) {
+        Command command = Bukkit.getCommandMap().getCommand(commandName);
+        if (command != null) unregister(command);
+    }
+
     public void reload() {
         CommandConfig commandConfig = BukkitZFuctone.getInstance().configManager().staticConfig().command();
 
         update(new ZFuctoneCommand(), commandConfig.zfuctone().enable());
+    }
+
+    public void unregisterAll() {
+        CommandConfig commandConfig = BukkitZFuctone.getInstance().configManager().staticConfig().command();
+
+        unregister(commandConfig.zfuctone().aliases().getFirst());
     }
 }
