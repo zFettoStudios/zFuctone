@@ -38,8 +38,6 @@ public class BukkitZFuctone extends JavaPlugin {
         localizationManager.init();
         console.init();
 
-        console.setLocalization(localizationManager.get(configManager.staticConfig().config().language().console().type()));
-
         commandManager = new CommandManager();
         permissionManager = new PermissionManager();
 
@@ -57,8 +55,7 @@ public class BukkitZFuctone extends JavaPlugin {
     public void reload() {
         configManager.reload();
         localizationManager.reload();
-
-        console.setLocalization(localizationManager.get(configManager.staticConfig().config().language().console().type()));
+        console.reload();
 
         permissionManager.reload();
         commandManager.reload();

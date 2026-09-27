@@ -14,7 +14,7 @@ import java.util.List;
 
 @With
 @Builder(toBuilder = true)
-@FileName("commandConfig.yml")
+@FileName("command.yml")
 public record CommandConfig(
     ZFuctone zfuctone,
     Spawn spawn,

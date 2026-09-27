@@ -14,7 +14,6 @@ public class ZConsole {
     private static final BukkitZFuctone ZFUCTONE = BukkitZFuctone.getInstance();
 
     private final ConsoleCommandSender console;
-    @Setter
     @Getter
     private Localization localization;
 
@@ -23,6 +22,10 @@ public class ZConsole {
     }
 
     public void init() {
+        localization = ZFUCTONE.localizationManager().get(ZFUCTONE.configManager().staticConfig().config().language().console().type());
+    }
+
+    public void reload() {
         localization = ZFUCTONE.localizationManager().get(ZFUCTONE.configManager().staticConfig().config().language().console().type());
     }
 
