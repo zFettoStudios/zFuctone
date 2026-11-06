@@ -32,9 +32,7 @@ public interface PlatformPlayer {
     boolean isOnline();
     int getPing();
 
-    PlatformPlayer setUniqueId(@NonNull UUID uuid);
     PlatformPlayer setDisplayNickname(String displayNickname);
-    PlatformPlayer setRawPlayer(Object rawPlayer);
 
     PlatformPlayer dispatchMessage(@NonNull Component message);
     PlatformPlayer executeCommand(@NonNull String command);

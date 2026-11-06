@@ -19,9 +19,9 @@ import org.jspecify.annotations.NonNull;
 import java.util.UUID;
 
 public class PlatformPlayerImpl implements PlatformPlayer {
-    @NonFinal UUID uuid;
+    UUID uuid;
     @Getter @Setter @NonFinal String displayNickname;
-    @Getter @Setter @NonFinal Object rawPlayer;
+    @Getter Object rawPlayer;
     PlatformPlayerAdapter playerAdapter = ZFuctoneAPI.get(PlatformPlayerAdapter.class);
     Integration integration = ZFuctoneAPI.get(Integration.class);
     FileFacade fileFacade = ZFuctoneAPI.get(FileFacade.class);
@@ -44,34 +44,34 @@ public class PlatformPlayerImpl implements PlatformPlayer {
     }
 
     @Override
-    public PlatformPlayer setUniqueId(@NonNull UUID uuid) {
-        this.uuid = uuid;
-        return this;
-    }
-
-    @Override
     public @NonNull String getNickname() {
+        if (!isPlayer()) return "";
         return playerAdapter.getNickname(rawPlayer);
     }
 
     @Override
     public @NonNull String getLocale() {
+        if (!isPlayer()) return "";
         return playerAdapter.getLocale(uuid);
     }
 
     @Override
     public @NonNull String getIp() {
+        if (!isPlayer()) return "";
         String ip = playerAdapter.getIp(uuid);
         return ip != null ? ip : "";
     }
 
     @Override
     public int getProtocolVersion() {
+        if (!isPlayer()) return -1;
         return playerAdapter.getProtocolVersion(uuid);
     }
 
     @Override
     public @NonNull String getVersion() {
+        if (!isPlayer()) return "";
+
         String version = null;
 
         switch (getEdition()) {
@@ -86,6 +86,8 @@ public class PlatformPlayerImpl implements PlatformPlayer {
 
     @Override
     public @NonNull String getDisplayVersion() {
+        if (!isPlayer()) return "";
+
         String version = null;
 
         switch (getEdition()) {
@@ -107,6 +109,8 @@ public class PlatformPlayerImpl implements PlatformPlayer {
 
     @Override
     public @NonNull PlayerEdition getEdition() {
+        if (!isPlayer()) return PlayerEdition.JAVA;
+
         PlayerEdition edition = integration.floodgate().getEdition(uuid);
         if (edition != null) return edition;
 
@@ -115,6 +119,8 @@ public class PlatformPlayerImpl implements PlatformPlayer {
 
     @Override
     public @NonNull String getDisplayEdition() {
+        if (!isPlayer()) return "";
+
         String edition = integration.floodgate().getDisplayEdition(uuid);
         if (edition != null) return edition;
 
@@ -123,43 +129,53 @@ public class PlatformPlayerImpl implements PlatformPlayer {
 
     @Override
     public boolean isOperator() {
+        if (!isPlayer()) return false;
         return playerAdapter.isOperator(uuid);
     }
 
     @Override
     public boolean isSneaking() {
+        if (!isPlayer()) return false;
         return playerAdapter.isSneaking(uuid);
     }
 
     @Override
     public boolean isDead() {
+        if (!isPlayer()) return false;
         return playerAdapter.isDead(uuid);
     }
 
     @Override
     public boolean isOnline() {
+        if (!isPlayer()) return false;
         return playerAdapter.isOnline(uuid);
     }
 
     @Override
     public int getPing() {
+        if (!isPlayer()) return -1;
         return playerAdapter.getPing(uuid);
     }
 
     @Override
     public PlatformPlayer dispatchMessage(@NonNull Component message) {
-        playerAdapter.dispatchMessage(rawPlayer, message);
+        if (isPlayer()) playerAdapter.dispatchMessage(rawPlayer, message);
         return this;
     }
 
     @Override
     public PlatformPlayer executeCommand(@NonNull String command) {
-        playerAdapter.executeCommand(rawPlayer, command);
+        if (isPlayer()) playerAdapter.executeCommand(rawPlayer, command);
         return this;
     }
 
     public static Builder builder() {
         return new Builder();
+    }
+
+    @Override
+    public boolean isPlayer() {
+        return playerAdapter.isPlatformPlayer(rawPlayer);
     }
 
     @Setter
