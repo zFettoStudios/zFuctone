@@ -1,0 +1,10 @@
+name: ${name}
+description: "${description}"
+prefix: ${prefix}
+version: "${version}"
+main: ${main}
+api-version: "${api_version}"
+load: ${load}
+folia-supported: ${folia_supported}
+author: ${author}
+website: ${website}

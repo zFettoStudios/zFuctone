@@ -1,0 +1,76 @@
+ext.libraries = [
+    rest: [
+        zjtime: "com.github.zfettostudios:zjtime:$zjtime_version",
+        slf4j: "org.slf4j:slf4j-api:$slf4j_version"
+    ],
+
+    platform: [
+        paper: "io.papermc.paper:dev-bundle:$paper_version"
+    ],
+
+    annotation: [
+        jspecify: "org.jspecify:jspecify:$jspecify_version",
+        lombok: [
+            core: "org.projectlombok:lombok:$lombok_version",
+            processor: "org.projectlombok:lombok:$lombok_version"
+        ],
+        mapstruct: [
+            core: "org.mapstruct:mapstruct:$mapstruct_version",
+            processor: "org.mapstruct:mapstruct-processor:$mapstruct_version"
+        ]
+    ],
+
+    cloud: [
+        core: "org.incendo:cloud-core:$cloud_core_version",
+        annotations: "org.incendo:cloud-annotations:$cloud_core_version",
+        paper: "org.incendo:cloud-paper:$cloud_minecraft_version",
+        velocity: "org.incendo:cloud-velocity:$cloud_minecraft_version"
+    ],
+
+    jackson: [
+        core: "tools.jackson.core:jackson-core:$jackson_version",
+        databind: "tools.jackson.core:jackson-databind:$jackson_version",
+        annotations: "com.fasterxml.jackson.core:jackson-annotations:$jackson_annotations_version",
+        snakeyaml: "org.snakeyaml:snakeyaml-engine:$snakeyaml_version",
+
+        dataformat: [
+            yaml: "tools.jackson.dataformat:jackson-dataformat-yaml:$jackson_version"
+        ]
+    ],
+
+    byte_reflection: [
+        asm: [
+            core: "org.ow2.asm:asm:$asm_version",
+            commons: "org.ow2.asm:asm-commons:$asm_version"
+        ],
+        byte_buddy: [
+            core: "net.bytebuddy:byte-buddy:$bytebuddy_version",
+            agent: "net.bytebuddy:byte-buddy-agent:$bytebuddy_version"
+        ]
+    ],
+
+    adventure: [
+        api: "net.kyori:adventure-api:$adventure_version",
+        key: "net.kyori:adventure-key:$adventure_version",
+        minimessage: "net.kyori:adventure-text-minimessage:$adventure_version",
+        logger: "net.kyori:adventure-text-logger-slf4j:$adventure_version",
+        serializer: [
+            legacy: "net.kyori:adventure-text-serializer-legacy:$adventure_version",
+            gson: "net.kyori:adventure-text-serializer-gson:$adventure_version",
+            plain: "net.kyori:adventure-text-serializer-plain:$adventure_version",
+            ansi: "net.kyori:adventure-text-serializer-ansi:$adventure_version",
+        ],
+        ansi: "net.kyori:ansi:$ansi_version"
+    ],
+
+    integration: [
+        placeholderapi: "me.clip:placeholderapi:$placeholderapi_version",
+        miniplaceholders: "io.github.miniplaceholders:miniplaceholders-api:$miniplaceholders_version",
+        viaversion: "com.viaversion:viaversion-api:$viaversion_version",
+        geyser: "org.geysermc.geyser:api:$geyser_version",
+        floodgate: "org.geysermc.floodgate:api:$floodgate_version",
+        flectonepulse: "net.flectone.pulse:api:$flectonepulse_version",
+        luckperms: "net.luckperms:api:$luckperms_version",
+        skinsrestorer: "net.skinsrestorer:skinsrestorer-api:$skinsrestorer_version"
+    ]
+]

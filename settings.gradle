@@ -1,0 +1,14 @@
+pluginManagement {
+    repositories {
+        gradlePluginPortal()
+        mavenCentral()
+
+        maven { url = papermc_repository }
+    }
+}
+
+rootProject.name = project_name
+
+include ":api"
+include ":common"
+include ":minecraft-bukkit"

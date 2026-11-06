@@ -1,0 +1,190 @@
+plugins {
+    id "java"
+    id "java-library"
+    id "com.gradleup.shadow" version "$gradle_shadow_version"
+    id "com.github.gmazzo.buildconfig" version "$buildconfig_version"
+    id "xyz.wagyourtail.jvmdowngrader" version "$jmvdowngrader_version"
+    id "io.freefair.lombok" version "$lombok_plugin_version"
+}
+
+apply from: "$rootDir/libraries.gradle"
+
+repositories {
+    mavenCentral()
+}
+
+group = project_group
+description = project_description
+
+subprojects {
+    apply plugin: "java"
+    apply plugin: "java-library"
+    apply plugin: "com.gradleup.shadow"
+    apply plugin: "com.github.gmazzo.buildconfig"
+    apply plugin: "xyz.wagyourtail.jvmdowngrader"
+    apply plugin: "io.freefair.lombok"
+    apply from: "$rootDir/libraries.gradle"
+
+    java {
+        withSourcesJar()
+        withJavadocJar()
+    }
+
+    repositories {
+        mavenCentral()
+        gradlePluginPortal()
+        google()
+
+        maven { url = maven_2_repository }
+        maven { url = sonatype_repository }
+        maven { url = papermc_repository }
+        maven { url = spigotmc_repository }
+        maven { url = jitpack_repository }
+        maven { url = extendedclip_repository }
+        maven { url = helpch_repository }
+        maven { url = viaversion_repository }
+        maven { url = opencollab_repository }
+        maven { url = codemc_repository }
+    }
+
+    dependencies {
+        compileOnly libraries.annotation.jspecify
+
+        compileOnly libraries.annotation.lombok.core
+        annotationProcessor libraries.annotation.lombok.processor
+
+        compileOnly libraries.annotation.mapstruct.core
+        annotationProcessor libraries.annotation.mapstruct.processor
+
+        implementation libraries.jackson.core
+        implementation libraries.jackson.databind
+        implementation libraries.jackson.annotations
+        implementation libraries.jackson.snakeyaml
+        implementation libraries.jackson.dataformat.yaml
+
+        implementation libraries.cloud.core
+        implementation libraries.cloud.annotations
+
+        implementation libraries.adventure.api
+        implementation libraries.adventure.key
+        implementation libraries.adventure.minimessage
+        implementation libraries.adventure.serializer.legacy
+        implementation libraries.adventure.serializer.gson
+        implementation libraries.adventure.serializer.plain
+        implementation libraries.adventure.serializer.ansi
+        implementation libraries.adventure.ansi
+        implementation libraries.adventure.logger
+
+        implementation libraries.byte_reflection.asm.core
+        implementation libraries.byte_reflection.asm.commons
+        implementation libraries.byte_reflection.byte_buddy.core
+        implementation libraries.byte_reflection.byte_buddy.agent
+
+        implementation libraries.rest.slf4j
+
+        //implementation libraries.rest.zjtime
+
+        compileOnly libraries.integration.viaversion
+        compileOnly libraries.integration.geyser
+        compileOnly libraries.integration.floodgate
+        compileOnly libraries.integration.flectonepulse
+        compileOnly libraries.integration.luckperms
+        compileOnly libraries.integration.skinsrestorer
+
+    }
+
+    tasks.withType(JavaCompile).configureEach {
+        options.encoding = "UTF-8"
+    }
+
+    tasks.withType(Javadoc).configureEach {
+        options.addStringOption("Xdoclint:none", "-quiet")
+        options.addStringOption("encoding", "UTF-8")
+        options.addStringOption("charSet", "UTF-8")
+    }
+
+    shadowJar {
+        archiveFileName = "$project_name-${getModuleName(project.name)}-${project_version}-raw.jar"
+
+        if (project.name != "minecraft-bukkit") {
+            relocate("net.kyori", "${project_path_libraries}")
+            relocate("org.slf4j", "${project_path_libraries}.slf4j")
+        }
+        else {
+            exclude "net/kyori/**"
+            exclude "org/slf4j/**"
+        }
+
+        relocate("tools.jackson", "${project_path_libraries}.jackson")
+        relocate("com.fasterxml.jackson", "${project_path_libraries}.jackson")
+        relocate("org.snakeyaml", "${project_path_libraries}.snakeyaml")
+        relocate("com.zfettostudios.zjanots", "${project_path_libraries}.zjanots")
+        relocate("com.zfettostudios.zjtime", "${project_path_libraries}.zjtime")
+        relocate("org.objectweb.asm", "${project_path_libraries}.asm")
+        relocate("me.lucko.jarrelocator", "${project_path_libraries}.jarrelocator")
+        relocate("net.bytebuddy", "${project_path_libraries}.bytebuddy")
+        relocate("win32-x86", "${project_path_libraries}.bytebuddy.win32-x86")
+        relocate("win32-x86-64", "${project_path_libraries}.bytebuddy.win32-x86-64")
+        relocate("win32-aarch64", "${project_path_libraries}.bytebuddy.win32-aarch64")
+        relocate("org.incendo.cloud", "${project_path_libraries}.cloud")
+        relocate("io.leangen.geantyref", "${project_path_libraries}.cloud")
+        relocate("com.google.gson", "${project_path_libraries}.gson")
+        relocate("com.google.errorprone", "${project_path_libraries}.errorprone")
+
+        duplicatesStrategy = DuplicatesStrategy.EXCLUDE
+
+        manifest {
+            attributes("Multi-Release": "true")
+        }
+
+        exclude "META-INF/versions/**"
+        exclude "META-INF/*.SF"
+        exclude "META-INF/*.DSA"
+        exclude "META-INF/*.RSA"
+
+        from(rootProject.file("LICENSE")) {
+            into("/")
+        }
+
+        outputs.cacheIf { true }
+        minimize()
+        mergeServiceFiles()
+    }
+
+    downgradeJar {
+        dependsOn tasks.named("shadowJar")
+
+        inputFile = tasks.named("shadowJar").flatMap { it.archiveFile }
+        downgradeTo = JavaVersion.VERSION_21
+
+        archiveFileName = "$project_name-${getModuleName(project.name)}-${project_version}.jar"
+        destinationDirectory = rootProject.layout.buildDirectory.dir("compiled")
+    }
+
+    tasks.named("build") {
+        dependsOn tasks.named("downgradeJar")
+    }
+
+    buildConfig {
+        className("BuildConstant")
+        packageName("${project_group}.model.constant")
+        rootProject.ext.properties.findAll { key, value ->
+            !key.toString().contains(".") && !key.toString().contains("-")
+        }.each { key, value ->
+            buildConfigField("String", key.toString().toUpperCase(), "\"${value.toString()}\"")
+        }
+    }
+
+    sourceSets {
+        test {
+            java.srcDirs = []
+            resources.srcDirs = []
+        }
+    }
+}
+
+static def getModuleName(String projectName) {
+    if (projectName == "minecraft-bukkit") return "Bukkit"
+
+    return projectName
+}
