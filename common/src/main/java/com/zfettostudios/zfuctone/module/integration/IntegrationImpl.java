@@ -17,6 +17,7 @@ import com.zfettostudios.zfuctone.module.integration.geyser.GeyserModule;
 import com.zfettostudios.zfuctone.module.integration.viaversion.ViaVersionModule;
 import com.zfettostudios.zfuctone.platform.adapter.PlatformPlayerAdapter;
 import com.zfettostudios.zfuctone.platform.adapter.PlatformServerAdapter;
+import com.zfettostudios.zfuctone.platform.entity.PlatformPlayer;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.minimessage.MiniMessage;
 import net.kyori.adventure.text.minimessage.tag.resolver.TagResolver;
@@ -92,15 +93,9 @@ public abstract class IntegrationImpl implements Integration {
             return "MiniPlaceholders";
         }
 
-        @NonNull
-        public Component setPlaceholders(@NonNull String input, @NonNull TagResolver... tagResolvers) {
-            return MiniMessage.miniMessage().deserialize(
-                input,
-                TagResolver.resolver(tagResolvers),
-                audiencePlaceholders(),
-                globalPlaceholders(),
-                audienceGlobalPlaceholders()
-            );
+        @Override
+        public @NonNull Component setPlaceholders(@NonNull PlatformPlayer sender, @NonNull String input, @NonNull TagResolver... tagResolvers) {
+            return MiniMessage.miniMessage().deserialize(input, sender, tagResolvers);
         }
     }
 

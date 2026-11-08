@@ -6,6 +6,9 @@ import lombok.experimental.Accessors;
 import com.zfettostudios.zfuctone.model.config.IntegrationConfig;
 import com.zfettostudios.zfuctone.module.integration.miniplaceholders.BukkitMiniPlaceholdersModule;
 import com.zfettostudios.zfuctone.module.integration.placeholderapi.BukkitPlaceholderAPIModule;
+import com.zfettostudios.zfuctone.platform.entity.PlatformPlayer;
+import net.kyori.adventure.text.Component;
+import net.kyori.adventure.text.minimessage.MiniMessage;
 import net.kyori.adventure.text.minimessage.tag.resolver.TagResolver;
 import org.bukkit.entity.Player;
 import org.jspecify.annotations.NonNull;
@@ -49,9 +52,9 @@ public class BukkitIntegration extends IntegrationImpl {
         }
 
         @Override
-        public @NonNull String setPlaceholders(@Nullable Object sender, @NonNull String input) {
+        public @NonNull String setPlaceholders(@Nullable PlatformPlayer sender, @NonNull String input) {
             if (!isEnable()) return input;
-            if (!(sender instanceof Player player)) return BukkitPlaceholderAPIModule.setPlaceholders(null, input);
+            if (sender == null || !(sender.getRawPlayer() instanceof Player player)) return BukkitPlaceholderAPIModule.setPlaceholders(null, input);
 
             return BukkitPlaceholderAPIModule.setPlaceholders(player, input);
         }

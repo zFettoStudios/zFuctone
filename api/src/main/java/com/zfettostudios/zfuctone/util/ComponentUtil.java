@@ -3,8 +3,8 @@ package com.zfettostudios.zfuctone.util;
 import lombok.experimental.UtilityClass;
 
 import com.zfettostudios.zfuctone.ZFuctoneAPI;
-import com.zfettostudios.zfuctone.model.entity.ZEntity;
 import com.zfettostudios.zfuctone.module.integration.Integration;
+import com.zfettostudios.zfuctone.platform.entity.PlatformPlayer;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.minimessage.MiniMessage;
 
@@ -12,7 +12,7 @@ import net.kyori.adventure.text.minimessage.MiniMessage;
 public class ComponentUtil {
     private static final Integration integration = ZFuctoneAPI.get(Integration.class);
 
-    public static Component build(ZEntity sender, String text) {
+    public static Component build(PlatformPlayer sender, String text) {
         return MiniMessage.miniMessage().deserialize(
             integration.placeholderAPI().setPlaceholders(sender, text),
             integration.miniPlaceholders().audienceGlobalPlaceholders(),

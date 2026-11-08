@@ -274,39 +274,6 @@ public class BukkitPlayerAdapter implements PlatformPlayerAdapter {
         return platformPlayer.getPing();
     }
 
-
-    @Override
-    public @NonNull String getWorldName(@NonNull UUID uuid) {
-        Player platformPlayer = Bukkit.getPlayer(uuid);
-        if (platformPlayer == null) return "";
-
-        return platformPlayer.getWorld().getName();
-    }
-
-    @Override
-    public @NonNull String getWorldName(@NonNull Object platformPlayer) {
-        Player player = getPlayerFrom(platformPlayer);
-        if (player != null) return player.getWorld().getName();
-
-        return "";
-    }
-
-    @Override
-    public @NonNull String getWorldEnvironment(@NonNull UUID uuid) {
-        Player platformPlayer = Bukkit.getPlayer(uuid);
-        if (platformPlayer == null) return "";
-
-        return platformPlayer.getWorld().getEnvironment().name();
-    }
-
-    @Override
-    public @NonNull String getWorldEnvironment(@NonNull Object platformPlayer) {
-        Player player = getPlayerFrom(platformPlayer);
-        if (player != null) return player.getWorld().getEnvironment().name();
-
-        return "";
-    }
-
     @Override
     public @NonNull String getLocale(@NonNull UUID uuid) {
         Player platformPlayer = Bukkit.getPlayer(uuid);
@@ -344,28 +311,6 @@ public class BukkitPlayerAdapter implements PlatformPlayerAdapter {
 
         return "";
     }
-
-    @Override
-    public @NonNull String getEntityTranslationKey(@Nullable Object platformPlayer) {
-        if (platformPlayer instanceof Entity entity) return entity.getType().translationKey();
-
-        return "";
-    }
-
-    @Override
-    public boolean isConsole(@NonNull Object platformPlayer) {
-        return switch (platformPlayer) {
-            case ProxiedCommandSender proxiedCommandSender -> isConsoleSender(proxiedCommandSender.getCallee());
-            case CommandSender commandSender -> isConsoleSender(commandSender);
-            default -> false;
-        };
-    }
-    private boolean isConsoleSender(CommandSender commandSender) {
-        return commandSender instanceof ConsoleCommandSender
-            || commandSender instanceof RemoteConsoleCommandSender
-            || commandSender instanceof BlockCommandSender;
-    }
-
 
     @Override
     public boolean isOperator(@NonNull UUID uuid) {

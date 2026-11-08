@@ -1,5 +1,8 @@
 package com.zfettostudios.zfuctone;
 
+import lombok.Getter;
+import lombok.experimental.Accessors;
+
 import com.zfettostudios.zfuctone.exception.InvalidTypeException;
 import com.zfettostudios.zfuctone.module.integration.BukkitIntegration;
 import com.zfettostudios.zfuctone.module.integration.Integration;
@@ -13,53 +16,19 @@ import com.zfettostudios.zfuctone.platform.registry.BukkitCommandRegistry;
 import com.zfettostudios.zfuctone.platform.registry.CommandRegistry;
 import net.kyori.adventure.text.logger.slf4j.ComponentLogger;
 import org.bukkit.plugin.java.JavaPlugin;
-import org.bukkit.scheduler.BukkitRunnable;
 import org.jspecify.annotations.NonNull;
 
 import java.nio.file.Path;
 
+@Getter
+@Accessors(fluent = true)
 public class BukkitZFuctone extends ZFuctoneImpl {
     JavaPlugin javaPlugin;
-    PlatformPlayerAdapter playerAdapter;
-    PlatformServerAdapter serverAdapter;
-    PlatformEntityAdapter entityAdapter;
-    Integration integration;
-    CommandRegistry commandRegistry;
 
     public BukkitZFuctone(JavaPlugin javaPlugin) {
         this.javaPlugin = javaPlugin;
 
         super();
-
-        serverAdapter = new BukkitServerAdapter(javaPlugin);
-        playerAdapter = new BukkitPlayerAdapter();
-        entityAdapter = new BukkitEntityAdapter();
-        integration = new BukkitIntegration();
-        commandRegistry = new BukkitCommandRegistry(javaPlugin);
-    }
-
-    @Override
-    protected void platformEnable() {
-        new BukkitRunnable() {
-            @Override
-            public void run() {
-                scheduler.onTick();
-            }
-        }.runTaskTimer(javaPlugin, 0L, 1L);
-
-        integration.enable();
-    }
-
-    @Override
-    protected void platformDisable() {
-        integration.disable();
-    }
-
-    @Override
-    protected ZFuctone platformReload() {
-        platformDisable();
-        platformEnable();
-        return this;
     }
 
     @Override
@@ -70,14 +39,8 @@ public class BukkitZFuctone extends ZFuctoneImpl {
     }
 
     @Override
-    protected <T> T platformGet(Class<T> type) {
-        if (type.isInstance(playerAdapter)) return type.cast(playerAdapter);
-        else if (type.isInstance(serverAdapter)) return type.cast(serverAdapter);
-        else if (type.isInstance(entityAdapter)) return type.cast(entityAdapter);
-        else if (type.isInstance(integration)) return type.cast(integration);
-        else if (type.isInstance(commandRegistry)) return type.cast(commandRegistry);
-
-        throw new InvalidTypeException(type);
+    public @NonNull Object getLoader() {
+        return javaPlugin;
     }
 
     @Override
@@ -88,5 +51,30 @@ public class BukkitZFuctone extends ZFuctoneImpl {
     @Override
     protected ComponentLogger getComponentLogger() {
         return javaPlugin.getComponentLogger();
+    }
+
+    @Override
+    protected Integration createIntegration() {
+        return new BukkitIntegration();
+    }
+
+    @Override
+    protected CommandRegistry createCommandRegistry() {
+        return new BukkitCommandRegistry(javaPlugin);
+    }
+
+    @Override
+    protected PlatformPlayerAdapter createPlayerAdapter() {
+        return new BukkitPlayerAdapter();
+    }
+
+    @Override
+    protected PlatformEntityAdapter createEntityAdapter() {
+        return new BukkitEntityAdapter();
+    }
+
+    @Override
+    protected PlatformServerAdapter createServerAdapter() {
+        return new BukkitServerAdapter(javaPlugin);
     }
 }

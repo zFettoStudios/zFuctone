@@ -10,8 +10,7 @@ public class ZFuctoneAPI {
         return instance = zfuctone;
     }
 
-    public static <T> T get(Class<T> type) {
-        if (type.isInstance(instance)) return type.cast(instance);
-        return instance.get(type);
+    public static ZFuctone get() {
+        return instance;
     }
 }

@@ -1,12 +1,13 @@
 package com.zfettostudios.zfuctone.platform.entity;
 
 import com.zfettostudios.zfuctone.model.constant.player.PlayerEdition;
+import net.kyori.adventure.audience.Audience;
 import net.kyori.adventure.text.Component;
 import org.jspecify.annotations.NonNull;
 
 import java.util.UUID;
 
-public interface PlatformPlayer {
+public interface PlatformPlayer extends Audience {
     <T> T getRawPlayer(@NonNull Class<T> type);
     Object getRawPlayer();
 

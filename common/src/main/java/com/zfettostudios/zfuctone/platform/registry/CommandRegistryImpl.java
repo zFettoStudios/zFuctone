@@ -1,6 +1,6 @@
 package com.zfettostudios.zfuctone.platform.registry;
 
-import com.zfettostudios.zfuctone.model.entity.ZPlayer;
+import com.zfettostudios.zfuctone.platform.entity.PlatformPlayer;
 import org.incendo.cloud.Command;
 import org.incendo.cloud.CommandManager;
 import org.incendo.cloud.setting.ManagerSetting;
@@ -15,8 +15,8 @@ public abstract class CommandRegistryImpl implements CommandRegistry {
     }
 
     @Override
-    public CommandRegistry register(Function<CommandManager<ZPlayer>, Command.Builder<ZPlayer>> builder) {
-        Command<ZPlayer> command = builder.apply(platformCommandManager()).build();
+    public CommandRegistry register(Function<CommandManager<PlatformPlayer>, Command.Builder<PlatformPlayer>> builder) {
+        Command<PlatformPlayer> command = builder.apply(platformCommandManager()).build();
 
         String commandName = command.rootComponent().name();
 
@@ -36,5 +36,5 @@ public abstract class CommandRegistryImpl implements CommandRegistry {
         return this;
     }
 
-    protected abstract CommandManager<ZPlayer> platformCommandManager();
+    protected abstract CommandManager<PlatformPlayer> platformCommandManager();
 }

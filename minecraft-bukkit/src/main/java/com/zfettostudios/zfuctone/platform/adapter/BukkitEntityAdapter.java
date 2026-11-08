@@ -10,18 +10,6 @@ import java.util.UUID;
 
 public class BukkitEntityAdapter implements PlatformEntityAdapter {
     @Override
-    public @Nullable <T> Class<T> getEntityClass(@NonNull Class<T> target) {
-        if (target.isInstance(Entity.class)) target.cast(Entity.class);
-
-        throw new InvalidTypeException(target);
-    }
-
-    @Override
-    public @Nullable Object getEntityClass() {
-        return Entity.class;
-    }
-
-    @Override
     public @Nullable <T> T getPlatformEntity(@NonNull UUID uuid, @NonNull Class<T> target) {
         return target.cast(Bukkit.getEntity(uuid));
     }

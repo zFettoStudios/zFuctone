@@ -1,6 +1,8 @@
 package com.zfettostudios.zfuctone;
 
 import lombok.AccessLevel;
+import lombok.Getter;
+import lombok.experimental.Accessors;
 import lombok.experimental.FieldDefaults;
 import lombok.experimental.NonFinal;
 
@@ -13,6 +15,12 @@ import com.zfettostudios.zfuctone.logging.ZLoggerImpl;
 import com.zfettostudios.zfuctone.model.constant.PlatformType;
 import com.zfettostudios.zfuctone.module.command.zfuctone.ZFuctoneCommandModule;
 import com.zfettostudios.zfuctone.module.command.zfuctone.ZFuctoneCommandModuleImpl;
+import com.zfettostudios.zfuctone.module.integration.Integration;
+import com.zfettostudios.zfuctone.platform.adapter.PlatformEntityAdapter;
+import com.zfettostudios.zfuctone.platform.adapter.PlatformPlayerAdapter;
+import com.zfettostudios.zfuctone.platform.adapter.PlatformServerAdapter;
+import com.zfettostudios.zfuctone.platform.registry.CommandRegistry;
+import com.zfettostudios.zfuctone.platform.registry.CommandRegistryImpl;
 import com.zfettostudios.zfuctone.scheduler.TaskScheduler;
 import com.zfettostudios.zfuctone.scheduler.TaskSchedulerImpl;
 import com.zfettostudios.zfuctone.service.PlatformPlayerService;
@@ -21,13 +29,21 @@ import net.kyori.adventure.text.logger.slf4j.ComponentLogger;
 
 import java.nio.file.Path;
 
+@Getter
+@Accessors(fluent = true)
 @FieldDefaults(level = AccessLevel.PROTECTED)
 public abstract class ZFuctoneImpl implements ZFuctone {
+    @Accessors(fluent = false)
     PlatformType platformType = detectPlatformType();
     FileFacade fileFacade;
-    TaskScheduler scheduler;
+    TaskScheduler taskScheduler;
     ZLogger logger;
     PlatformPlayerService playerService;
+    PlatformPlayerAdapter playerAdapter;
+    PlatformServerAdapter serverAdapter;
+    PlatformEntityAdapter entityAdapter;
+    Integration integration;
+    CommandRegistry commandRegistry;
     MessageDispatcher messageDispatcher;
 
     @NonFinal ZFuctoneCommandModule zfuctoneCommand;
@@ -35,30 +51,24 @@ public abstract class ZFuctoneImpl implements ZFuctone {
     public ZFuctoneImpl() {
         ZFuctoneAPI.setInstance(this);
 
+        playerAdapter = createPlayerAdapter();
+        serverAdapter = createServerAdapter();
+        entityAdapter = createEntityAdapter();
+
         fileFacade = new FileFacadeImpl(getDataPath());
         logger = new ZLoggerImpl(getComponentLogger());
-        scheduler = new TaskSchedulerImpl(((FileFacadeImpl) fileFacade).executor());
+        taskScheduler = new TaskSchedulerImpl(((FileFacadeImpl) fileFacade).executor());
+
+        integration = createIntegration();
         playerService = new PlatformPlayerServiceImpl();
         messageDispatcher = new MessageDispatcherImpl();
-    }
-
-    @Override
-    public <T> T get(Class<T> type) {
-        if (type.isInstance(platformType)) return type.cast(platformType);
-        else if (type.isInstance(fileFacade)) return type.cast(fileFacade);
-        else if (type.isInstance(scheduler)) return type.cast(scheduler);
-        else if (type.isInstance(logger)) return type.cast(logger);
-        else if (type.isInstance(messageDispatcher)) return type.cast(messageDispatcher);
-
-        return platformGet(type);
+        commandRegistry = createCommandRegistry();
     }
 
     @Override
     public ZFuctone enable() {
         fileFacade.enable();
-        scheduler.start();
-
-        platformEnable();
+        taskScheduler.start();
 
         zfuctoneCommand = new ZFuctoneCommandModuleImpl();
         zfuctoneCommand.register();
@@ -73,8 +83,7 @@ public abstract class ZFuctoneImpl implements ZFuctone {
 
         zfuctoneCommand.unregister();
 
-        platformDisable();
-        scheduler.shutdown();
+        taskScheduler.shutdown();
         fileFacade.disable();
         return this;
     }
@@ -82,13 +91,9 @@ public abstract class ZFuctoneImpl implements ZFuctone {
     @Override
     public ZFuctone reload() {
         fileFacade.updateFiles();
-        scheduler.reload();
-        return platformReload();
+        taskScheduler.reload();
+        return this;
     }
-
-    protected abstract void platformEnable();
-    protected abstract void platformDisable();
-    protected abstract ZFuctone platformReload();
 
     protected PlatformType detectPlatformType() {
         try {
@@ -104,9 +109,13 @@ public abstract class ZFuctoneImpl implements ZFuctone {
         }
     }
 
-    protected abstract <T> T platformGet(Class<T> type);
-
     protected abstract Path getDataPath();
 
     protected abstract ComponentLogger getComponentLogger();
+
+    protected abstract Integration createIntegration();
+    protected abstract CommandRegistry createCommandRegistry();
+    protected abstract PlatformPlayerAdapter createPlayerAdapter();
+    protected abstract PlatformEntityAdapter createEntityAdapter();
+    protected abstract PlatformServerAdapter createServerAdapter();
 }

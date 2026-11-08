@@ -8,15 +8,12 @@ import com.zfettostudios.zfuctone.logging.ZLogger;
 import com.zfettostudios.zfuctone.model.config.IntegrationConfig;
 import com.zfettostudios.zfuctone.model.config.PermissionConfig;
 import com.zfettostudios.zfuctone.model.constant.BuildConstant;
-import com.zfettostudios.zfuctone.model.constant.ValueConstant;
 import com.zfettostudios.zfuctone.model.constant.player.PlayerEdition;
-import com.zfettostudios.zfuctone.model.entity.ZPlayer;
-import com.zfettostudios.zfuctone.model.entity.ZPlayerImpl;
 import com.zfettostudios.zfuctone.module.integration.IntegrationHook;
+import com.zfettostudios.zfuctone.platform.entity.PlatformPlayer;
 import com.zfettostudios.zfuctone.util.StringUtil;
 import me.clip.placeholderapi.PlaceholderAPI;
 import me.clip.placeholderapi.expansion.PlaceholderExpansion;
-import net.kyori.adventure.text.minimessage.MiniMessage;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
@@ -94,14 +91,10 @@ public class BukkitPlaceholderAPIIntegration extends PlaceholderExpansion implem
         PermissionConfig.Placeholder config = ZFuctoneAPI.get(FileFacade.class).permission().placeholder();
 
         if (player != null) {
-            ZPlayer zplayer = ZPlayerImpl.builder()
-                .isConsole(false)
-                .isOnline(true)
-                .ip("")
+            PlatformPlayer platformPlayer = PlatformPlayer.builder()
+                .platformPlayer(player)
                 .uuid(player.getUniqueId())
-                .name(player.getName())
-                .type("Player")
-                .displayName(MiniMessage.miniMessage().serialize(player.displayName())).build();
+                .build();
 
             switch (params) {
                 case "player_locale" -> {
@@ -110,20 +103,20 @@ public class BukkitPlaceholderAPIIntegration extends PlaceholderExpansion implem
                 }
                 case "player_version" -> {
                     if (!player.hasPermission(config.playerVersion().use().name())) return null;
-                    return zplayer.getVersion();
+                    return platformPlayer.getVersion();
                 }
                 case "player_edition" -> {
                     if (!player.hasPermission(config.playerEdition().use().name())) return null;
-                    PlayerEdition edition = zplayer.getEdition();
-                    return edition != null ? edition.name() : ValueConstant.UNKNOWN;
+                    PlayerEdition edition = platformPlayer.getEdition();
+                    return edition.name();
                 }
                 case "player_display_version" -> {
                     if (!player.hasPermission(config.playerDisplayVersion().use().name())) return null;
-                    return zplayer.getDisplayVersion();
+                    return platformPlayer.getDisplayVersion();
                 }
                 case "player_display_edition" -> {
                     if (!player.hasPermission(config.playerDisplayEdition().use().name())) return null;
-                    return zplayer.getDisplayEdition();
+                    return platformPlayer.getDisplayEdition();
                 }
             }
         }

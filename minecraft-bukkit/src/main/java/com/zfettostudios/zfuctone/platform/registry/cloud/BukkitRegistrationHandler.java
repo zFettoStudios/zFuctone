@@ -2,7 +2,7 @@ package com.zfettostudios.zfuctone.platform.registry.cloud;
 
 import lombok.RequiredArgsConstructor;
 
-import com.zfettostudios.zfuctone.model.entity.ZPlayer;
+import com.zfettostudios.zfuctone.platform.entity.PlatformPlayer;
 import org.bukkit.Bukkit;
 import org.bukkit.command.CommandMap;
 import org.bukkit.command.CommandSender;
@@ -32,8 +32,8 @@ public class BukkitRegistrationHandler extends PlatformRegistrationHandler<Comma
     Map<String, org.bukkit.command.Command> knownCommands = commandMap.getKnownCommands();
 
     @Override
-    public boolean registerCommand(@NonNull Command<ZPlayer> command) {
-        CommandComponent<ZPlayer> component = command.rootComponent();
+    public boolean registerCommand(@NonNull Command<PlatformPlayer> command) {
+        CommandComponent<PlatformPlayer> component = command.rootComponent();
         String label = component.name();
         if (registeredCommands.containsKey(label)) return false;
 
@@ -53,7 +53,7 @@ public class BukkitRegistrationHandler extends PlatformRegistrationHandler<Comma
     }
 
     @Override
-    public void unregisterRootCommand(@NonNull CommandComponent<ZPlayer> rootCommand) {
+    public void unregisterRootCommand(@NonNull CommandComponent<PlatformPlayer> rootCommand) {
         BukkitCommand bukkitCommand = registeredCommands.remove(rootCommand.name());
         if (bukkitCommand == null) return;
 
@@ -74,9 +74,9 @@ public class BukkitRegistrationHandler extends PlatformRegistrationHandler<Comma
     }
 
     private class BukkitCommand extends org.bukkit.command.Command implements PluginIdentifiableCommand {
-        private final Command<ZPlayer> command;
+        private final Command<PlatformPlayer> command;
 
-        private BukkitCommand(String label, List<String> aliases, Command<ZPlayer> command) {
+        private BukkitCommand(String label, List<String> aliases, Command<PlatformPlayer> command) {
             super(label, command.commandDescription().description().textDescription(), "", aliases);
 
             this.command = command;
@@ -84,7 +84,7 @@ public class BukkitRegistrationHandler extends PlatformRegistrationHandler<Comma
 
         @Override
         public boolean execute(@NonNull CommandSender sender, @NonNull String commandLabel, @NonNull String @NonNull [] args) {
-            ZPlayer player = manager.senderMapper().map(sender);
+            PlatformPlayer player = manager.senderMapper().map(sender);
 
             manager.commandExecutor().executeCommand(player, getInput(args));
             return true;
@@ -92,9 +92,9 @@ public class BukkitRegistrationHandler extends PlatformRegistrationHandler<Comma
 
         @Override
         public @NonNull List<String> tabComplete(@NonNull CommandSender sender, @NonNull String alias, @NonNull String @NonNull [] args) {
-            ZPlayer player = manager.senderMapper().map(sender);
+            PlatformPlayer player = manager.senderMapper().map(sender);
 
-            Suggestions<ZPlayer, ? extends Suggestion> suggestions = manager.suggestionFactory().suggestImmediately(player, getInput(args));
+            Suggestions<PlatformPlayer, ? extends Suggestion> suggestions = manager.suggestionFactory().suggestImmediately(player, getInput(args));
             return suggestions.list().stream()
                 .map(suggestion -> StringUtils.trimBeforeLastSpace(suggestion.suggestion(), suggestions.commandInput()))
                 .filter(Objects::nonNull)
@@ -105,7 +105,7 @@ public class BukkitRegistrationHandler extends PlatformRegistrationHandler<Comma
         public boolean testPermissionSilent(@NonNull CommandSender target) {
             if (!isRegistered()) return false;
 
-            ZPlayer player = manager.senderMapper().map(target);
+            PlatformPlayer player = manager.senderMapper().map(target);
             return manager.testPermission(player, command.commandPermission()).allowed();
         }
 

@@ -9,8 +9,8 @@ import com.zfettostudios.zfuctone.model.config.CommandConfig;
 import com.zfettostudios.zfuctone.model.config.localization.Localization;
 import com.zfettostudios.zfuctone.model.config.PermissionConfig;
 import com.zfettostudios.zfuctone.model.constant.LocalizationType;
-import com.zfettostudios.zfuctone.model.entity.ZPlayer;
 import com.zfettostudios.zfuctone.platform.adapter.PlatformPlayerAdapter;
+import com.zfettostudios.zfuctone.platform.entity.PlatformPlayer;
 import com.zfettostudios.zfuctone.platform.registry.CommandRegistry;
 import com.zfettostudios.zfuctone.util.ComponentUtil;
 import org.incendo.cloud.Command;
@@ -26,7 +26,7 @@ public class ZFuctoneCommandModuleImpl implements ZFuctoneCommandModule {
     PermissionConfig.Command.ZFuctone permissionConfig = ZFuctoneAPI.get(FileFacade.class).permission().command().zfuctone();
 
     @Override
-    public ZFuctoneCommandModule execute(ZPlayer player, CommandContext<ZPlayer> commandContext) {
+    public ZFuctoneCommandModule execute(PlatformPlayer player, CommandContext<PlatformPlayer> commandContext) {
         return this;
     }
 
@@ -35,7 +35,7 @@ public class ZFuctoneCommandModuleImpl implements ZFuctoneCommandModule {
         if (commandConfig.aliases().isEmpty()) return this;
 
         commandRegistry.register(manager -> {
-            Command.Builder<ZPlayer> builder = manager.commandBuilder(commandConfig.aliases().getFirst(), commandConfig.aliases().toArray(new String[0]))
+            Command.Builder<PlatformPlayer> builder = manager.commandBuilder(commandConfig.aliases().getFirst(), commandConfig.aliases().toArray(new String[0]))
                 .permission(permissionConfig.name())
                 .handler(this::handlerReload);
 
@@ -48,12 +48,9 @@ public class ZFuctoneCommandModuleImpl implements ZFuctoneCommandModule {
         return this;
     }
 
-    private void handlerReload(CommandContext<ZPlayer> context) {
-        ZPlayer player = context.sender();
-        Object platformPlayer = playerAdapter.getPlatformPlayer(player.uuid());
-        Localization localization;
-        if (platformPlayer != null) localization = fileFacade.localizationOrDefault(playerAdapter.getLocale(platformPlayer), LocalizationType.PLAYER);
-        else localization = fileFacade.localizationOrDefault(playerAdapter.getLocale(player.uuid()), LocalizationType.PLAYER);
+    private void handlerReload(CommandContext<PlatformPlayer> context) {
+        PlatformPlayer platformPlayer = context.sender();
+        Localization localization = fileFacade.localizationOrDefault(platformPlayer.getLocale(), LocalizationType.PLAYER);
 
         try {
             zfuctone.reload();
@@ -61,7 +58,7 @@ public class ZFuctoneCommandModuleImpl implements ZFuctoneCommandModule {
             ZFuctoneAPI.get(ZLogger.class).warn("Command execution error {}", e.getMessage());
         }
 
-        playerAdapter.dispatchMessage(player.uuid(), ComponentUtil.build(player, localization.command().zfuctone().reload()));
+        playerAdapter.dispatchMessage(platformPlayer, ComponentUtil.build(platformPlayer, localization.command().zfuctone().reload()));
     }
 
     @Override

@@ -225,7 +225,7 @@ public class TaskSchedulerImpl implements TaskScheduler {
 
     private CompletableFuture<Void> scheduleRunnable(Runnable runnable, long delay, long period, boolean async) {
         if (isDisabled()) {
-            logger.warn("Attempted to schedule task while scheduler is disabled");
+            logger.warn("Attempted to schedule task while taskScheduler is disabled");
             return CompletableFuture.completedFuture(null);
         }
 
@@ -240,7 +240,7 @@ public class TaskSchedulerImpl implements TaskScheduler {
 
     private <T> CompletableFuture<T> scheduleSupplier(Supplier<T> supplier, long delay, long period, boolean async) {
         if (isDisabled()) {
-            logger.warn("Attempted to schedule supplier while scheduler is disabled");
+            logger.warn("Attempted to schedule supplier while taskScheduler is disabled");
             return CompletableFuture.completedFuture(null);
         }
 

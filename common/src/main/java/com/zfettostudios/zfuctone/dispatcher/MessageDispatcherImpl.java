@@ -40,6 +40,7 @@ public class MessageDispatcherImpl implements MessageDispatcher {
                 futures[i] = scheduler.runSync(() ->
                     playerAdapter.dispatchMessage(recipient,
                         integration.miniPlaceholders().setPlaceholders(
+                            sender,
                             integration.placeholderAPI().setPlaceholders(sender, getMessage.apply(
                                 fileFacade.localizationOrDefault(playerAdapter.getLocale(recipient), LocalizationType.PLAYER))))));
             }
@@ -61,6 +62,7 @@ public class MessageDispatcherImpl implements MessageDispatcher {
 
             futures[0] = scheduler.runSync(() -> {
                 logger.info(integration.miniPlaceholders().setPlaceholders(
+                    sender,
                     integration.placeholderAPI().setPlaceholders(sender,
                         getMessage.apply(fileFacade.localization(LocalizationType.CONSOLE)))));
             });
@@ -71,6 +73,7 @@ public class MessageDispatcherImpl implements MessageDispatcher {
                 futures[i] = scheduler.runSync(() ->
                     playerAdapter.dispatchMessage(recipient,
                         integration.miniPlaceholders().setPlaceholders(
+                            sender,
                             integration.placeholderAPI().setPlaceholders(sender, getMessage.apply(
                                 fileFacade.localizationOrDefault(playerAdapter.getLocale(recipient), LocalizationType.PLAYER))))));
             }
