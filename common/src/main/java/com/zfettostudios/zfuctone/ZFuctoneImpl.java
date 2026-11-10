@@ -13,14 +13,15 @@ import com.zfettostudios.zfuctone.file.FileFacadeImpl;
 import com.zfettostudios.zfuctone.logging.ZLogger;
 import com.zfettostudios.zfuctone.logging.ZLoggerImpl;
 import com.zfettostudios.zfuctone.model.constant.PlatformType;
-import com.zfettostudios.zfuctone.module.command.zfuctone.ZFuctoneCommandModule;
-import com.zfettostudios.zfuctone.module.command.zfuctone.ZFuctoneCommandModuleImpl;
+import com.zfettostudios.zfuctone.module.command.CommandModuleController;
+import com.zfettostudios.zfuctone.module.command.CommandModuleControllerImpl;
 import com.zfettostudios.zfuctone.module.integration.Integration;
+import com.zfettostudios.zfuctone.module.message.MessageModuleController;
+import com.zfettostudios.zfuctone.module.message.MessageModuleControllerImpl;
 import com.zfettostudios.zfuctone.platform.adapter.PlatformEntityAdapter;
 import com.zfettostudios.zfuctone.platform.adapter.PlatformPlayerAdapter;
 import com.zfettostudios.zfuctone.platform.adapter.PlatformServerAdapter;
 import com.zfettostudios.zfuctone.platform.registry.CommandRegistry;
-import com.zfettostudios.zfuctone.platform.registry.CommandRegistryImpl;
 import com.zfettostudios.zfuctone.scheduler.TaskScheduler;
 import com.zfettostudios.zfuctone.scheduler.TaskSchedulerImpl;
 import com.zfettostudios.zfuctone.service.PlatformPlayerService;
@@ -36,8 +37,8 @@ public abstract class ZFuctoneImpl implements ZFuctone {
     @Accessors(fluent = false)
     PlatformType platformType = detectPlatformType();
     FileFacade fileFacade;
-    TaskScheduler taskScheduler;
     ZLogger logger;
+    TaskScheduler taskScheduler;
     PlatformPlayerService playerService;
     PlatformPlayerAdapter playerAdapter;
     PlatformServerAdapter serverAdapter;
@@ -45,8 +46,8 @@ public abstract class ZFuctoneImpl implements ZFuctone {
     Integration integration;
     CommandRegistry commandRegistry;
     MessageDispatcher messageDispatcher;
-
-    @NonFinal ZFuctoneCommandModule zfuctoneCommand;
+    MessageModuleController messageModuleController;
+    CommandModuleController commandModuleController;
 
     public ZFuctoneImpl() {
         ZFuctoneAPI.setInstance(this);
@@ -55,14 +56,17 @@ public abstract class ZFuctoneImpl implements ZFuctone {
         serverAdapter = createServerAdapter();
         entityAdapter = createEntityAdapter();
 
-        fileFacade = new FileFacadeImpl(getDataPath());
         logger = new ZLoggerImpl(getComponentLogger());
+        fileFacade = new FileFacadeImpl(getDataPath());
         taskScheduler = new TaskSchedulerImpl(((FileFacadeImpl) fileFacade).executor());
 
         integration = createIntegration();
         playerService = new PlatformPlayerServiceImpl();
         messageDispatcher = new MessageDispatcherImpl();
         commandRegistry = createCommandRegistry();
+
+        messageModuleController = new MessageModuleControllerImpl();
+        commandModuleController = new CommandModuleControllerImpl();
     }
 
     @Override
@@ -70,8 +74,8 @@ public abstract class ZFuctoneImpl implements ZFuctone {
         fileFacade.enable();
         taskScheduler.start();
 
-        zfuctoneCommand = new ZFuctoneCommandModuleImpl();
-        zfuctoneCommand.register();
+        messageModuleController.enable();
+        commandModuleController.enable();
 
         logger.info("Successfully launched!");
         return this;
@@ -81,7 +85,8 @@ public abstract class ZFuctoneImpl implements ZFuctone {
     public ZFuctone disable() {
         logger.info("Disabling...");
 
-        zfuctoneCommand.unregister();
+        messageModuleController.disable();
+        commandModuleController.disable();
 
         taskScheduler.shutdown();
         fileFacade.disable();

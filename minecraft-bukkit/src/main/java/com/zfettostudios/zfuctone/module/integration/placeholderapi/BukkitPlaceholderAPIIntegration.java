@@ -23,11 +23,13 @@ import org.jspecify.annotations.Nullable;
 import java.util.List;
 
 public class BukkitPlaceholderAPIIntegration extends PlaceholderExpansion implements IntegrationHook<BukkitPlaceholderAPIIntegration> {
-    private final static IntegrationConfig.PlaceholderAPI config = ZFuctoneAPI.get(FileFacade.class).integration().placeholderapi();
+    private IntegrationConfig.PlaceholderAPI config() {
+        return ZFuctoneAPI.get().fileFacade().integration().placeholderapi();
+    }
 
     @Override
     public @NotNull String getIdentifier() {
-        return config.identifier();
+        return config().identifier();
     }
 
     @Override
@@ -83,12 +85,12 @@ public class BukkitPlaceholderAPIIntegration extends PlaceholderExpansion implem
         Player player = null;
         if (offlinePlayer.isOnline()) player = offlinePlayer.getPlayer();
 
-        if (config.processNestedPlaceholders()) {
+        if (config().processNestedPlaceholders()) {
             if (player != null) params = PlaceholderAPI.setBracketPlaceholders(player, params);
             else params = PlaceholderAPI.setBracketPlaceholders(offlinePlayer, params);
         }
 
-        PermissionConfig.Placeholder config = ZFuctoneAPI.get(FileFacade.class).permission().placeholder();
+        PermissionConfig.Placeholder config = ZFuctoneAPI.get().fileFacade().permission().placeholder();
 
         if (player != null) {
             PlatformPlayer platformPlayer = PlatformPlayer.builder()
@@ -141,9 +143,9 @@ public class BukkitPlaceholderAPIIntegration extends PlaceholderExpansion implem
             case "project_reload" -> {
                 if (!(player != null && player.hasPermission(config.projectReload().use().name()))) yield null;
                 try {
-                    ZFuctoneAPI.get(ZFuctone.class).reload();
+                    ZFuctoneAPI.get().reload();
                 } catch (ReloadException e) {
-                    ZFuctoneAPI.get(ZLogger.class).warn("Failed to reload ZFuctone \"{}\"", e.getMessage());
+                    ZFuctoneAPI.get().logger().warn("Failed to reload ZFuctone \"{}\"", e.getMessage());
                 }
                 yield "completed";
             }
@@ -152,6 +154,6 @@ public class BukkitPlaceholderAPIIntegration extends PlaceholderExpansion implem
     }
 
     private String createPlaceholder(String name) {
-        return "%" + config.identifier() + "_" + name + "%";
+        return "%" + config().identifier() + "_" + name + "%";
     }
 }

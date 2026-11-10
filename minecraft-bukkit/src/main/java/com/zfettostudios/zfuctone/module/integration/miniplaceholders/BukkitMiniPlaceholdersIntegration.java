@@ -1,7 +1,6 @@
 package com.zfettostudios.zfuctone.module.integration.miniplaceholders;
 
 import com.zfettostudios.zfuctone.ZFuctoneAPI;
-import com.zfettostudios.zfuctone.file.FileFacade;
 import com.zfettostudios.zfuctone.model.config.IntegrationConfig;
 import com.zfettostudios.zfuctone.model.constant.BuildConstant;
 import com.zfettostudios.zfuctone.module.integration.IntegrationHook;
@@ -11,7 +10,9 @@ import net.kyori.adventure.identity.Identity;
 import net.kyori.adventure.text.minimessage.tag.Tag;
 
 public class BukkitMiniPlaceholdersIntegration implements IntegrationHook<BukkitMiniPlaceholdersIntegration> {
-    private final static IntegrationConfig.MiniPlaceholders config = ZFuctoneAPI.get(FileFacade.class).integration().miniplaceholders();
+    private IntegrationConfig.MiniPlaceholders config() {
+        return ZFuctoneAPI.get().fileFacade().integration().miniplaceholders();
+    }
 
     private final Expansion expansion = createExpansion();
 
@@ -28,7 +29,7 @@ public class BukkitMiniPlaceholdersIntegration implements IntegrationHook<Bukkit
     }
 
     private Expansion createExpansion() {
-        return Expansion.builder(config.identifier())
+        return Expansion.builder(config().identifier())
             .author(BuildConstant.PROJECT_NAME)
             .version(BuildConstant.PROJECT_VERSION)
             .audiencePlaceholder("project_authors", (_, _, _) -> Tag.preProcessParsed(BuildConstant.PROJECT_AUTHORS))

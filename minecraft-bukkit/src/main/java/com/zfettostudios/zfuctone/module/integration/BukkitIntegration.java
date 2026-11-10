@@ -3,12 +3,9 @@ package com.zfettostudios.zfuctone.module.integration;
 import lombok.Getter;
 import lombok.experimental.Accessors;
 
-import com.zfettostudios.zfuctone.model.config.IntegrationConfig;
 import com.zfettostudios.zfuctone.module.integration.miniplaceholders.BukkitMiniPlaceholdersModule;
 import com.zfettostudios.zfuctone.module.integration.placeholderapi.BukkitPlaceholderAPIModule;
 import com.zfettostudios.zfuctone.platform.entity.PlatformPlayer;
-import net.kyori.adventure.text.Component;
-import net.kyori.adventure.text.minimessage.MiniMessage;
 import net.kyori.adventure.text.minimessage.tag.resolver.TagResolver;
 import org.bukkit.entity.Player;
 import org.jspecify.annotations.NonNull;
@@ -17,8 +14,8 @@ import org.jspecify.annotations.Nullable;
 @Getter
 @Accessors(fluent = true)
 public class BukkitIntegration extends IntegrationImpl {
-    PlaceholderAPI placeholderAPI = new BukkitPlaceholderAPI(config.placeholderapi());
-    MiniPlaceholders miniPlaceholders = new BukkitMiniPlaceholders(config.miniplaceholders());
+    PlaceholderAPI placeholderAPI = new BukkitPlaceholderAPI();
+    MiniPlaceholders miniPlaceholders = new BukkitMiniPlaceholders();
 
     @Override
     protected Integration platformEnable() {
@@ -35,10 +32,6 @@ public class BukkitIntegration extends IntegrationImpl {
     }
 
     public static class BukkitPlaceholderAPI extends PlaceholderAPIImpl {
-        public BukkitPlaceholderAPI(IntegrationConfig.PlaceholderAPI config) {
-            super(config);
-        }
-
         @Override
         public PlaceholderAPI enable() {
             if (isEnable()) BukkitPlaceholderAPIModule.enable();
@@ -61,10 +54,6 @@ public class BukkitIntegration extends IntegrationImpl {
     }
 
     public static class BukkitMiniPlaceholders extends MiniPlaceholdersImpl {
-        public BukkitMiniPlaceholders(IntegrationConfig.MiniPlaceholders config) {
-            super(config);
-        }
-
         @Override
         public MiniPlaceholders enable() {
             if (isEnable()) BukkitMiniPlaceholdersModule.enable();

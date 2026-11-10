@@ -8,6 +8,10 @@ import tools.jackson.databind.DeserializationContext;
 import tools.jackson.databind.ValueDeserializer;
 
 public class BooleanDeserializer extends ValueDeserializer<Boolean> {
+    private ZLogger logger() {
+        return ZFuctoneAPI.get().logger();
+    }
+
     @Override
     public Boolean deserialize(JsonParser parser, DeserializationContext context) {
         JsonToken token = parser.currentToken();
@@ -26,13 +30,13 @@ public class BooleanDeserializer extends ValueDeserializer<Boolean> {
                 case "true", "yes", "y", "on", "enable", "enabled" -> Boolean.TRUE;
                 case "false", "no", "n", "off", "disable", "disabled" -> Boolean.FALSE;
                 default -> {
-                    ZFuctoneAPI.get(ZLogger.class).warn("Value \"{}\" is not boolean", value);
+                    logger().warn("Value \"{}\" is not boolean", value);
                     yield null;
                 }
             };
         }
 
-        ZFuctoneAPI.get(ZLogger.class).warn("Token \"{}\" is not boolean", token);
+        logger().warn("Token \"{}\" is not boolean", token);
         return null;
     }
 

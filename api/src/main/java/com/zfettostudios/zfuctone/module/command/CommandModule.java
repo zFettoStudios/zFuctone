@@ -8,4 +8,6 @@ public interface CommandModule<T> {
 
     T register();
     T unregister();
+
+    T get();
 }

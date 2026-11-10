@@ -10,8 +10,11 @@ import org.bukkit.entity.Player;
 
 @UtilityClass
 public class BukkitPlaceholderAPIModule {
-    private static final IntegrationConfig.PlaceholderAPI config = ZFuctoneAPI.get(FileFacade.class).integration().placeholderapi();
     private static final BukkitPlaceholderAPIIntegration integration = new BukkitPlaceholderAPIIntegration();
+
+    private static IntegrationConfig.PlaceholderAPI config() {
+        return ZFuctoneAPI.get().fileFacade().integration().placeholderapi();
+    }
 
     public static void enable() {
         integration.hook();
@@ -26,7 +29,7 @@ public class BukkitPlaceholderAPIModule {
     }
 
     private static String setNestedPlaceholders(Player player, String message) {
-        if (!config.processNestedPlaceholders()) return message;
+        if (!config().processNestedPlaceholders()) return message;
         return PlaceholderAPI.setBracketPlaceholders(player, message);
     }
 }

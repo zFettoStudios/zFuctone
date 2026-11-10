@@ -35,15 +35,15 @@ public interface Integration extends Module<Integration> {
 
     interface ViaVersion extends Module<ViaVersion> {
         @Nullable String getVersion(@NonNull UUID uuid);
-        @Nullable String getDisplayVersion(@NonNull UUID uuid);
+        @Nullable String getDisplayVersion(@NonNull PlatformPlayer player);
         int getProtocolVersion(@NonNull UUID uuid);
     }
 
     interface Floodgate extends Module<Floodgate> {
         PlayerEdition getEdition(@NonNull UUID uuid);
-        @Nullable String getDisplayEdition(@NonNull UUID uuid);
+        @Nullable String getDisplayEdition(@NonNull PlatformPlayer player);
         @Nullable String getVersion(@NonNull UUID uuid);
-        @Nullable String getDisplayVersion(@NonNull UUID uuid);
+        @Nullable String getDisplayVersion(@NonNull PlatformPlayer player);
     }
 
     interface Geyser extends Module<Geyser> {

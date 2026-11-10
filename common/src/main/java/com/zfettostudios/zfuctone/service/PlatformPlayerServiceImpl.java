@@ -1,7 +1,5 @@
 package com.zfettostudios.zfuctone.service;
 
-import lombok.experimental.NonFinal;
-
 import com.zfettostudios.zfuctone.ZFuctoneAPI;
 import com.zfettostudios.zfuctone.platform.adapter.PlatformPlayerAdapter;
 import com.zfettostudios.zfuctone.platform.entity.PlatformPlayer;
@@ -16,18 +14,19 @@ import java.util.concurrent.ConcurrentHashMap;
 
 public class PlatformPlayerServiceImpl implements PlatformPlayerService {
     Map<UUID, PlatformPlayer> platformPlayers = new ConcurrentHashMap<>();
-    @NonFinal PlatformPlayerAdapter playerAdapter;
+
+    private PlatformPlayerAdapter playerAdapter() {
+        return ZFuctoneAPI.get().playerAdapter();
+    }
 
     @Override
     public @Nullable PlatformPlayer getPlatformPlayer(@NonNull UUID uuid) {
-        isNullGet();
         return platformPlayers.get(uuid);
     }
 
     @Override
     public @Nullable PlatformPlayer getPlatformPlayer(@NonNull String nickname) {
-        isNullGet();
-        return platformPlayers.get(playerAdapter.getUniqueIdFromNickname(nickname));
+        return platformPlayers.get(playerAdapter().getUniqueIdFromNickname(nickname));
     }
 
     @Override
@@ -57,7 +56,7 @@ public class PlatformPlayerServiceImpl implements PlatformPlayerService {
 
     @Override
     public PlatformPlayerService removePlatformPlayer(@NonNull String nickname) {
-        platformPlayers.remove(playerAdapter.getUniqueIdFromNickname(nickname));
+        platformPlayers.remove(playerAdapter().getUniqueIdFromNickname(nickname));
         return this;
     }
 
@@ -69,9 +68,5 @@ public class PlatformPlayerServiceImpl implements PlatformPlayerService {
     @Override
     public PlatformPlayerService update(@NonNull String nickname) {
         return this;
-    }
-
-    private void isNullGet() {
-        if (playerAdapter == null) playerAdapter = ZFuctoneAPI.get(PlatformPlayerAdapter.class);
     }
 }

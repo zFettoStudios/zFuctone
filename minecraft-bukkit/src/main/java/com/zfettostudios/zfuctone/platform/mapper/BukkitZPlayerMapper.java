@@ -1,7 +1,6 @@
 package com.zfettostudios.zfuctone.platform.mapper;
 
 import com.zfettostudios.zfuctone.ZFuctoneAPI;
-import com.zfettostudios.zfuctone.platform.adapter.PlatformPlayerAdapter;
 import com.zfettostudios.zfuctone.platform.entity.PlatformPlayer;
 import org.bukkit.Bukkit;
 import org.bukkit.command.CommandSender;
@@ -10,8 +9,6 @@ import org.incendo.cloud.SenderMapper;
 import org.jspecify.annotations.NonNull;
 
 public class BukkitZPlayerMapper implements SenderMapper<CommandSender, PlatformPlayer> {
-    PlatformPlayerAdapter playerAdapter = ZFuctoneAPI.get(PlatformPlayerAdapter.class);
-
     @Override
     public @NonNull PlatformPlayer map(@NonNull CommandSender sender) {
         if (!(sender instanceof Player player))
@@ -25,7 +22,7 @@ public class BukkitZPlayerMapper implements SenderMapper<CommandSender, Platform
 
     @Override
     public @NonNull CommandSender reverse(@NonNull PlatformPlayer player) {
-        Player platformPlayer = playerAdapter.getPlatformPlayer(player.getUniqueId(), Player.class);
+        Player platformPlayer = ZFuctoneAPI.get().playerAdapter().getPlatformPlayer(player.getUniqueId(), Player.class);
         if (platformPlayer == null) return Bukkit.getConsoleSender();
 
         return platformPlayer;

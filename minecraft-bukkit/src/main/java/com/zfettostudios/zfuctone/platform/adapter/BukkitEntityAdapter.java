@@ -1,6 +1,5 @@
 package com.zfettostudios.zfuctone.platform.adapter;
 
-import com.zfettostudios.zfuctone.exception.InvalidTypeException;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Entity;
 import org.jspecify.annotations.NonNull;

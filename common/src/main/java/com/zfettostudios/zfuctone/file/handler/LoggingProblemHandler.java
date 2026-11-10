@@ -11,7 +11,7 @@ import tools.jackson.databind.deser.DeserializationProblemHandler;
 
 public class LoggingProblemHandler extends DeserializationProblemHandler {
     private ZLogger logger() {
-        return ZFuctoneAPI.get(ZLogger.class);
+        return ZFuctoneAPI.get().logger();
     }
 
     @Override

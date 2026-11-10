@@ -28,9 +28,17 @@ public class TaskSchedulerImpl implements TaskScheduler {
     AtomicLong currentTick = new AtomicLong(0L);
     ConcurrentNavigableMap<Long, Queue<TaskEntry>> scheduledTasks = new ConcurrentSkipListMap<>();
 
-    FileFacade fileFacade = ZFuctoneAPI.get(FileFacade.class);
-    ZLogger logger = ZFuctoneAPI.get(ZLogger.class);
-    @NonFinal PlatformServerAdapter serverAdapter;
+    private FileFacade fileFacade() {
+        return ZFuctoneAPI.get().fileFacade();
+    }
+
+    private ZLogger logger() {
+        return ZFuctoneAPI.get().logger();
+    }
+
+    private PlatformServerAdapter serverAdapter() {
+        return ZFuctoneAPI.get().serverAdapter();
+    }
 
     @NonFinal @Getter volatile ExecutorService executorService;
     @NonFinal volatile boolean disabled = false;
@@ -38,7 +46,7 @@ public class TaskSchedulerImpl implements TaskScheduler {
     Semaphore semaphore = new Semaphore(config().maxPoolSize() <= 0 ? Integer.MAX_VALUE : config().maxPoolSize());
 
     private Config.Executor config() {
-        return fileFacade.config().executor();
+        return fileFacade().config().executor();
     }
 
     public TaskSchedulerImpl(ExecutorService executorService) {
@@ -81,10 +89,10 @@ public class TaskSchedulerImpl implements TaskScheduler {
         try {
             return future.get(timeout.toMillis(), TimeUnit.MILLISECONDS);
         } catch (TimeoutException e) {
-            logger.warn("Timeout awaiting task \"{}\"", description);
+            logger().warn("Timeout awaiting task \"{}\"", description);
             return fallback;
         } catch (Exception e) {
-            logger.warn("Error awaiting task \"{}\"", description);
+            logger().warn("Error awaiting task \"{}\"", description);
             return fallback;
         }
     }
@@ -134,7 +142,7 @@ public class TaskSchedulerImpl implements TaskScheduler {
         try {
             runnable.run();
         } catch (Throwable throwable) {
-            logger.warn("Error executing task immediately \"{}\"", throwable.getMessage());
+            logger().warn("Error executing task immediately \"{}\"", throwable.getMessage());
         }
 
         return CompletableFuture.completedFuture(null);
@@ -186,7 +194,7 @@ public class TaskSchedulerImpl implements TaskScheduler {
         try {
             future.complete(supplier.get());
         } catch (Throwable throwable) {
-            logger.warn("Error executing supplier immediately \"{}\"", throwable.getMessage());
+            logger().warn("Error executing supplier immediately \"{}\"", throwable.getMessage());
             future.complete(null);
         }
 
@@ -225,7 +233,7 @@ public class TaskSchedulerImpl implements TaskScheduler {
 
     private CompletableFuture<Void> scheduleRunnable(Runnable runnable, long delay, long period, boolean async) {
         if (isDisabled()) {
-            logger.warn("Attempted to schedule task while taskScheduler is disabled");
+            logger().warn("Attempted to schedule task while taskScheduler is disabled");
             return CompletableFuture.completedFuture(null);
         }
 
@@ -240,7 +248,7 @@ public class TaskSchedulerImpl implements TaskScheduler {
 
     private <T> CompletableFuture<T> scheduleSupplier(Supplier<T> supplier, long delay, long period, boolean async) {
         if (isDisabled()) {
-            logger.warn("Attempted to schedule supplier while taskScheduler is disabled");
+            logger().warn("Attempted to schedule supplier while taskScheduler is disabled");
             return CompletableFuture.completedFuture(null);
         }
 
@@ -258,9 +266,9 @@ public class TaskSchedulerImpl implements TaskScheduler {
 
         Runnable wrappedRunnable = () -> {
             try {
-                task.execute(logger);
+                task.execute();
             } catch (Throwable throwable) {
-                logger.warn("Error executing task: {}", throwable.getMessage());
+                logger().warn("Error executing task: {}", throwable.getMessage());
             } finally {
                 if (!task.isRepeating()) task.completeEmpty();
             }
@@ -278,10 +286,7 @@ public class TaskSchedulerImpl implements TaskScheduler {
                 }
             });
         }
-        else {
-            if (serverAdapter == null) serverAdapter = ZFuctoneAPI.get(PlatformServerAdapter.class);
-            serverAdapter.runTask(wrappedRunnable);
-        }
+        else serverAdapter().runTask(wrappedRunnable);
 
         if (task.isRepeating() && !task.isCancelled())
             scheduledTasks.computeIfAbsent(currentTick + task.period(), _ -> new ConcurrentLinkedQueue<>()).add(task);
@@ -289,7 +294,7 @@ public class TaskSchedulerImpl implements TaskScheduler {
 
 
     private interface TaskEntry {
-        void execute(ZLogger logger);
+        void execute();
         void completeEmpty();
         boolean isCancelled();
         boolean isRepeating();
@@ -304,7 +309,7 @@ public class TaskSchedulerImpl implements TaskScheduler {
         CompletableFuture<?> future
     ) implements TaskEntry {
         @Override
-        public void execute(ZLogger logger) {
+        public void execute() {
             runnable.run();
         }
 
@@ -336,11 +341,11 @@ public class TaskSchedulerImpl implements TaskScheduler {
         CompletableFuture<T> future
     ) implements TaskEntry {
         @Override
-        public void execute(ZLogger logger) {
+        public void execute() {
             try {
                 if (!isRepeating()) future.complete(supplier.get());
             } catch (Throwable throwable) {
-                logger.warn("Error executing scheduled supplier task: {}", throwable.getMessage());
+                ZFuctoneAPI.get().logger().warn("Error executing scheduled supplier task: {}", throwable.getMessage());
                 future.complete(null);
             }
         }

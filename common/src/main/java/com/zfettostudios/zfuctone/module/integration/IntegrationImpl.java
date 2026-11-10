@@ -1,10 +1,8 @@
 package com.zfettostudios.zfuctone.module.integration;
 
-import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.Accessors;
-import lombok.experimental.FieldDefaults;
 
 import com.zfettostudios.zfuctone.ZFuctoneAPI;
 import com.zfettostudios.zfuctone.file.FileFacade;
@@ -15,8 +13,6 @@ import com.zfettostudios.zfuctone.model.constant.player.PlayerEdition;
 import com.zfettostudios.zfuctone.module.integration.floodgate.FloodgateModule;
 import com.zfettostudios.zfuctone.module.integration.geyser.GeyserModule;
 import com.zfettostudios.zfuctone.module.integration.viaversion.ViaVersionModule;
-import com.zfettostudios.zfuctone.platform.adapter.PlatformPlayerAdapter;
-import com.zfettostudios.zfuctone.platform.adapter.PlatformServerAdapter;
 import com.zfettostudios.zfuctone.platform.entity.PlatformPlayer;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.minimessage.MiniMessage;
@@ -29,12 +25,9 @@ import java.util.UUID;
 @Getter
 @Accessors(fluent = true)
 public abstract class IntegrationImpl implements Integration {
-    @Getter(AccessLevel.NONE)
-    protected IntegrationConfig config = ZFuctoneAPI.get(FileFacade.class).integration();
-
-    ViaVersion viaVersion = new ViaVersionImpl(config.viaversion());
-    Geyser geyser = new GeyserImpl(config.geyser());
-    Floodgate floodgate = new FloodgateImpl(config.floodgate(), geyser);
+    ViaVersion viaVersion = new ViaVersionImpl();
+    Geyser geyser = new GeyserImpl();
+    Floodgate floodgate = new FloodgateImpl(geyser);
 
     @Override
     public Integration enable() {
@@ -52,7 +45,7 @@ public abstract class IntegrationImpl implements Integration {
 
     @Override
     public boolean isEnable() {
-        return config.enable();
+        return ZFuctoneAPI.get().fileFacade().integration().enable();
     }
 
     public static abstract class IntegrationModuleImpl {
@@ -61,19 +54,20 @@ public abstract class IntegrationImpl implements Integration {
         }
 
         public boolean isPluginExits() {
-            return ZFuctoneAPI.get(PlatformServerAdapter.class).isProjectExits(getName());
+            return ZFuctoneAPI.get().serverAdapter().isProjectExits(getName());
         }
 
         protected abstract String getName();
         protected abstract boolean isEnable();
     }
 
-    @RequiredArgsConstructor
     public static abstract class PlaceholderAPIImpl extends IntegrationModuleImpl implements PlaceholderAPI {
-        protected IntegrationConfig.PlaceholderAPI config;
+        protected IntegrationConfig.PlaceholderAPI config() {
+            return ZFuctoneAPI.get().fileFacade().integration().placeholderapi();
+        }
 
         public boolean isEnable() {
-            return isEnable(config.enable());
+            return isEnable(config().enable());
         }
 
         public String getName() {
@@ -81,12 +75,13 @@ public abstract class IntegrationImpl implements Integration {
         }
     }
 
-    @RequiredArgsConstructor
     public static abstract class MiniPlaceholdersImpl extends IntegrationModuleImpl implements MiniPlaceholders {
-        protected IntegrationConfig.MiniPlaceholders config;
+        protected IntegrationConfig.MiniPlaceholders config() {
+            return ZFuctoneAPI.get().fileFacade().integration().miniplaceholders();
+        }
 
         public boolean isEnable() {
-            return isEnable(config.enable());
+            return isEnable(config().enable());
         }
 
         public String getName() {
@@ -95,18 +90,26 @@ public abstract class IntegrationImpl implements Integration {
 
         @Override
         public @NonNull Component setPlaceholders(@NonNull PlatformPlayer sender, @NonNull String input, @NonNull TagResolver... tagResolvers) {
-            return MiniMessage.miniMessage().deserialize(input, sender, tagResolvers);
+            return MiniMessage.miniMessage().deserialize(input, sender,
+                TagResolver.resolver(tagResolvers),
+                audienceGlobalPlaceholders(),
+                audiencePlaceholders(),
+                globalPlaceholders()
+            );
         }
     }
 
-    @RequiredArgsConstructor
     public static class ViaVersionImpl extends IntegrationModuleImpl implements ViaVersion {
-        protected IntegrationConfig.ViaVersion config;
-        FileFacade fileFacade = ZFuctoneAPI.get(FileFacade.class);
-        PlatformPlayerAdapter playerAdapter = ZFuctoneAPI.get(PlatformPlayerAdapter.class);
+        protected IntegrationConfig.ViaVersion config() {
+            return ZFuctoneAPI.get().fileFacade().integration().viaversion();
+        }
+
+        protected FileFacade fileFacade() {
+            return ZFuctoneAPI.get().fileFacade();
+        }
 
         public boolean isEnable() {
-            return isEnable(config.enable());
+            return isEnable(config().enable());
         }
 
         public String getName() {
@@ -126,11 +129,11 @@ public abstract class IntegrationImpl implements Integration {
         }
 
         @Override
-        public @Nullable String getDisplayVersion(@NonNull UUID uuid) {
+        public @Nullable String getDisplayVersion(@NonNull PlatformPlayer player) {
             if (!isEnable()) return null;
 
-            return fileFacade.localizationOrDefault(playerAdapter.getLocale(uuid), LocalizationType.PLAYER)
-                .message().player().version().java().get(ViaVersionModule.getProtocolVersion(uuid));
+            return fileFacade().localizationOrDefault(player.getLocale(), LocalizationType.PLAYER)
+                .message().player().version().java().get(ViaVersionModule.getProtocolVersion(player.getUniqueId()));
         }
 
         @Override
@@ -146,10 +149,15 @@ public abstract class IntegrationImpl implements Integration {
 
     @RequiredArgsConstructor
     public static class FloodgateImpl extends IntegrationModuleImpl implements Floodgate {
-        protected IntegrationConfig.Floodgate config;
         Geyser geyser;
-        FileFacade fileFacade = ZFuctoneAPI.get(FileFacade.class);
-        PlatformPlayerAdapter playerAdapter = ZFuctoneAPI.get(PlatformPlayerAdapter.class);
+
+        protected IntegrationConfig.Floodgate config() {
+            return ZFuctoneAPI.get().fileFacade().integration().floodgate();
+        }
+
+        protected FileFacade fileFacade() {
+            return ZFuctoneAPI.get().fileFacade();
+        }
 
         @Override
         protected String getName() {
@@ -158,7 +166,7 @@ public abstract class IntegrationImpl implements Integration {
 
         @Override
         protected boolean isEnable() {
-            return isEnable(config.enable());
+            return isEnable(config().enable());
         }
 
         @Override
@@ -178,13 +186,13 @@ public abstract class IntegrationImpl implements Integration {
         }
 
         @Override
-        public @Nullable String getDisplayEdition(@NonNull UUID uuid) {
+        public @Nullable String getDisplayEdition(@NonNull PlatformPlayer player) {
             if (!isEnable()) return null;
 
-            Localization.Message.Player.Edition localization = fileFacade.localizationOrDefault(playerAdapter.getLocale(uuid),
+            Localization.Message.Player.Edition localization = fileFacade().localizationOrDefault(player.getLocale(),
                 LocalizationType.PLAYER).message().player().edition();
 
-            return switch (FloodgateModule.getEdition(uuid)) {
+            return switch (FloodgateModule.getEdition(player.getUniqueId())) {
                 case JAVA -> localization.java();
                 case BEDROCK -> localization.bedrock();
             };
@@ -197,20 +205,21 @@ public abstract class IntegrationImpl implements Integration {
         }
 
         @Override
-        public @Nullable String getDisplayVersion(@NonNull UUID uuid) {
+        public @Nullable String getDisplayVersion(@NonNull PlatformPlayer player) {
             if (!isEnable()) return null;
 
-            int protocol = geyser.getProtocolVersion(uuid);
+            int protocol = geyser.getProtocolVersion(player.getUniqueId());
             if (protocol == -1) return null;
 
-            return fileFacade.localizationOrDefault(playerAdapter.getLocale(uuid), LocalizationType.PLAYER)
+            return fileFacade().localizationOrDefault(player.getLocale(), LocalizationType.PLAYER)
                 .message().player().version().bedrock().get(protocol);
         }
     }
 
-    @RequiredArgsConstructor
     public static class GeyserImpl extends IntegrationModuleImpl implements Geyser {
-        protected IntegrationConfig.Geyser config;
+        protected IntegrationConfig.Geyser config() {
+            return ZFuctoneAPI.get().fileFacade().integration().geyser();
+        }
 
         @Override
         public Geyser enable() {
@@ -229,7 +238,7 @@ public abstract class IntegrationImpl implements Integration {
 
         @Override
         protected boolean isEnable() {
-            return isEnable(config.enable());
+            return isEnable(config().enable());
         }
 
         @Override
