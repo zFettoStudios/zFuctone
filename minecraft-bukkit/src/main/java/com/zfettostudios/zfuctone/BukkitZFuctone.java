@@ -12,8 +12,6 @@ import com.zfettostudios.zfuctone.platform.adapter.BukkitServerAdapter;
 import com.zfettostudios.zfuctone.platform.adapter.PlatformEntityAdapter;
 import com.zfettostudios.zfuctone.platform.adapter.PlatformPlayerAdapter;
 import com.zfettostudios.zfuctone.platform.adapter.PlatformServerAdapter;
-import com.zfettostudios.zfuctone.platform.registry.BukkitCommandRegistry;
-import com.zfettostudios.zfuctone.platform.registry.CommandRegistry;
 import net.kyori.adventure.text.logger.slf4j.ComponentLogger;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.jspecify.annotations.NonNull;
@@ -56,11 +54,6 @@ public class BukkitZFuctone extends ZFuctoneImpl {
     @Override
     protected Integration createIntegration() {
         return new BukkitIntegration();
-    }
-
-    @Override
-    protected CommandRegistry createCommandRegistry() {
-        return new BukkitCommandRegistry(javaPlugin);
     }
 
     @Override

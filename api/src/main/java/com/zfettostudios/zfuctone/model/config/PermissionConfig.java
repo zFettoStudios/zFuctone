@@ -115,6 +115,12 @@ public class PermissionConfig {
         PlaceholderPermissionSetting playerDisplayVersion = new PlaceholderPermissionSetting(
             "zfuctone.module.placeholder.player_display_version.use", PermissionType.OP
         );
+        PlaceholderPermissionSetting serverType = new PlaceholderPermissionSetting(
+            "zfuctone.module.placeholder.server_type.use", PermissionType.OP
+        );
+        PlaceholderPermissionSetting serverVersion = new PlaceholderPermissionSetting(
+            "zfuctone.module.placeholder.server_version.use", PermissionType.OP
+        );
 
         @Getter
         @Setter

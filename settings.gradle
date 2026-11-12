@@ -12,3 +12,4 @@ rootProject.name = project_name
 include ":api"
 include ":common"
 include ":minecraft-bukkit"
+include ":minecraft-core"

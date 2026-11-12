@@ -20,6 +20,16 @@ public class PlatformPlayerServiceImpl implements PlatformPlayerService {
     }
 
     @Override
+    public PlatformPlayerService enable() {
+        return this;
+    }
+
+    @Override
+    public PlatformPlayerService disable() {
+        return this;
+    }
+
+    @Override
     public @Nullable PlatformPlayer getPlatformPlayer(@NonNull UUID uuid) {
         return platformPlayers.get(uuid);
     }
@@ -41,14 +51,6 @@ public class PlatformPlayerServiceImpl implements PlatformPlayerService {
     }
 
     @Override
-    public PlatformPlayerService updateAll() {
-        for (final PlatformPlayer platformPlayer : platformPlayers.values()) {
-
-        }
-        return this;
-    }
-
-    @Override
     public PlatformPlayerService removePlatformPlayer(@NonNull UUID uuid) {
         platformPlayers.remove(uuid);
         return this;
@@ -57,16 +59,6 @@ public class PlatformPlayerServiceImpl implements PlatformPlayerService {
     @Override
     public PlatformPlayerService removePlatformPlayer(@NonNull String nickname) {
         platformPlayers.remove(playerAdapter().getUniqueIdFromNickname(nickname));
-        return this;
-    }
-
-    @Override
-    public PlatformPlayerService update(@NonNull UUID uuid) {
-        return this;
-    }
-
-    @Override
-    public PlatformPlayerService update(@NonNull String nickname) {
         return this;
     }
 }

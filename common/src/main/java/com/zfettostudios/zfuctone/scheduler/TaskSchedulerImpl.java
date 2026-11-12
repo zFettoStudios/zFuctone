@@ -10,7 +10,6 @@ import com.zfettostudios.zfuctone.model.config.Config;
 import com.zfettostudios.zfuctone.platform.adapter.PlatformServerAdapter;
 
 import java.time.Duration;
-import java.util.Map;
 import java.util.Queue;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ConcurrentLinkedQueue;
@@ -207,6 +206,12 @@ public class TaskSchedulerImpl implements TaskScheduler {
     }
 
     @Override
+    public TaskScheduler runSyncAllOf(CompletableFuture<?>[] futures) {
+        CompletableFuture.allOf(futures).join();
+        return this;
+    }
+
+    @Override
     public boolean isDisabled() {
         return disabled;
     }
@@ -216,17 +221,22 @@ public class TaskSchedulerImpl implements TaskScheduler {
         if (isDisabled()) return this;
 
         long tick = currentTick.getAndIncrement();
+        ConcurrentNavigableMap<Long, Queue<TaskEntry>> headMap = scheduledTasks.headMap(tick, true);
 
-        for (Map.Entry<Long, Queue<TaskEntry>> entry : scheduledTasks.headMap(tick, true).entrySet()) {
+        if (headMap.isEmpty()) return this;
+
+        headMap.forEach((entryTick, queue) -> {
             TaskEntry task;
 
-            while ((task = entry.getValue().poll()) != null) {
-                if (isDisabled()) return this;
-                executeScheduledTask(task, tick);
-            }
+            while ((task = queue.poll()) != null) {
+                if (isDisabled()) return;
 
-            scheduledTasks.remove(entry.getKey());
-        }
+                TaskEntry finalTask = task;
+                executorService.submit(() -> executeScheduledTask(finalTask, entryTick));
+            }
+        });
+
+        headMap.clear();
 
         return this;
     }
@@ -291,7 +301,6 @@ public class TaskSchedulerImpl implements TaskScheduler {
         if (task.isRepeating() && !task.isCancelled())
             scheduledTasks.computeIfAbsent(currentTick + task.period(), _ -> new ConcurrentLinkedQueue<>()).add(task);
     }
-
 
     private interface TaskEntry {
         void execute();

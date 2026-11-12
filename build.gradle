@@ -185,6 +185,7 @@ subprojects {
 
 static def getModuleName(String projectName) {
     if (projectName == "minecraft-bukkit") return "Bukkit"
+    else if (projectName == "minecraft-core") return "Core"
 
     return projectName
 }

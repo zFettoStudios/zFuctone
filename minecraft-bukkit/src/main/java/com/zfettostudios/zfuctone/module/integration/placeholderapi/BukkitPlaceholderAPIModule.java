@@ -3,7 +3,6 @@ package com.zfettostudios.zfuctone.module.integration.placeholderapi;
 import lombok.experimental.UtilityClass;
 
 import com.zfettostudios.zfuctone.ZFuctoneAPI;
-import com.zfettostudios.zfuctone.file.FileFacade;
 import com.zfettostudios.zfuctone.model.config.IntegrationConfig;
 import me.clip.placeholderapi.PlaceholderAPI;
 import org.bukkit.entity.Player;

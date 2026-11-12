@@ -57,6 +57,7 @@ public interface TaskScheduler {
     <T> CompletableFuture<T> runImmediately(Supplier<T> supplier);
 
     CompletableFuture<Void> runAsyncAllOf(CompletableFuture<?>[] futures);
+    TaskScheduler runSyncAllOf(CompletableFuture<?>[] futures);
 
     boolean isDisabled();
 

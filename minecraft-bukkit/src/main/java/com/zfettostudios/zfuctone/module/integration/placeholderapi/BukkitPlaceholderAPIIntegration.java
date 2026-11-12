@@ -1,10 +1,7 @@
 package com.zfettostudios.zfuctone.module.integration.placeholderapi;
 
-import com.zfettostudios.zfuctone.ZFuctone;
 import com.zfettostudios.zfuctone.ZFuctoneAPI;
 import com.zfettostudios.zfuctone.exception.ReloadException;
-import com.zfettostudios.zfuctone.file.FileFacade;
-import com.zfettostudios.zfuctone.logging.ZLogger;
 import com.zfettostudios.zfuctone.model.config.IntegrationConfig;
 import com.zfettostudios.zfuctone.model.config.PermissionConfig;
 import com.zfettostudios.zfuctone.model.constant.BuildConstant;
@@ -14,6 +11,7 @@ import com.zfettostudios.zfuctone.platform.entity.PlatformPlayer;
 import com.zfettostudios.zfuctone.util.StringUtil;
 import me.clip.placeholderapi.PlaceholderAPI;
 import me.clip.placeholderapi.expansion.PlaceholderExpansion;
+import org.bukkit.Bukkit;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
@@ -54,7 +52,9 @@ public class BukkitPlaceholderAPIIntegration extends PlaceholderExpansion implem
             createPlaceholder("player_version"),
             createPlaceholder("player_edition"),
             createPlaceholder("player_display_version"),
-            createPlaceholder("player_display_edition")
+            createPlaceholder("player_display_edition"),
+            createPlaceholder("server_type"),
+            createPlaceholder("server_version")
         );
     }
 
@@ -149,6 +149,8 @@ public class BukkitPlaceholderAPIIntegration extends PlaceholderExpansion implem
                 }
                 yield "completed";
             }
+            case "server_type" -> ZFuctoneAPI.get().getPlatformType().name();
+            case "server_version" -> Bukkit.getServer().getVersion();
             default -> null;
         };
     }

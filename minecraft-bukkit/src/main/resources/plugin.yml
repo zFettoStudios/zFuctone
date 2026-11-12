@@ -8,3 +8,32 @@ load: ${load}
 folia-supported: ${folia_supported}
 author: ${author}
 website: ${website}
+softdepend:
+  - AdvancedBan
+  - CMI
+  - Essentials
+  - floodgate
+  - Geyser-Spigot
+  - InteractiveChat
+  - ItemsAdder
+  - LibertyBans
+  - LiteBans
+  - LuckPerms
+  - MiniMOTD
+  - MiniPlaceholders
+  - MOTD
+  - packetevents
+  - PlaceholderAPI
+  - PlasmoVoice
+  - PremiumVanish
+  - ProtocolLib
+  - ProtocolSupport
+  - SkinsRestorer
+  - SuperVanish
+  - TAB
+  - Vault
+  - ViaBackwards
+  - ViaRewind
+  - ViaVersion
+  - voicechat
+  - FlectonePulse
