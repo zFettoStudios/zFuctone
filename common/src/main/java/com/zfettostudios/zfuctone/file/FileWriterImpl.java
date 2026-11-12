@@ -60,7 +60,7 @@ public class FileWriterImpl implements FileWriter {
 
         return CompletableFuture.allOf(localizations.entrySet().stream()
             .map(entry -> saveAsync(entry.getValue(),
-                localizationsPath.resolve(entry.getKey() + ".yml")))
+                localizationsPath.resolve(entry.getKey())))
             .toArray(CompletableFuture[]::new));
     }
 }

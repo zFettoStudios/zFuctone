@@ -150,7 +150,7 @@ public class BukkitPlaceholderAPIIntegration extends PlaceholderExpansion implem
                 yield "completed";
             }
             case "server_type" -> ZFuctoneAPI.get().getPlatformType().name();
-            case "server_version" -> Bukkit.getServer().getVersion();
+            case "server_version" -> Bukkit.getServer().getMinecraftVersion();
             default -> null;
         };
     }
