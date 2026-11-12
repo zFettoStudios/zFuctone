@@ -10,6 +10,7 @@ import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonSetter;
 import com.fasterxml.jackson.annotation.Nulls;
 import com.fasterxml.jackson.annotation.PropertyAccessor;
+import com.zfettostudios.zfuctone.ZFuctoneAPI;
 import com.zfettostudios.zfuctone.file.deserializer.BooleanDeserializer;
 import com.zfettostudios.zfuctone.file.deserializer.ListDeserializer;
 import com.zfettostudios.zfuctone.file.deserializer.MapDeserializer;
@@ -18,6 +19,7 @@ import com.zfettostudios.zfuctone.file.deserializer.StringDeserializer;
 import com.zfettostudios.zfuctone.file.deserializer.TimeUnitDeserializer;
 import com.zfettostudios.zfuctone.file.handler.LoggingProblemHandler;
 import com.zfettostudios.zfuctone.file.serializer.TimeUnitSerializer;
+import com.zfettostudios.zfuctone.logging.ZLogger;
 import com.zfettostudios.zfuctone.model.config.CommandConfig;
 import com.zfettostudios.zfuctone.model.config.Config;
 import com.zfettostudios.zfuctone.model.config.IntegrationConfig;
@@ -71,6 +73,10 @@ public class FileFacadeImpl implements FileFacade {
 
         loader = new FileLoaderImpl(dataPath, localizationsPath, mapper, executor);
         writer = new FileWriterImpl(dataPath, localizationsPath, mapper, executor);
+    }
+
+    private ZLogger logger() {
+        return ZFuctoneAPI.get().logger();
     }
 
     @Override
@@ -147,12 +153,15 @@ public class FileFacadeImpl implements FileFacade {
     @Override
     public FileFacade updateFiles() {
         loader.loadAsync(files).join();
+        saveFiles();
+
+        loader.loadAsync(files).join();
 
         localizationPlayerDefault = localization(config().language().player().type());
         localizationConsole = localization(config().language().console().type());
         localizationCommandBlockDefault = localization(config().language().commandBlock().type());
 
-        return saveFiles();
+        return this;
     }
 
     @Override

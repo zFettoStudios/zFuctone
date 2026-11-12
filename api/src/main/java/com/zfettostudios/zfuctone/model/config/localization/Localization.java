@@ -5,8 +5,6 @@ import lombok.Setter;
 import lombok.experimental.Accessors;
 import lombok.experimental.FieldDefaults;
 
-import com.zfettostudios.zfuctone.model.config.Config;
-
 import java.util.LinkedHashMap;
 import java.util.Map;
 
