@@ -59,8 +59,19 @@ public class FileWriterImpl implements FileWriter {
         if (localizations == null || localizations.isEmpty()) return CompletableFuture.completedFuture(null);
 
         return CompletableFuture.allOf(localizations.entrySet().stream()
-            .map(entry -> saveAsync(entry.getValue(),
-                localizationsPath.resolve(entry.getKey())))
+            .map(entry -> {
+                String key = entry.getKey();
+                String lowerKey = key.toLowerCase();
+
+                return saveAsync(entry.getValue(), localizationsPath.resolve(
+                    (lowerKey.endsWith(".yml") || lowerKey.endsWith(".yaml")) ? key : resolveFileName(key)));
+            })
             .toArray(CompletableFuture[]::new));
+    }
+
+    private String resolveFileName(String langKey) {
+        if (Files.exists(localizationsPath.resolve(langKey + ".yaml"))) return langKey + ".yaml";
+
+        return langKey + ".yml";
     }
 }

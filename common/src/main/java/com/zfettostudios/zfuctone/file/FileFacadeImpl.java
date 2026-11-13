@@ -153,13 +153,12 @@ public class FileFacadeImpl implements FileFacade {
     @Override
     public FileFacade updateFiles() {
         loader.loadAsync(files).join();
-        saveFiles();
-
-        loader.loadAsync(files).join();
 
         localizationPlayerDefault = localization(config().language().player().type());
         localizationConsole = localization(config().language().console().type());
         localizationCommandBlockDefault = localization(config().language().commandBlock().type());
+
+        saveFiles();
 
         return this;
     }

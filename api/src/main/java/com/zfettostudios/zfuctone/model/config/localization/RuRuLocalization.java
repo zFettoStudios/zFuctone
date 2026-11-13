@@ -1,8 +1,10 @@
 package com.zfettostudios.zfuctone.model.config.localization;
 
 import com.zfettostudios.zfuctone.annotation.config.FilePath;
+import com.zfettostudios.zfuctone.annotation.config.LocaleName;
 
 @FilePath(path = "ru_ru.yml", localization = true)
+@LocaleName("ru_ru")
 public class RuRuLocalization extends Localization {
     public RuRuLocalization() {
         messageCollect();

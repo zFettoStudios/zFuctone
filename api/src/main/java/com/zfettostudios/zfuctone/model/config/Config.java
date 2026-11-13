@@ -44,7 +44,7 @@ public class Config {
         @Setter
         @FieldDefaults(makeFinal = false)
         public static class Player {
-            String type = "en_ud";
+            String type = "en_us";
             Boolean byPlayer = true;
         }
 

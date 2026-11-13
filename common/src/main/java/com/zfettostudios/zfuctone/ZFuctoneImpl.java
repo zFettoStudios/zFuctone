@@ -97,8 +97,8 @@ public abstract class ZFuctoneImpl implements ZFuctone {
 
         integration.disable();
 
-        taskScheduler.shutdown();
         fileFacade.disable();
+        taskScheduler.shutdown();
         return this;
     }
 
