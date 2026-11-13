@@ -13,11 +13,25 @@ import com.zfettostudios.zfuctone.annotation.config.FilePath;
 public class MessageConfig {
     private Boolean enable = true;
     private final Format format = new Format();
+    private final Join join = new Join();
+    private final Quit quit = new Quit();
 
     @Getter
     @Setter
     public static class Format {
         private Boolean enable = true;
         private Boolean convertLegacyColor = true;
+    }
+
+    @Getter
+    @Setter
+    public static class Join {
+        private Boolean enable = true;
+    }
+
+    @Getter
+    @Setter
+    public static class Quit {
+        private Boolean enable = true;
     }
 }

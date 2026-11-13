@@ -19,6 +19,8 @@ public class Localization {
     @Setter
     public static class Message {
         private final Player player = new Player();
+        private final Join join = new Join();
+        private final Quit quit = new Quit();
 
         @Getter
         @Setter
@@ -39,6 +41,18 @@ public class Localization {
                 private final Map<Integer, String> java = new LinkedHashMap<>();
                 private final Map<Integer, String> bedrock = new LinkedHashMap<>();
             }
+        }
+
+        @Getter
+        @Setter
+        public static class Join {
+            private String format;
+        }
+
+        @Getter
+        @Setter
+        public static class Quit {
+            private String format;
         }
     }
 
