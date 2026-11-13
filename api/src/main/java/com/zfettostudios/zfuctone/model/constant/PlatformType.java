@@ -8,6 +8,6 @@ public enum PlatformType {
     FOLIA,
     SPONGE,
     FABRIC,
-    NEOFORHE,
+    NEOFORGE,
     FORGE
 }
