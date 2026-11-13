@@ -5,14 +5,14 @@ import com.zfettostudios.zfuctone.ZFuctoneAPI;
 import com.zfettostudios.zfuctone.file.FileFacade;
 import com.zfettostudios.zfuctone.model.config.IntegrationConfig;
 import com.zfettostudios.zfuctone.model.constant.LocalizationType;
-import com.zfettostudios.zfuctone.module.integration.IntegrationModule;
+import com.zfettostudios.zfuctone.module.integration.IntegrationModuleImpl;
 import com.zfettostudios.zfuctone.platform.entity.PlatformPlayer;
 import org.jspecify.annotations.NonNull;
 import org.jspecify.annotations.Nullable;
 
 import java.util.UUID;
 
-public class ViaVersionModuleImpl extends IntegrationModule implements ViaVersionModule {
+public class ViaVersionModuleImpl extends IntegrationModuleImpl implements ViaVersionModule {
     private IntegrationConfig.ViaVersion config() {
         return ZFuctoneAPI.get().fileFacade().integration().viaversion();
     }

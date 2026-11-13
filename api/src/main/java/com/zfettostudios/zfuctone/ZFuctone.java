@@ -12,6 +12,7 @@ import com.zfettostudios.zfuctone.module.message.MessageModuleController;
 import com.zfettostudios.zfuctone.platform.adapter.PlatformEntityAdapter;
 import com.zfettostudios.zfuctone.platform.adapter.PlatformPlayerAdapter;
 import com.zfettostudios.zfuctone.platform.adapter.PlatformServerAdapter;
+import com.zfettostudios.zfuctone.platform.registry.ListenerRegistry;
 import com.zfettostudios.zfuctone.reflect.ReflectionResolver;
 import com.zfettostudios.zfuctone.scheduler.TaskScheduler;
 import com.zfettostudios.zfuctone.service.PlatformPlayerService;
@@ -45,4 +46,6 @@ public interface ZFuctone extends Module<ZFuctone> {
     MessageModuleController messageModuleController();
 
     ReflectionResolver reflectionResolver();
+
+    ListenerRegistry listenerRegistry();
 }

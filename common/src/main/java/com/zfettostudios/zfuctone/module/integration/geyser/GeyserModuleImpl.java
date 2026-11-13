@@ -4,7 +4,7 @@ import lombok.RequiredArgsConstructor;
 
 import com.zfettostudios.zfuctone.ZFuctoneAPI;
 import com.zfettostudios.zfuctone.model.config.IntegrationConfig;
-import com.zfettostudios.zfuctone.module.integration.IntegrationModule;
+import com.zfettostudios.zfuctone.module.integration.IntegrationModuleImpl;
 import org.geysermc.geyser.api.GeyserApi;
 import org.geysermc.geyser.api.connection.GeyserConnection;
 import org.jspecify.annotations.NonNull;
@@ -12,7 +12,7 @@ import org.jspecify.annotations.NonNull;
 import java.util.UUID;
 
 @RequiredArgsConstructor
-public class GeyserModuleImpl extends IntegrationModule implements GeyserModule {
+public class GeyserModuleImpl extends IntegrationModuleImpl implements GeyserModule {
     protected IntegrationConfig.Geyser config() {
         return ZFuctoneAPI.get().fileFacade().integration().geyser();
     }

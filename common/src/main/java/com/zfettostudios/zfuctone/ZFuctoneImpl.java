@@ -18,6 +18,8 @@ import com.zfettostudios.zfuctone.module.message.MessageModuleControllerImpl;
 import com.zfettostudios.zfuctone.platform.adapter.PlatformEntityAdapter;
 import com.zfettostudios.zfuctone.platform.adapter.PlatformPlayerAdapter;
 import com.zfettostudios.zfuctone.platform.adapter.PlatformServerAdapter;
+import com.zfettostudios.zfuctone.platform.registry.ListenerRegistry;
+import com.zfettostudios.zfuctone.platform.registry.ListenerRegistryImpl;
 import com.zfettostudios.zfuctone.reflect.ReflectionResolver;
 import com.zfettostudios.zfuctone.reflect.ReflectionResolverImpl;
 import com.zfettostudios.zfuctone.scheduler.TaskScheduler;
@@ -45,6 +47,7 @@ public abstract class ZFuctoneImpl implements ZFuctone {
     protected final MessageModuleController messageModuleController;
     protected final CommandModuleController commandModuleController;
     protected final ReflectionResolver reflectionResolver;
+    protected final ListenerRegistry listenerRegistry;
 
     public ZFuctoneImpl() {
         ZFuctoneAPI.setInstance(this);
@@ -59,6 +62,8 @@ public abstract class ZFuctoneImpl implements ZFuctone {
         logger = new ZLoggerImpl(getComponentLogger());
         fileFacade = new FileFacadeImpl(getDataPath());
         taskScheduler = new TaskSchedulerImpl(((FileFacadeImpl) fileFacade).executor());
+
+        listenerRegistry = new ListenerRegistryImpl();
 
         integration = createIntegration();
         playerService = new PlatformPlayerServiceImpl();
@@ -79,6 +84,8 @@ public abstract class ZFuctoneImpl implements ZFuctone {
         messageModuleController.enable();
         commandModuleController.enable();
 
+        registerListeners();
+
         logger.info("Successfully launched!");
         return this;
     }
@@ -86,6 +93,8 @@ public abstract class ZFuctoneImpl implements ZFuctone {
     @Override
     public ZFuctone disable() {
         logger.info("Disabling...");
+
+        unregisterListeners();
 
         messageModuleController.disable();
         commandModuleController.disable();
@@ -115,23 +124,20 @@ public abstract class ZFuctoneImpl implements ZFuctone {
 
         commandModuleController.disable();
         commandModuleController.enable();
+
+        unregisterListeners();
+        registerListeners();
         return this;
     }
 
-    protected PlatformType detectPlatformType() {
-        if (reflectionResolver.hasClass("io.papermc.paper.threadedregions.RegionizedServer")) return PlatformType.FOLIA;
-        else if (reflectionResolver.hasClass("io.papermc.paper.ServerBuildInfo") ||
-            reflectionResolver.hasClass("com.destroystokyo.paper.ParticleBuilder")) return PlatformType.PAPER;
-        else if (reflectionResolver.hasClass("org.bukkit.Bukkit")) return PlatformType.BUKKIT;
-        else if (reflectionResolver.hasClass("com.velocitypowered.api.proxy.ProxyServer")) return PlatformType.VELOCITY;
-        else if (reflectionResolver.hasClass("net.md_5.bungee.api.ProxyServer")) return PlatformType.BUNGEECORD;
-        else if (reflectionResolver.hasClass("org.spongepowered.api.Sponge")) return PlatformType.SPONGE;
-        else if (reflectionResolver.hasClass("net.fabricmc.api.ModInitializer")) return PlatformType.FABRIC;
-        else if (reflectionResolver.hasClass("net.neoforged.fml.common.Mod")) return PlatformType.NEOFORGE;
-        else if (reflectionResolver.hasClass("net.minecraftforge.fml.common.Mod")) return PlatformType.FORGE;
+    protected abstract PlatformType detectPlatformType();
 
-        return PlatformType.BUKKIT;
-    }
+//     if (reflectionResolver.hasClass("com.velocitypowered.api.proxy.ProxyServer")) return PlatformType.VELOCITY;
+//     if (reflectionResolver.hasClass("net.md_5.bungee.api.ProxyServer")) return PlatformType.BUNGEECORD;
+//     if (reflectionResolver.hasClass("org.spongepowered.api.Sponge")) return PlatformType.SPONGE;
+//     if (reflectionResolver.hasClass("net.fabricmc.api.ModInitializer")) return PlatformType.FABRIC;
+//     if (reflectionResolver.hasClass("net.neoforged.fml.common.Mod")) return PlatformType.NEOFORGE;
+//     if (reflectionResolver.hasClass("net.minecraftforge.fml.common.Mod")) return PlatformType.FORGE;
 
     protected abstract Path getDataPath();
 
@@ -141,4 +147,7 @@ public abstract class ZFuctoneImpl implements ZFuctone {
     protected abstract PlatformPlayerAdapter createPlayerAdapter();
     protected abstract PlatformEntityAdapter createEntityAdapter();
     protected abstract PlatformServerAdapter createServerAdapter();
+
+    protected abstract void registerListeners();
+    protected abstract void unregisterListeners();
 }

@@ -8,7 +8,7 @@ import com.zfettostudios.zfuctone.model.config.IntegrationConfig;
 import com.zfettostudios.zfuctone.model.config.localization.Localization;
 import com.zfettostudios.zfuctone.model.constant.LocalizationType;
 import com.zfettostudios.zfuctone.model.constant.player.PlayerEdition;
-import com.zfettostudios.zfuctone.module.integration.IntegrationModule;
+import com.zfettostudios.zfuctone.module.integration.IntegrationModuleImpl;
 import com.zfettostudios.zfuctone.module.integration.geyser.GeyserModule;
 import com.zfettostudios.zfuctone.platform.entity.PlatformPlayer;
 import org.geysermc.floodgate.api.FloodgateApi;
@@ -18,7 +18,7 @@ import org.jspecify.annotations.Nullable;
 import java.util.UUID;
 
 @RequiredArgsConstructor
-public class FloodgateModuleImpl extends IntegrationModule implements FloodgateModule {
+public class FloodgateModuleImpl extends IntegrationModuleImpl implements FloodgateModule {
     private final GeyserModule geyser;
 
     private IntegrationConfig.Floodgate config() {

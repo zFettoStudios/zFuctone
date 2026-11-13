@@ -2,7 +2,7 @@ package com.zfettostudios.zfuctone.module.integration;
 
 import com.zfettostudios.zfuctone.ZFuctoneAPI;
 
-public abstract class IntegrationModule {
+public abstract class IntegrationModuleImpl {
     protected boolean isEnable(boolean enable) {
         return enable && isPluginExits();
     }

@@ -2,14 +2,14 @@ package com.zfettostudios.zfuctone.module.integration.miniplaceholders;
 
 import com.zfettostudios.zfuctone.ZFuctoneAPI;
 import com.zfettostudios.zfuctone.model.config.IntegrationConfig;
-import com.zfettostudios.zfuctone.module.integration.IntegrationModule;
+import com.zfettostudios.zfuctone.module.integration.IntegrationModuleImpl;
 import com.zfettostudios.zfuctone.platform.entity.PlatformPlayer;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.minimessage.MiniMessage;
 import net.kyori.adventure.text.minimessage.tag.resolver.TagResolver;
 import org.jspecify.annotations.NonNull;
 
-public abstract class MiniPlaceholdersModuleImpl extends IntegrationModule implements MiniPlaceholdersModule {
+public abstract class MiniPlaceholdersModuleImpl extends IntegrationModuleImpl implements MiniPlaceholdersModule {
     protected IntegrationConfig.MiniPlaceholders config() {
         return ZFuctoneAPI.get().fileFacade().integration().miniplaceholders();
     }
