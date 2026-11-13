@@ -8,7 +8,7 @@ import org.jspecify.annotations.Nullable;
 import java.util.List;
 import java.util.UUID;
 
-public interface PlatformPlayerService extends Module<PlatformPlayer> {
+public interface PlatformPlayerService extends Module<PlatformPlayerService> {
     @Nullable PlatformPlayer getPlatformPlayer(@NonNull UUID uuid);
     @Nullable PlatformPlayer getPlatformPlayer(@NonNull String nickname);
     @NonNull List<PlatformPlayer> getPlatformPlayers();
