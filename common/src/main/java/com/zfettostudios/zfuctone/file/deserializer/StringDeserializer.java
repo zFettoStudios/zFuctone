@@ -10,10 +10,12 @@ public class StringDeserializer extends ValueDeserializer<String> {
     public String deserialize(JsonParser parser, DeserializationContext context) {
         return parser.currentToken() == JsonToken.VALUE_NULL ? "" : parser.getString();
     }
-    @Override public String getNullValue(DeserializationContext context) {
+    @Override
+    public String getNullValue(DeserializationContext context) {
         return "";
     }
-    @Override public String getAbsentValue(DeserializationContext context) {
+    @Override
+    public String getAbsentValue(DeserializationContext context) {
         return null;
     }
 }

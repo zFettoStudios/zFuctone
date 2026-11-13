@@ -7,7 +7,7 @@ import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
 public class CommandModuleControllerImpl implements CommandModuleController {
-    Map<String, CommandModule<?>> modules = new ConcurrentHashMap<>();
+    private final Map<String, CommandModule<?>> modules = new ConcurrentHashMap<>();
 
     @Override
     public CommandModuleController enable() {

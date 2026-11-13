@@ -6,7 +6,6 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.experimental.Accessors;
-import lombok.experimental.FieldDefaults;
 
 import com.zfettostudios.zfuctone.model.constant.message.BossBar;
 import com.zfettostudios.zfuctone.model.constant.message.Advancement;
@@ -17,39 +16,37 @@ import com.zfettostudios.zfuctone.model.constant.message.Advancement;
 @NoArgsConstructor
 @AllArgsConstructor
 @Accessors(fluent = true)
-@FieldDefaults(makeFinal = false)
 public class DestinationSetting {
-    Type type;
-    Times times;
-    Long duration;
-    Float health;
-    BossBar.Overlay overlay;
-    BossBar.Color color;
-    Boolean playBoosMusic;
-    Boolean createWorldFog;
-    Boolean darkenScreen;
-    String background;
-    Boolean hasShadow;
-    Long animationTime;
-    Long liveTime;
-    Integer width;
-    Float scale;
-    Integer offsetX;
-    Integer offsetY;
-    Integer offsetZ;
-    String icon;
-    Advancement.Style style;
+    private Type type;
+    private Times times;
+    private Long duration;
+    private Float health;
+    private BossBar.Overlay overlay;
+    private BossBar.Color color;
+    private Boolean playBoosMusic;
+    private Boolean createWorldFog;
+    private Boolean darkenScreen;
+    private String background;
+    private Boolean hasShadow;
+    private Long animationTime;
+    private Long liveTime;
+    private Integer width;
+    private Float scale;
+    private Integer offsetX;
+    private Integer offsetY;
+    private Integer offsetZ;
+    private String icon;
+    private Advancement.Style style;
 
     @Getter
     @Setter
     @Builder
     @NoArgsConstructor
     @AllArgsConstructor
-    @FieldDefaults(makeFinal = false)
     public static class Times {
-        Long fadeIn;
-        Long stay;
-        Long fadeOut;
+        private Long fadeIn;
+        private Long stay;
+        private Long fadeOut;
     }
 
     public enum Type {

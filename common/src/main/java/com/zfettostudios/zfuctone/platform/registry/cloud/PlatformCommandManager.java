@@ -14,7 +14,7 @@ import org.jspecify.annotations.NonNull;
 @Getter
 @Accessors(fluent = true)
 public class PlatformCommandManager<S> extends CommandManager<PlatformPlayer> implements SenderMapperHolder<S, PlatformPlayer> {
-    SenderMapper<S, PlatformPlayer> senderMapper;
+    private final SenderMapper<S, PlatformPlayer> senderMapper;
 
     public PlatformCommandManager(
         ExecutionCoordinator<PlatformPlayer> executionCoordinator,

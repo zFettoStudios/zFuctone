@@ -1,31 +1,38 @@
 package com.zfettostudios.zfuctone.module.integration.miniplaceholders;
 
-import lombok.experimental.UtilityClass;
-
 import io.github.miniplaceholders.api.MiniPlaceholders;
 import net.kyori.adventure.text.minimessage.tag.resolver.TagResolver;
 
-@UtilityClass
-public class BukkitMiniPlaceholdersModule {
-    private static final BukkitMiniPlaceholdersIntegration integration = new BukkitMiniPlaceholdersIntegration();
+public class BukkitMiniPlaceholdersModule extends MiniPlaceholdersModuleImpl {
+    private final BukkitMiniPlaceholdersIntegration integration = new BukkitMiniPlaceholdersIntegration();
 
-    public static void enable() {
-        integration.hook();
+    @Override
+    public MiniPlaceholdersModule enable() {
+        if (isEnable()) integration.hook();
+        return this;
     }
 
-    public static void disable() {
-        integration.unhook();
+    @Override
+    public MiniPlaceholdersModule disable() {
+        if (isPluginExits()) integration.unhook();
+        return this;
     }
 
-    public static TagResolver audiencePlaceholders() {
-        return MiniPlaceholders.audiencePlaceholders();
+    @Override
+    public TagResolver audiencePlaceholders() {
+        if (isEnable()) return MiniPlaceholders.audiencePlaceholders();
+        return TagResolver.empty();
     }
 
-    public static TagResolver globalPlaceholders() {
-        return MiniPlaceholders.globalPlaceholders();
+    @Override
+    public TagResolver globalPlaceholders() {
+        if (isEnable()) return MiniPlaceholders.globalPlaceholders();
+        return TagResolver.empty();
     }
 
-    public static TagResolver audienceGlobalPlaceholders() {
-        return MiniPlaceholders.audienceGlobalPlaceholders();
+    @Override
+    public TagResolver audienceGlobalPlaceholders() {
+        if (isEnable()) return MiniPlaceholders.audienceGlobalPlaceholders();
+        return TagResolver.empty();
     }
 }

@@ -10,8 +10,8 @@ import net.kyori.adventure.text.minimessage.MiniMessage;
 
 @RequiredArgsConstructor
 public class ZLoggerImpl implements ZLogger {
-    ComponentLogger logger;
-    MiniMessage mm = MiniMessage.miniMessage();
+    private final ComponentLogger logger;
+    private final MiniMessage mm = MiniMessage.miniMessage();
 
     private Config.Logger config() {
         return ZFuctoneAPI.get().fileFacade().config().logger();

@@ -25,11 +25,11 @@ import java.util.concurrent.ConcurrentHashMap;
 
 @RequiredArgsConstructor
 public class BukkitRegistrationHandler extends PlatformRegistrationHandler<CommandSender> {
-    Map<String, BukkitCommand> registeredCommands = new ConcurrentHashMap<>();
-    Plugin plugin;
+    private final Map<String, BukkitCommand> registeredCommands = new ConcurrentHashMap<>();
+    private final Plugin plugin;
 
-    CommandMap commandMap = Bukkit.getCommandMap();
-    Map<String, org.bukkit.command.Command> knownCommands = commandMap.getKnownCommands();
+    private final CommandMap commandMap = Bukkit.getCommandMap();
+    private final Map<String, org.bukkit.command.Command> knownCommands = commandMap.getKnownCommands();
 
     @Override
     public boolean registerCommand(@NonNull Command<PlatformPlayer> command) {

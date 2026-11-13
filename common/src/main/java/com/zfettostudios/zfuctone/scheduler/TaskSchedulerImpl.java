@@ -24,8 +24,8 @@ import java.util.concurrent.atomic.AtomicLong;
 import java.util.function.Supplier;
 
 public class TaskSchedulerImpl implements TaskScheduler {
-    AtomicLong currentTick = new AtomicLong(0L);
-    ConcurrentNavigableMap<Long, Queue<TaskEntry>> scheduledTasks = new ConcurrentSkipListMap<>();
+    private final AtomicLong currentTick = new AtomicLong(0L);
+    private final ConcurrentNavigableMap<Long, Queue<TaskEntry>> scheduledTasks = new ConcurrentSkipListMap<>();
 
     private FileFacade fileFacade() {
         return ZFuctoneAPI.get().fileFacade();

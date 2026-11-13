@@ -13,7 +13,7 @@ import java.util.UUID;
 import java.util.concurrent.ConcurrentHashMap;
 
 public class PlatformPlayerServiceImpl implements PlatformPlayerService {
-    Map<UUID, PlatformPlayer> platformPlayers = new ConcurrentHashMap<>();
+    private final Map<UUID, PlatformPlayer> platformPlayers = new ConcurrentHashMap<>();
 
     private PlatformPlayerAdapter playerAdapter() {
         return ZFuctoneAPI.get().playerAdapter();

@@ -5,7 +5,6 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.experimental.Accessors;
-import lombok.experimental.FieldDefaults;
 
 import com.zfettostudios.zfuctone.model.constant.world.SoundCategory;
 
@@ -14,11 +13,10 @@ import com.zfettostudios.zfuctone.model.constant.world.SoundCategory;
 @NoArgsConstructor
 @AllArgsConstructor
 @Accessors(fluent = true)
-@FieldDefaults(makeFinal = false)
 public class SoundSetting {
-    Boolean enable = false;
-    Float volume;
-    Float pitch;
-    SoundCategory category;
-    String name;
+    private Boolean enable = false;
+    private Float volume;
+    private Float pitch;
+    private SoundCategory category;
+    private String name;
 }

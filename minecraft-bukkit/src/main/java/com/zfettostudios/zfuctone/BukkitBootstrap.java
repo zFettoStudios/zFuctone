@@ -1,11 +1,9 @@
 package com.zfettostudios.zfuctone;
 
-import lombok.experimental.NonFinal;
-
 import org.bukkit.plugin.java.JavaPlugin;
 
 public class BukkitBootstrap extends JavaPlugin {
-    @NonFinal BukkitZFuctone plugin;
+    private BukkitZFuctone plugin;
 
     @Override
     public void onEnable() {

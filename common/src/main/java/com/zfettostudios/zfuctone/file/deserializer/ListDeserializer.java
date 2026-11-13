@@ -1,5 +1,7 @@
 package com.zfettostudios.zfuctone.file.deserializer;
 
+import lombok.RequiredArgsConstructor;
+
 import tools.jackson.core.JacksonException;
 import tools.jackson.core.JsonParser;
 import tools.jackson.core.JsonToken;
@@ -12,15 +14,12 @@ import tools.jackson.databind.ValueDeserializer;
 import java.util.List;
 import java.util.concurrent.CopyOnWriteArrayList;
 
+@RequiredArgsConstructor
 public class ListDeserializer extends ValueDeserializer<List<Object>> {
     private final ValueDeserializer<Object> elementDeserializer;
 
     public ListDeserializer() {
-        this.elementDeserializer = null;
-    }
-
-    public ListDeserializer(ValueDeserializer<Object> elementDeserializer) {
-        this.elementDeserializer = elementDeserializer;
+        this(null);
     }
 
     @Override
@@ -54,6 +53,7 @@ public class ListDeserializer extends ValueDeserializer<List<Object>> {
     @Override
     public List<Object> deserialize(JsonParser parser, DeserializationContext context) throws JacksonException {
         if (parser.currentToken() == JsonToken.VALUE_NULL) return new CopyOnWriteArrayList<>();
+
         return deserialize(parser, context, new CopyOnWriteArrayList<>());
     }
 
@@ -63,6 +63,7 @@ public class ListDeserializer extends ValueDeserializer<List<Object>> {
             if (intoValue == null) return new CopyOnWriteArrayList<>();
 
             intoValue.clear();
+
             return intoValue;
         }
 

@@ -27,14 +27,16 @@ public class LoggingProblemHandler extends DeserializationProblemHandler {
     }
 
     @Override
-    public Object handleUnexpectedToken(DeserializationContext context, JavaType type, JsonToken token, JsonParser parser, String failureMessage) {
+    public Object handleUnexpectedToken(DeserializationContext context, JavaType type,
+                                        JsonToken token, JsonParser parser, String failureMessage) {
         logger().warn("Expected {} but found \"{}\", skipping", type, token);
         parser.skipChildren();
         return fallback(type.getRawClass());
     }
 
     @Override
-    public boolean handleUnknownProperty(DeserializationContext context, JsonParser parser, ValueDeserializer<?> deserializer, Object target, String property) {
+    public boolean handleUnknownProperty(DeserializationContext context, JsonParser parser,
+                                         ValueDeserializer<?> deserializer, Object target, String property) {
         logger().warn("Unknown key \"{}\", ignoring", property);
         parser.skipChildren();
         return true;

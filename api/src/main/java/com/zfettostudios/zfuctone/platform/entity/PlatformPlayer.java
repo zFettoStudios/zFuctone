@@ -33,7 +33,7 @@ public interface PlatformPlayer extends Audience {
     boolean isOnline();
     int getPing();
 
-    PlatformPlayer setDisplayNickname(String displayNickname);
+    PlatformPlayer setDisplayNickname(@NonNull String displayNickname);
 
     PlatformPlayer dispatchMessage(@NonNull Component message);
     PlatformPlayer executeCommand(@NonNull String command);

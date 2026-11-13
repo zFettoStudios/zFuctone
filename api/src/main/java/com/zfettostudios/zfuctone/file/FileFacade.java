@@ -44,24 +44,5 @@ public interface FileFacade extends Module<FileFacade> {
 
     FileWriter writer();
 
-    static FilePath getFilePath(Object config) {
-        FilePath filePath = config.getClass().getAnnotation(FilePath.class);
-        if (filePath == null) throw new AnnotationNotFoundException(config.getClass(), FilePath.class);
-
-        return filePath;
-    }
-
-    static FilePath getFilePath(Class<?> config) {
-        FilePath filePath = config.getAnnotation(FilePath.class);
-        if (filePath == null) throw new AnnotationNotFoundException(config, FilePath.class);
-
-        return filePath;
-    }
-
-    static Path getFilePath(Object config, Path dataPath, Path localizationsPath) {
-        FilePath filePath = getFilePath(config);
-        if (filePath.localization()) return localizationsPath.resolve(filePath.path());
-
-        return dataPath.resolve(filePath.path());
-    }
+    Path getFilePath(Object config, Path dataPath, Path localizationsPath);
 }

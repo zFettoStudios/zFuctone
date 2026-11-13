@@ -5,7 +5,6 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.experimental.Accessors;
-import lombok.experimental.FieldDefaults;
 
 import com.zfettostudios.zjtime.TimeUnit;
 
@@ -14,8 +13,7 @@ import com.zfettostudios.zjtime.TimeUnit;
 @AllArgsConstructor
 @NoArgsConstructor
 @Accessors(fluent = true)
-@FieldDefaults(makeFinal = false)
 public class TimeSetting {
-    Long duration;
-    TimeUnit timeUnit;
+    private Long duration;
+    private TimeUnit timeUnit;
 }

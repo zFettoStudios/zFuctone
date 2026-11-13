@@ -8,26 +8,23 @@ import com.zfettostudios.zfuctone.model.file.FilePack;
 import tools.jackson.dataformat.yaml.YAMLMapper;
 
 import java.io.File;
-import java.io.FileFilter;
 import java.io.IOException;
-import java.nio.file.DirectoryStream;
 import java.nio.file.Files;
 import java.nio.file.Path;
-import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ExecutorService;
-import java.util.stream.StreamSupport;
 
 @RequiredArgsConstructor
 public class FileLoaderImpl implements FileLoader {
-    Path dataPath;
-    Path localizationsPath;
-    YAMLMapper mapper;
-    ExecutorService executor;
+    private final FileFacade fileFacade;
+    private final Path dataPath;
+    private final Path localizationsPath;
+    private final YAMLMapper mapper;
+    private final ExecutorService executor;
 
     private <T> T load(T file, Path path) {
         File fileFromPath = path.toFile();
@@ -46,7 +43,7 @@ public class FileLoaderImpl implements FileLoader {
 
     @Override
     public <T> CompletableFuture<T> loadAsync(T file) {
-        return loadAsync(file, FileFacade.getFilePath(file, dataPath, localizationsPath));
+        return loadAsync(file, fileFacade.getFilePath(file, dataPath, localizationsPath));
     }
 
     @Override

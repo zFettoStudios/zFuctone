@@ -39,5 +39,4 @@ public class BooleanDeserializer extends ValueDeserializer<Boolean> {
         logger().warn("Token \"{}\" is not boolean", token);
         return null;
     }
-
 }

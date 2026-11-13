@@ -3,7 +3,6 @@ package com.zfettostudios.zfuctone.model.config;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.experimental.Accessors;
-import lombok.experimental.NonFinal;
 
 import com.zfettostudios.zfuctone.annotation.config.FilePath;
 import com.zfettostudios.zfuctone.model.config.setting.CooldownSetting;
@@ -18,18 +17,18 @@ import java.util.List;
 @Accessors(fluent = true)
 @FilePath(path = "command.yml")
 public class CommandConfig {
-    @NonFinal Boolean enable = true;
-    ZFuctone zfuctone = new ZFuctone();
+    private Boolean enable = true;
+    private final ZFuctone zfuctone = new ZFuctone();
 
     @Getter
     @Setter
     public static class ZFuctone {
-        @NonFinal Boolean enable = true;
-        List<String> aliases = new LinkedList<>();
-        DestinationSetting destination = DestinationSetting.builder().type(DestinationSetting.Type.CHAT).build();
-        CooldownSetting cooldown = new CooldownSetting();
-        SoundSetting sound = new SoundSetting();
-        Reload reload = new Reload();
+        private Boolean enable = true;
+        private final List<String> aliases = new LinkedList<>();
+        private final DestinationSetting destination = DestinationSetting.builder().type(DestinationSetting.Type.CHAT).build();
+        private final CooldownSetting cooldown = new CooldownSetting();
+        private final SoundSetting sound = new SoundSetting();
+        private final Reload reload = new Reload();
 
         public ZFuctone() {
             aliases.add("zfuctone");
@@ -38,11 +37,11 @@ public class CommandConfig {
         @Getter
         @Setter
         public static class Reload {
-            @NonFinal Boolean enable = true;
-            List<String> aliases = new LinkedList<>();
-            DestinationSetting destination = DestinationSetting.builder().type(DestinationSetting.Type.CHAT).build();
-            CooldownSetting cooldown = new CooldownSetting();
-            SoundSetting sound = new SoundSetting();
+            private Boolean enable = true;
+            private final List<String> aliases = new LinkedList<>();
+            private final DestinationSetting destination = DestinationSetting.builder().type(DestinationSetting.Type.CHAT).build();
+            private final CooldownSetting cooldown = new CooldownSetting();
+            private final SoundSetting sound = new SoundSetting();
 
             public Reload() {
                 aliases.add("reload");

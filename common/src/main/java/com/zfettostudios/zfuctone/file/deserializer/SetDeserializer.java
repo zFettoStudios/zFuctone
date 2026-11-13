@@ -1,5 +1,7 @@
 package com.zfettostudios.zfuctone.file.deserializer;
 
+import lombok.RequiredArgsConstructor;
+
 import tools.jackson.core.JacksonException;
 import tools.jackson.core.JsonParser;
 import tools.jackson.core.JsonToken;
@@ -12,15 +14,12 @@ import tools.jackson.databind.ValueDeserializer;
 import java.util.Set;
 import java.util.concurrent.CopyOnWriteArraySet;
 
+@RequiredArgsConstructor
 public class SetDeserializer extends ValueDeserializer<Set<Object>> {
     private final ValueDeserializer<Object> elementDeserializer;
 
     public SetDeserializer() {
-        this.elementDeserializer = null;
-    }
-
-    public SetDeserializer(ValueDeserializer<Object> elementDeserializer) {
-        this.elementDeserializer = elementDeserializer;
+        this(null);
     }
 
     @Override
@@ -54,6 +53,7 @@ public class SetDeserializer extends ValueDeserializer<Set<Object>> {
     @Override
     public Set<Object> deserialize(JsonParser parser, DeserializationContext context) throws JacksonException {
         if (parser.currentToken() == JsonToken.VALUE_NULL) return new CopyOnWriteArraySet<>();
+
         return deserialize(parser, context, new CopyOnWriteArraySet<>());
     }
 

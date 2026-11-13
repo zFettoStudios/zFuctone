@@ -3,8 +3,6 @@ package com.zfettostudios.zfuctone.model.config;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.experimental.Accessors;
-import lombok.experimental.FieldDefaults;
-import lombok.experimental.NonFinal;
 
 import com.zfettostudios.zfuctone.annotation.config.FilePath;
 import com.zfettostudios.zfuctone.model.config.setting.TimeSetting;
@@ -23,128 +21,117 @@ import java.util.UUID;
 @Accessors(fluent = true)
 @FilePath(path = "config.yml")
 public class Config {
-    @NonFinal UUID server = UUID.randomUUID();
-    @NonFinal String version = BuildConstant.PROJECT_VERSION;
+    private UUID server = UUID.randomUUID();
+    private String version = BuildConstant.PROJECT_VERSION;
 
-    Config.Language language = new Config.Language();
-    Config.Database database = new Config.Database();
-    Config.Executor executor = new Config.Executor();
-    Config.Proxy proxy = new Config.Proxy();
-    Config.Internal internal = new Config.Internal();
-    Config.Logger logger = new Config.Logger();
-    Config.Metrics metrics = new Config.Metrics();
+    private final Language language = new Language();
+    private final Database database = new Database();
+    private final Executor executor = new Executor();
+    private final Proxy proxy = new Proxy();
+    private final Internal internal = new Config.Internal();
+    private final Logger logger = new Logger();
+    private final Metrics metrics = new Metrics();
 
     @Getter
     public static class Language {
-        Config.Language.Player player = new Config.Language.Player();
-        Config.Language.Console console = new Config.Language.Console();
-        Config.Language.CommandBlock commandBlock = new Config.Language.CommandBlock();
+        private final Player player = new Player();
+        private final Console console = new Console();
+        private final CommandBlock commandBlock = new CommandBlock();
 
         @Getter
         @Setter
-        @FieldDefaults(makeFinal = false)
         public static class Player {
-            String type = "en_us";
-            Boolean byPlayer = true;
+            private String type = "en_us";
+            private Boolean byPlayer = true;
         }
 
         @Getter
         @Setter
-        @FieldDefaults(makeFinal = false)
         public static class Console {
-            String type = "en_us";
+            private String type = "en_us";
         }
 
         @Getter
         @Setter
-        @FieldDefaults(makeFinal = false)
         public static class CommandBlock {
-            String type = "en_us";
-            Boolean byConsole = false;
-            Boolean byPlayer = true;
+            private String type = "en_us";
+            private Boolean byConsole = false;
+            private Boolean byPlayer = true;
         }
     }
 
     @Getter
     @Setter
-    @FieldDefaults(makeFinal = false)
     public static class Database {
-        DatabaseType type = DatabaseType.H2;
-        String name = BuildConstant.PROJECT_NAME.toLowerCase();
-        String host = "127.0.0.1";
-        Integer port = 3306;
-        String user = "root";
-        String password = "password";
-        String parameters = "?autoReconnect=true&useSSL=false&useUnicode=true&characterEncoding=UTF-8";
-        String prefix = BuildConstant.PROJECT_NAME.toLowerCase() + "_";
-        final Config.Database.PoolSettings poolSettings = new Config.Database.PoolSettings();
+        private DatabaseType type = DatabaseType.H2;
+        private String name = BuildConstant.PROJECT_NAME.toLowerCase();
+        private String host = "127.0.0.1";
+        private Integer port = 3306;
+        private String user = "root";
+        private String password = "password";
+        private String parameters = "?autoReconnect=true&useSSL=false&useUnicode=true&characterEncoding=UTF-8";
+        private String prefix = BuildConstant.PROJECT_NAME.toLowerCase() + "_";
+        private final PoolSettings poolSettings = new PoolSettings();
 
         @Getter
         @Setter
-        @FieldDefaults(makeFinal = false)
         public static class PoolSettings {
-            Integer maxSize = 10;
-            Integer minIdle = 10;
-            TimeSetting maxLifetime = new TimeSetting(1800000L, TimeUnit.MILLISECONDS);
-            TimeSetting keepaliveTime = new TimeSetting(0L, TimeUnit.MILLISECONDS);
-            TimeSetting timeout = new TimeSetting(5000L, TimeUnit.MILLISECONDS);
+            private Integer maxSize = 10;
+            private Integer minIdle = 10;
+            private TimeSetting maxLifetime = new TimeSetting(1800000L, TimeUnit.MILLISECONDS);
+            private TimeSetting keepaliveTime = new TimeSetting(0L, TimeUnit.MILLISECONDS);
+            private TimeSetting timeout = new TimeSetting(5000L, TimeUnit.MILLISECONDS);
         }
     }
 
     @Getter
     @Setter
-    @FieldDefaults(makeFinal = false)
     public static class Executor {
-        Integer maxPoolSize = 50;
-        TimeSetting shutdownTimeout = new TimeSetting(5L, TimeUnit.SECONDS);
+        private Integer maxPoolSize = 50;
+        private TimeSetting shutdownTimeout = new TimeSetting(5L, TimeUnit.SECONDS);
     }
 
     @Getter
     @Setter
-    @FieldDefaults(makeFinal = false)
     public static class Proxy {
-        final Set<String> clusters = new LinkedHashSet<>();
-        Boolean bungeecord = false;
-        Boolean velocity = false;
-        final Config.Proxy.Redis redis = new Config.Proxy.Redis();
+        private final Set<String> clusters = new LinkedHashSet<>();
+        private Boolean bungeecord = false;
+        private Boolean velocity = false;
+        private final Redis redis = new Redis();
 
         @Getter
         @Setter
-        @FieldDefaults(makeFinal = false)
         public static class Redis {
-            Boolean enable = false;
-            String host = "127.0.0.1";
-            Integer port = 6379;
-            Boolean ssl = false;
-            String user = "root";
-            String password = "password";
+            private Boolean enable = false;
+            private String host = "127.0.0.1";
+            private Integer port = 6379;
+            private Boolean ssl = false;
+            private String user = "root";
+            private String password = "password";
         }
     }
 
     @Getter
     @Setter
-    @FieldDefaults(makeFinal = false)
     public static class Internal {
-        Boolean enable = true;
-        Boolean unregisterCommandOnReload = false;
-        final Set<String> vanillaCommandsToRemove = new LinkedHashSet<>();
+        private Boolean enable = true;
+        private Boolean unregisterCommandOnReload = false;
+        private final Set<String> vanillaCommandsToRemove = new LinkedHashSet<>();
     }
 
     @Getter
     @Setter
-    @FieldDefaults(makeFinal = false)
     public static class Logger {
-        String prefix = "(" + BuildConstant.PROJECT_NAME + ") ";
-        final List<String> description = new LinkedList<>();
-        String warn = "<yellow>";
-        String info = "<white>";
-        Set<String> filter = new LinkedHashSet<>();
+        private String prefix = "(" + BuildConstant.PROJECT_NAME + ") ";
+        private final List<String> description = new LinkedList<>();
+        private String warn = "<yellow>";
+        private String info = "<white>";
+        private final Set<String> filter = new LinkedHashSet<>();
     }
 
     @Getter
     @Setter
-    @FieldDefaults(makeFinal = false)
     public static class Metrics {
-        Boolean enable = true;
+        private Boolean enable = true;
     }
 }

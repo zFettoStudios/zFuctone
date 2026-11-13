@@ -1,9 +1,7 @@
 package com.zfettostudios.zfuctone;
 
-import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.experimental.Accessors;
-import lombok.experimental.FieldDefaults;
 
 import com.zfettostudios.zfuctone.dispatcher.MessageDispatcher;
 import com.zfettostudios.zfuctone.dispatcher.MessageDispatcherImpl;
@@ -32,22 +30,21 @@ import java.nio.file.Path;
 
 @Getter
 @Accessors(fluent = true)
-@FieldDefaults(level = AccessLevel.PROTECTED)
 public abstract class ZFuctoneImpl implements ZFuctone {
     @Accessors(fluent = false)
-    PlatformType platformType;
-    FileFacade fileFacade;
-    ZLogger logger;
-    TaskScheduler taskScheduler;
-    PlatformPlayerService playerService;
-    PlatformPlayerAdapter playerAdapter;
-    PlatformServerAdapter serverAdapter;
-    PlatformEntityAdapter entityAdapter;
-    Integration integration;
-    MessageDispatcher messageDispatcher;
-    MessageModuleController messageModuleController;
-    CommandModuleController commandModuleController;
-    ReflectionResolver reflectionResolver;
+    protected final PlatformType platformType;
+    protected final FileFacade fileFacade;
+    protected final ZLogger logger;
+    protected final TaskScheduler taskScheduler;
+    protected final PlatformPlayerService playerService;
+    protected final PlatformPlayerAdapter playerAdapter;
+    protected final PlatformServerAdapter serverAdapter;
+    protected final PlatformEntityAdapter entityAdapter;
+    protected final Integration integration;
+    protected final MessageDispatcher messageDispatcher;
+    protected final MessageModuleController messageModuleController;
+    protected final CommandModuleController commandModuleController;
+    protected final ReflectionResolver reflectionResolver;
 
     public ZFuctoneImpl() {
         ZFuctoneAPI.setInstance(this);
@@ -130,7 +127,7 @@ public abstract class ZFuctoneImpl implements ZFuctone {
         else if (reflectionResolver.hasClass("net.md_5.bungee.api.ProxyServer")) return PlatformType.BUNGEECORD;
         else if (reflectionResolver.hasClass("org.spongepowered.api.Sponge")) return PlatformType.SPONGE;
         else if (reflectionResolver.hasClass("net.fabricmc.api.ModInitializer")) return PlatformType.FABRIC;
-        else if (reflectionResolver.hasClass("net.neoforged.fml.common.Mod")) return PlatformType.NEOFORHE;
+        else if (reflectionResolver.hasClass("net.neoforged.fml.common.Mod")) return PlatformType.NEOFORGE;
         else if (reflectionResolver.hasClass("net.minecraftforge.fml.common.Mod")) return PlatformType.FORGE;
 
         return PlatformType.BUKKIT;

@@ -4,18 +4,15 @@ import lombok.Getter;
 import lombok.experimental.Accessors;
 
 import com.zfettostudios.zfuctone.module.integration.miniplaceholders.BukkitMiniPlaceholdersModule;
+import com.zfettostudios.zfuctone.module.integration.miniplaceholders.MiniPlaceholdersModule;
 import com.zfettostudios.zfuctone.module.integration.placeholderapi.BukkitPlaceholderAPIModule;
-import com.zfettostudios.zfuctone.platform.entity.PlatformPlayer;
-import net.kyori.adventure.text.minimessage.tag.resolver.TagResolver;
-import org.bukkit.entity.Player;
-import org.jspecify.annotations.NonNull;
-import org.jspecify.annotations.Nullable;
+import com.zfettostudios.zfuctone.module.integration.placeholdersapi.PlaceholderAPIModule;
 
 @Getter
 @Accessors(fluent = true)
 public class BukkitIntegration extends IntegrationImpl {
-    PlaceholderAPI placeholderAPI = new BukkitPlaceholderAPI();
-    MiniPlaceholders miniPlaceholders = new BukkitMiniPlaceholders();
+    private final PlaceholderAPIModule placeholderAPI = new BukkitPlaceholderAPIModule();
+    private final MiniPlaceholdersModule miniPlaceholders = new BukkitMiniPlaceholdersModule();
 
     @Override
     protected Integration platformEnable() {
@@ -29,59 +26,5 @@ public class BukkitIntegration extends IntegrationImpl {
         placeholderAPI.disable();
         miniPlaceholders.disable();
         return this;
-    }
-
-    public static class BukkitPlaceholderAPI extends PlaceholderAPIImpl {
-        @Override
-        public PlaceholderAPI enable() {
-            if (isEnable()) BukkitPlaceholderAPIModule.enable();
-            return this;
-        }
-
-        @Override
-        public PlaceholderAPI disable() {
-            if (isPluginExits()) BukkitPlaceholderAPIModule.disable();
-            return this;
-        }
-
-        @Override
-        public @NonNull String setPlaceholders(@Nullable PlatformPlayer sender, @NonNull String input) {
-            if (!isEnable()) return input;
-            if (sender == null || !(sender.getRawPlayer() instanceof Player player)) return BukkitPlaceholderAPIModule.setPlaceholders(null, input);
-
-            return BukkitPlaceholderAPIModule.setPlaceholders(player, input);
-        }
-    }
-
-    public static class BukkitMiniPlaceholders extends MiniPlaceholdersImpl {
-        @Override
-        public MiniPlaceholders enable() {
-            if (isEnable()) BukkitMiniPlaceholdersModule.enable();
-            return this;
-        }
-
-        @Override
-        public MiniPlaceholders disable() {
-            if (isPluginExits()) BukkitMiniPlaceholdersModule.disable();
-            return this;
-        }
-
-        @Override
-        public TagResolver audiencePlaceholders() {
-            if (isEnable()) return BukkitMiniPlaceholdersModule.audiencePlaceholders();
-            return TagResolver.empty();
-        }
-
-        @Override
-        public TagResolver globalPlaceholders() {
-            if (isEnable()) return BukkitMiniPlaceholdersModule.globalPlaceholders();
-            return TagResolver.empty();
-        }
-
-        @Override
-        public TagResolver audienceGlobalPlaceholders() {
-            if (isEnable()) return BukkitMiniPlaceholdersModule.audienceGlobalPlaceholders();
-            return TagResolver.empty();
-        }
     }
 }

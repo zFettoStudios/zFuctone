@@ -4,13 +4,13 @@ import lombok.experimental.UtilityClass;
 
 @UtilityClass
 public class ZFuctoneAPI {
-    private static ZFuctone instance;
+    private ZFuctone instance;
 
-    static ZFuctone setInstance(ZFuctone zfuctone) {
+    ZFuctone setInstance(ZFuctone zfuctone) {
         return instance = zfuctone;
     }
 
-    public static ZFuctone get() {
+    public ZFuctone get() {
         return instance;
     }
 }

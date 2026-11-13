@@ -11,7 +11,7 @@ import java.util.List;
 
 @RequiredArgsConstructor
 public class BukkitServerAdapter implements PlatformServerAdapter {
-    JavaPlugin plugin;
+    private final JavaPlugin plugin;
 
     @Override
     public boolean isProjectExits(@NonNull String name) {

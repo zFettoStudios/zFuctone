@@ -21,7 +21,7 @@ import java.nio.file.Path;
 @Getter
 @Accessors(fluent = true)
 public class BukkitZFuctone extends ZFuctoneImpl {
-    JavaPlugin javaPlugin;
+    private final JavaPlugin javaPlugin;
 
     public BukkitZFuctone(JavaPlugin javaPlugin) {
         this.javaPlugin = javaPlugin;

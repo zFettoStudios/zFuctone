@@ -3,7 +3,6 @@ package com.zfettostudios.zfuctone.file;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.experimental.Accessors;
-import lombok.experimental.NonFinal;
 
 import com.fasterxml.jackson.annotation.JsonAutoDetect;
 import com.fasterxml.jackson.annotation.JsonInclude;
@@ -11,6 +10,7 @@ import com.fasterxml.jackson.annotation.JsonSetter;
 import com.fasterxml.jackson.annotation.Nulls;
 import com.fasterxml.jackson.annotation.PropertyAccessor;
 import com.zfettostudios.zfuctone.ZFuctoneAPI;
+import com.zfettostudios.zfuctone.annotation.config.FilePath;
 import com.zfettostudios.zfuctone.file.deserializer.BooleanDeserializer;
 import com.zfettostudios.zfuctone.file.deserializer.ListDeserializer;
 import com.zfettostudios.zfuctone.file.deserializer.MapDeserializer;
@@ -19,7 +19,6 @@ import com.zfettostudios.zfuctone.file.deserializer.StringDeserializer;
 import com.zfettostudios.zfuctone.file.deserializer.TimeUnitDeserializer;
 import com.zfettostudios.zfuctone.file.handler.LoggingProblemHandler;
 import com.zfettostudios.zfuctone.file.serializer.TimeUnitSerializer;
-import com.zfettostudios.zfuctone.logging.ZLogger;
 import com.zfettostudios.zfuctone.model.config.CommandConfig;
 import com.zfettostudios.zfuctone.model.config.Config;
 import com.zfettostudios.zfuctone.model.config.IntegrationConfig;
@@ -28,6 +27,7 @@ import com.zfettostudios.zfuctone.model.config.MessageConfig;
 import com.zfettostudios.zfuctone.model.config.PermissionConfig;
 import com.zfettostudios.zfuctone.model.constant.LocalizationType;
 import com.zfettostudios.zfuctone.model.file.FilePack;
+import com.zfettostudios.zfuctone.reflect.ReflectionResolver;
 import com.zfettostudios.zjtime.TimeUnit;
 import org.jspecify.annotations.NonNull;
 import org.jspecify.annotations.Nullable;
@@ -53,30 +53,28 @@ import java.util.concurrent.Executors;
 @Getter
 @Accessors(fluent = true)
 public class FileFacadeImpl implements FileFacade {
-    Path dataPath;
-    Path localizationsPath;
+    private final Path dataPath;
+    private final Path localizationsPath;
 
-    FileLoader loader;
-    FileWriter writer;
-    YAMLMapper mapper = createMapper();
-    ExecutorService executor = Executors.newVirtualThreadPerTaskExecutor();
+    private final FileLoader loader;
+    private final FileWriter writer;
+    private final YAMLMapper mapper = createMapper();
+    private final ExecutorService executor = Executors.newVirtualThreadPerTaskExecutor();
+    private final ReflectionResolver reflectionResolver = ZFuctoneAPI.get().reflectionResolver();
 
-    @Getter(AccessLevel.NONE) FilePack files = new FilePack();
+    @Getter(AccessLevel.NONE)
+    private final FilePack files = new FilePack();
 
-    @NonFinal Localization localizationPlayerDefault;
-    @NonFinal Localization localizationConsole;
-    @NonFinal Localization localizationCommandBlockDefault;
+    private Localization localizationPlayerDefault;
+    private Localization localizationConsole;
+    private Localization localizationCommandBlockDefault;
 
     public FileFacadeImpl(Path dataPath) {
         this.dataPath = dataPath;
         localizationsPath = dataPath.resolve("localizations");
 
-        loader = new FileLoaderImpl(dataPath, localizationsPath, mapper, executor);
-        writer = new FileWriterImpl(dataPath, localizationsPath, mapper, executor);
-    }
-
-    private ZLogger logger() {
-        return ZFuctoneAPI.get().logger();
+        loader = new FileLoaderImpl(this, dataPath, localizationsPath, mapper, executor);
+        writer = new FileWriterImpl(this, dataPath, localizationsPath, mapper, executor);
     }
 
     @Override
@@ -161,6 +159,14 @@ public class FileFacadeImpl implements FileFacade {
         saveFiles();
 
         return this;
+    }
+
+    @Override
+    public Path getFilePath(Object config, Path dataPath, Path localizationsPath) {
+        FilePath filePath = reflectionResolver.getAnnotation(FilePath.class, config);
+        if (filePath.localization()) return localizationsPath.resolve(filePath.path());
+
+        return dataPath.resolve(filePath.path());
     }
 
     @Override

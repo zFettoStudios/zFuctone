@@ -16,10 +16,11 @@ import java.util.concurrent.ExecutorService;
 
 @RequiredArgsConstructor
 public class FileWriterImpl implements FileWriter {
-    Path dataPath;
-    Path localizationsPath;
-    YAMLMapper mapper;
-    ExecutorService executor;
+    private final FileFacade fileFacade;
+    private final Path dataPath;
+    private final Path localizationsPath;
+    private final YAMLMapper mapper;
+    private final ExecutorService executor;
 
     private  <T> T save(T file, Path path) {
         try {
@@ -40,7 +41,7 @@ public class FileWriterImpl implements FileWriter {
 
     @Override
     public  <T> CompletableFuture<T> saveAsync(T file) {
-        return saveAsync(file, FileFacade.getFilePath(file, dataPath, localizationsPath));
+        return saveAsync(file, fileFacade.getFilePath(file, dataPath, localizationsPath));
     }
 
     @Override

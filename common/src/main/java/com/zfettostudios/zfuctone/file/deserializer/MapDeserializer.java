@@ -1,5 +1,7 @@
 package com.zfettostudios.zfuctone.file.deserializer;
 
+import lombok.RequiredArgsConstructor;
+
 import tools.jackson.core.JacksonException;
 import tools.jackson.core.JsonParser;
 import tools.jackson.core.JsonToken;
@@ -13,18 +15,13 @@ import tools.jackson.databind.ValueDeserializer;
 import java.util.LinkedHashMap;
 import java.util.Map;
 
+@RequiredArgsConstructor
 public class MapDeserializer extends ValueDeserializer<Map<Object, Object>> {
     private final KeyDeserializer keyDeserializer;
     private final ValueDeserializer<Object> valueDeserializer;
 
     public MapDeserializer() {
-        this.keyDeserializer = null;
-        this.valueDeserializer = null;
-    }
-
-    public MapDeserializer(KeyDeserializer keyDeserializer, ValueDeserializer<Object> valueDeserializer) {
-        this.keyDeserializer = keyDeserializer;
-        this.valueDeserializer = valueDeserializer;
+        this(null, null);
     }
 
     @Override
@@ -33,8 +30,11 @@ public class MapDeserializer extends ValueDeserializer<Map<Object, Object>> {
             JavaType keyType = property.getType().containedType(0);
             JavaType valueType = property.getType().containedType(1);
 
-            KeyDeserializer keyDeserializer = keyType != null ? context.findKeyDeserializer(keyType, property) : null;
-            ValueDeserializer<Object> valueDeserializer = valueType != null ? context.findNonContextualValueDeserializer(valueType) : null;
+            KeyDeserializer keyDeserializer = null;
+            if (keyType != null) keyDeserializer = context.findKeyDeserializer(keyType, property);
+
+            ValueDeserializer<Object> valueDeserializer = null;
+            if (valueType != null) valueDeserializer = context.findNonContextualValueDeserializer(valueType);
 
             return new MapDeserializer(keyDeserializer, valueDeserializer);
         }
@@ -59,11 +59,13 @@ public class MapDeserializer extends ValueDeserializer<Map<Object, Object>> {
     @Override
     public Map<Object, Object> deserialize(JsonParser parser, DeserializationContext context) throws JacksonException {
         if (parser.currentToken() == JsonToken.VALUE_NULL) return new LinkedHashMap<>();
+
         return deserialize(parser, context, new LinkedHashMap<>());
     }
 
     @Override
-    public Map<Object, Object> deserialize(JsonParser parser, DeserializationContext context, Map<Object, Object> intoValue) throws JacksonException {
+    public Map<Object, Object> deserialize(JsonParser parser, DeserializationContext context,
+                                           Map<Object, Object> intoValue) throws JacksonException {
         if (parser.currentToken() == JsonToken.VALUE_NULL) {
             if (intoValue != null) intoValue.clear();
             return intoValue == null ? new LinkedHashMap<>() : intoValue;
@@ -91,7 +93,8 @@ public class MapDeserializer extends ValueDeserializer<Map<Object, Object>> {
             }
 
             ValueDeserializer<Object> deserializer = valueDeserializer;
-            if (deserializer == null) deserializer = context.findNonContextualValueDeserializer(context.constructType(Object.class));
+            if (deserializer == null)
+                deserializer = context.findNonContextualValueDeserializer(context.constructType(Object.class));
 
             Object value = deserializer != null ? deserializer.deserialize(parser, context) : parser.getValueAsString();
             intoValue.put(key, value);

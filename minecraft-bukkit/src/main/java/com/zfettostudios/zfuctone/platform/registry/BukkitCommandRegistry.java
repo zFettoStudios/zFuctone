@@ -15,7 +15,7 @@ import org.jspecify.annotations.NonNull;
 @Getter(AccessLevel.PROTECTED)
 @Accessors(fluent = true)
 public class BukkitCommandRegistry extends CommandRegistryImpl {
-    @NonNull PlatformCommandManager<CommandSender> platformCommandManager;
+    @NonNull private final PlatformCommandManager<CommandSender> platformCommandManager;
 
     public BukkitCommandRegistry(JavaPlugin plugin) {
         platformCommandManager = new PlatformCommandManager<>(

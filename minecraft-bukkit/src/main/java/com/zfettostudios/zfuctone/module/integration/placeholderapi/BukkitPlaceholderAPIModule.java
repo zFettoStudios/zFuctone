@@ -1,34 +1,46 @@
 package com.zfettostudios.zfuctone.module.integration.placeholderapi;
 
-import lombok.experimental.UtilityClass;
-
-import com.zfettostudios.zfuctone.ZFuctoneAPI;
-import com.zfettostudios.zfuctone.model.config.IntegrationConfig;
+import com.zfettostudios.zfuctone.module.integration.placeholdersapi.PlaceholderAPIModule;
+import com.zfettostudios.zfuctone.platform.entity.PlatformPlayer;
 import me.clip.placeholderapi.PlaceholderAPI;
 import org.bukkit.entity.Player;
+import org.jspecify.annotations.NonNull;
+import org.jspecify.annotations.Nullable;
 
-@UtilityClass
-public class BukkitPlaceholderAPIModule {
-    private static final BukkitPlaceholderAPIIntegration integration = new BukkitPlaceholderAPIIntegration();
+public class BukkitPlaceholderAPIModule extends PlaceholderAPIModuleImpl {
+    private final BukkitPlaceholderAPIIntegration integration = new BukkitPlaceholderAPIIntegration();
 
-    private static IntegrationConfig.PlaceholderAPI config() {
-        return ZFuctoneAPI.get().fileFacade().integration().placeholderapi();
+    @Override
+    public PlaceholderAPIModule enable() {
+        if (isEnable()) integration.hook();
+        return this;
     }
 
-    public static void enable() {
-        integration.hook();
+    @Override
+    public PlaceholderAPIModule disable() {
+        if (isPluginExits()) integration.unhook();
+        return this;
     }
 
-    public static void disable() {
-        integration.unhook();
+    @Override
+    public @NonNull String setPlaceholders(@Nullable PlatformPlayer sender, @NonNull String input) {
+        if (!isEnable()) return input;
+        if (sender == null || !(sender.getRawPlayer() instanceof Player player))
+            return setPlaceholders(input);
+
+        return setPlaceholders(player, input);
     }
 
-    public static String setPlaceholders(Player player, String message) {
+    private String setPlaceholders(Player player, String message) {
         return PlaceholderAPI.setPlaceholders(player, setNestedPlaceholders(player, message));
     }
 
-    private static String setNestedPlaceholders(Player player, String message) {
+    private String setNestedPlaceholders(Player player, String message) {
         if (!config().processNestedPlaceholders()) return message;
         return PlaceholderAPI.setBracketPlaceholders(player, message);
+    }
+
+    private String setPlaceholders(String input) {
+        return setPlaceholders((Player) null, input);
     }
 }

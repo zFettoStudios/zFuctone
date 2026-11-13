@@ -7,7 +7,7 @@ import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
 public class MessageModuleControllerImpl implements MessageModuleController {
-    Map<String, MessageModule<?>> modules = new ConcurrentHashMap<>();
+    private final Map<String, MessageModule<?>> modules = new ConcurrentHashMap<>();
 
     @Override
     public MessageModuleController enable() {

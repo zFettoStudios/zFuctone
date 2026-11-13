@@ -3,8 +3,6 @@ package com.zfettostudios.zfuctone.platform.entity;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.experimental.Accessors;
-import lombok.experimental.FieldDefaults;
-import lombok.experimental.NonFinal;
 
 import com.zfettostudios.zfuctone.ZFuctoneAPI;
 import com.zfettostudios.zfuctone.exception.InvalidTypeException;
@@ -20,8 +18,8 @@ import java.util.UUID;
 
 public class PlatformPlayerImpl implements PlatformPlayer {
     UUID uuid;
-    @Getter @Setter @NonFinal String displayNickname;
-    @Getter Object rawPlayer;
+    @Getter @Setter private String displayNickname;
+    @Getter private Object rawPlayer;
 
     private PlatformPlayerAdapter playerAdapter() {
         return ZFuctoneAPI.get().playerAdapter();
@@ -188,18 +186,18 @@ public class PlatformPlayerImpl implements PlatformPlayer {
     }
 
     @Setter
-    @FieldDefaults(makeFinal = false)
     @Accessors(fluent = true)
     public static class Builder {
-        UUID uuid;
-        Object platformPlayer;
+        private UUID uuid;
+        private Object platformPlayer;
 
         private PlatformPlayerAdapter playerAdapter() {
             return ZFuctoneAPI.get().playerAdapter();
         }
 
         public PlatformPlayerImpl build() {
-            if (platformPlayer == null && uuid == null) throw new NullPointerException("Argument \"platformPlayer\" and \"uuid\" is null");
+            if (platformPlayer == null && uuid == null)
+                throw new NullPointerException("Argument \"platformPlayer\" and \"uuid\" is null");
 
             if (platformPlayer == null) {
                 Object receivedPlayer = playerAdapter().getPlatformPlayer(uuid);
@@ -207,7 +205,8 @@ public class PlatformPlayerImpl implements PlatformPlayer {
 
                 platformPlayer = receivedPlayer;
             }
-            else if (!playerAdapter().isPlatformPlayer(platformPlayer)) throw new InvalidTypeException("Argument \"platformPlayer\" is not player");
+            else if (!playerAdapter().isPlatformPlayer(platformPlayer))
+                throw new InvalidTypeException("Argument \"platformPlayer\" is not player");
 
             if (uuid == null) {
                 UUID receivedUuid = playerAdapter().getUniqueId(platformPlayer);

@@ -8,7 +8,7 @@ import java.util.Locale;
 
 @UtilityClass
 public class StringUtil {
-    public static String localeToString(@Nullable Locale locale) {
+    public String localeToString(@Nullable Locale locale) {
         if (locale == null) return "";
         return locale.toLanguageTag().replace('-', '_').toLowerCase();
     }
