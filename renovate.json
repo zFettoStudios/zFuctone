@@ -4,7 +4,7 @@
   "labels": ["dependencies"],
   "semanticCommitType": "build",
   "commitMessagePrefix": "chore(deps): ",
-  "stabilityDays": 0,
+  "minimumReleaseAge": null,
   "ignoreUnstable": false,
   "packageRules": [
     {
