@@ -24,6 +24,7 @@ public class BukkitPlaceholderAPIIntegration extends PlaceholderExpansion implem
     private final FileFacade fileFacade = ZFuctoneAPI.get().fileFacade();
     private final IntegrationConfig.PlaceholderAPI config = fileFacade.integration().placeholderapi();
     private final PlaceholderModule placeholderModule = ZFuctoneAPI.get().moduleController().placeholderModule();
+    private String identifier;
 
     private PlatformPlayerService playerService() {
         return ZFuctoneAPI.get().playerService();
@@ -31,7 +32,7 @@ public class BukkitPlaceholderAPIIntegration extends PlaceholderExpansion implem
 
     @Override
     public @NotNull String getIdentifier() {
-        return config.identifier();
+        return identifier;
     }
 
     @Override
@@ -56,6 +57,8 @@ public class BukkitPlaceholderAPIIntegration extends PlaceholderExpansion implem
 
     @Override
     public BukkitPlaceholderAPIIntegration hook() {
+        identifier = config.identifier();
+
         register();
         return this;
     }

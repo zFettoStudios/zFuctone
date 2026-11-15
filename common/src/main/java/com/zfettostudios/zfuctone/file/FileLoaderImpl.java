@@ -33,7 +33,7 @@ public class FileLoaderImpl implements FileLoader {
             Path parentPath = path.getParent();
             if (parentPath != null && !Files.exists(parentPath)) Files.createDirectories(parentPath);
 
-            if (!Files.exists(path)) mapper.writeValue(fileFromPath, file);
+            if (!Files.exists(path) || fileFromPath.length() == 0) mapper.writeValue(fileFromPath, file);
 
             return mapper.readerForUpdating(file).readValue(fileFromPath);
         } catch (IOException e) {

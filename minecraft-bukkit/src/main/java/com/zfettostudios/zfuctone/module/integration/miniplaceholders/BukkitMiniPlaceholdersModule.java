@@ -43,6 +43,8 @@ public class BukkitMiniPlaceholdersModule extends MiniPlaceholdersModuleImpl {
 
     @Override
     public MiniPlaceholdersModule reload() {
+        disable();
+        enable();
         return this;
     }
 }

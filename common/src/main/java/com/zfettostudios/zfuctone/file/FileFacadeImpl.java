@@ -43,8 +43,11 @@ import tools.jackson.dataformat.yaml.YAMLFactory;
 import tools.jackson.dataformat.yaml.YAMLMapper;
 import tools.jackson.dataformat.yaml.YAMLWriteFeature;
 
+import java.lang.reflect.Field;
+import java.lang.reflect.Modifier;
 import java.nio.file.Path;
 import java.util.Collection;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -54,6 +57,8 @@ import java.util.concurrent.Executors;
 @Getter
 @Accessors(fluent = true)
 public class FileFacadeImpl implements FileFacade {
+    private static final String PACKAGE_PATH = Config.class.getPackage().getName();
+
     private final Path dataPath;
     private final Path localizationsPath;
 
@@ -186,17 +191,17 @@ public class FileFacadeImpl implements FileFacade {
     }
 
     private YAMLMapper createMapper() {
-        return YAMLMapper.builder(YAMLFactory.builder().loadSettings(LoadSettings.builder()
+        YAMLMapper.Builder builder = YAMLMapper.builder(YAMLFactory.builder().loadSettings(LoadSettings.builder()
                 .setBufferSize(8192)
                 .setAllowDuplicateKeys(true)
                 .build()
             ).build())
             .enable(MapperFeature.ACCEPT_CASE_INSENSITIVE_ENUMS)
             .enable(MapperFeature.ACCEPT_CASE_INSENSITIVE_PROPERTIES)
-            .enable(MapperFeature.ALLOW_FINAL_FIELDS_AS_MUTATORS)
             .enable(DeserializationFeature.ACCEPT_SINGLE_VALUE_AS_ARRAY)
             .enable(DeserializationFeature.ACCEPT_EMPTY_STRING_AS_NULL_OBJECT)
             .enable(SerializationFeature.INDENT_OUTPUT)
+            .enable(MapperFeature.ALLOW_FINAL_FIELDS_AS_MUTATORS)
             .disable(EnumFeature.READ_ENUMS_USING_TO_STRING)
             .disable(EnumFeature.WRITE_ENUMS_USING_TO_STRING)
             .disable(YAMLWriteFeature.SPLIT_LINES)
@@ -210,7 +215,6 @@ public class FileFacadeImpl implements FileFacade {
             .changeDefaultPropertyInclusion(_ -> JsonInclude.Value.construct(JsonInclude.Include.NON_NULL, JsonInclude.Include.NON_NULL))
             .changeDefaultNullHandling(_ -> JsonSetter.Value.forValueNulls(Nulls.SKIP))
             .changeDefaultVisibility(vc -> vc.withVisibility(PropertyAccessor.FIELD, JsonAutoDetect.Visibility.ANY))
-            .withConfigOverride(Object.class, override -> override.setMergeable(true))
             .withConfigOverride(String.class, override -> override.setNullHandling(JsonSetter.Value.forContentNulls(Nulls.AS_EMPTY)))
             .withConfigOverride(Collection.class, override -> override.setNullHandling(JsonSetter.Value.forContentNulls(Nulls.AS_EMPTY)))
             .withConfigOverride(List.class, override -> override.setNullHandling(JsonSetter.Value.forContentNulls(Nulls.AS_EMPTY)))
@@ -226,7 +230,35 @@ public class FileFacadeImpl implements FileFacade {
                 .addDeserializer(Map.class, new MapDeserializer())
 
                 .addSerializer(TimeUnit.class, new TimeUnitSerializer())
-            )
-            .build();
+            );
+
+        Set<Class<?>> visited = new HashSet<>();
+        List.of(
+            Config.class,
+            CommandConfig.class,
+            IntegrationConfig.class,
+            MessageConfig.class,
+            PermissionConfig.class,
+            PlaceholderConfig.class,
+            Localization.class
+        ).forEach(root -> enableMerge(builder, root, visited));
+
+        return builder.build();
+    }
+
+    private static void enableMerge(YAMLMapper.Builder builder, Class<?> type, Set<Class<?>> visited) {
+        if (type == null || !type.getName().startsWith(PACKAGE_PATH) || !visited.add(type)) return;
+
+        for (Field field : type.getDeclaredFields()) {
+            if (Modifier.isStatic(field.getModifiers())) continue;
+
+            Class<?> fieldType = field.getType();
+            if (fieldType.isEnum() || !fieldType.getName().startsWith(PACKAGE_PATH)) continue;
+
+            builder.withConfigOverride(fieldType, override -> override.setMergeable(true));
+            enableMerge(builder, fieldType, visited);
+        }
+
+        enableMerge(builder, type.getSuperclass(), visited);
     }
 }

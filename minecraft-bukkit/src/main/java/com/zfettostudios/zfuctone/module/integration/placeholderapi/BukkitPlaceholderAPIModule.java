@@ -13,12 +13,14 @@ public class BukkitPlaceholderAPIModule extends PlaceholderAPIModuleImpl {
     @Override
     public PlaceholderAPIModule enable() {
         if (isEnable()) integration.hook();
+
         return this;
     }
 
     @Override
     public PlaceholderAPIModule disable() {
         if (isPluginExits()) integration.unhook();
+
         return this;
     }
 
@@ -51,6 +53,8 @@ public class BukkitPlaceholderAPIModule extends PlaceholderAPIModuleImpl {
 
     @Override
     public PlaceholderAPIModule reload() {
+        disable();
+        enable();
         return this;
     }
 }
