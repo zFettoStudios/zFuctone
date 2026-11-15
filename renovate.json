@@ -5,7 +5,7 @@
   "semanticCommitType": "build",
   "commitMessagePrefix": "chore(deps): ",
   "stabilityDays": 0,
-  "prereleases": true,
+  "ignoreUnstable": false,
   "packageRules": [
     {
       "matchPackageNames": ["net.fabricmc:fabric-loader"],
