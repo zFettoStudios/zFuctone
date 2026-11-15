@@ -53,7 +53,7 @@ public class ServerPlaceholderHandler {
         if (PlaceholderHandlerUtil.cannotHandle(context.getSender(),
             config.serverPlayersMax(), permissionConfig.serverPlayersMaxUse())) return null;
 
-        return String.valueOf(serverAdapter.getPlayersOnline());
+        return String.valueOf(serverAdapter.getPlayersMax());
     }
 
     private String handlerTps1(PlaceholderContext context) {

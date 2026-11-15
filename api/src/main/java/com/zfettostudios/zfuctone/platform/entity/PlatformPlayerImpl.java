@@ -53,20 +53,20 @@ public class PlatformPlayerImpl implements PlatformPlayer {
     @Override
     public @NonNull String getLocale() {
         if (!isPlayer()) return "";
-        return playerAdapter.getLocale(uuid);
+        return playerAdapter.getLocale(rawPlayer);
     }
 
     @Override
     public @NonNull String getIp() {
         if (!isPlayer()) return "";
-        String ip = playerAdapter.getIp(uuid);
+        String ip = playerAdapter.getIp(rawPlayer);
         return ip != null ? ip : "";
     }
 
     @Override
     public int getProtocolVersion() {
         if (!isPlayer()) return -1;
-        return playerAdapter.getProtocolVersion(uuid);
+        return playerAdapter.getProtocolVersion(rawPlayer);
     }
 
     @Override

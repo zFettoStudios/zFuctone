@@ -8,6 +8,7 @@ import com.zfettostudios.zfuctone.file.FileFacade;
 import com.zfettostudios.zfuctone.model.config.IntegrationConfig;
 import com.zfettostudios.zfuctone.model.config.PlaceholderConfig;
 import com.zfettostudios.zfuctone.model.config.localization.Localization;
+import com.zfettostudios.zfuctone.module.integration.placeholdersapi.PlaceholderAPIModule;
 import com.zfettostudios.zfuctone.module.placeholder.handler.PlayerPlaceholderHandler;
 import com.zfettostudios.zfuctone.module.placeholder.handler.ProjectPlaceholderHandler;
 import com.zfettostudios.zfuctone.module.placeholder.handler.ServerPlaceholderHandler;
@@ -26,6 +27,9 @@ public class PlaceholderModuleImpl implements PlaceholderModule {
     private final FileFacade fileFacade = ZFuctoneAPI.get().fileFacade();
     private final PlaceholderConfig config = fileFacade.placeholder();
     private final IntegrationConfig.PlaceholderAPI configPlaceholderAPI = fileFacade.integration().placeholderapi();
+    private PlaceholderAPIModule placeholderAPI() {
+        return ZFuctoneAPI.get().moduleController().getIntegrationOrNew(PlaceholderAPIModule.class);
+    }
 
     @Override
     public List<String> getPlaceholderAPIPlaceholders() {
@@ -114,5 +118,10 @@ public class PlaceholderModuleImpl implements PlaceholderModule {
         ProjectPlaceholderHandler.createPlaceholders(placeholders);
         ServerPlaceholderHandler.createPlaceholders(placeholders);
         PlayerPlaceholderHandler.createPlaceholders(placeholders);
+
+        for (Localization localization : fileFacade.localizations().values())
+            for (Map.Entry<String, String> entry : localization.placeholder().values().entrySet())
+                placeholders.put(entry.getKey(), context ->
+                    placeholderAPI().setPlaceholders(context.getSender(), entry.getValue()));
     }
 }
