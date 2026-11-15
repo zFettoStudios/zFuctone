@@ -6,6 +6,10 @@
   "commitMessagePrefix": "chore(deps): ",
   "minimumReleaseAge": null,
   "ignoreUnstable": false,
+  "ignorePrAuthor": true,
+  "stopUpdatingReleases": [
+    "manual-close"
+  ]
   "packageRules": [
     {
       "matchPackageNames": ["net.fabricmc:fabric-loader"],
