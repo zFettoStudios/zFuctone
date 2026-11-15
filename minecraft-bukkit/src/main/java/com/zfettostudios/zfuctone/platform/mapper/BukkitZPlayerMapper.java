@@ -22,7 +22,7 @@ public class BukkitZPlayerMapper implements SenderMapper<CommandSender, Platform
 
     @Override
     public @NonNull CommandSender reverse(@NonNull PlatformPlayer player) {
-        Player platformPlayer = ZFuctoneAPI.get().playerAdapter().getPlatformPlayer(player.getUniqueId(), Player.class);
+        Player platformPlayer = ZFuctoneAPI.get().playerAdapter().getPlatformPlayer(player.uuid(), Player.class);
         if (platformPlayer == null) return Bukkit.getConsoleSender();
 
         return platformPlayer;

@@ -14,10 +14,7 @@ import java.util.concurrent.ConcurrentHashMap;
 
 public class PlatformPlayerServiceImpl implements PlatformPlayerService {
     private final Map<UUID, PlatformPlayer> platformPlayers = new ConcurrentHashMap<>();
-
-    private PlatformPlayerAdapter playerAdapter() {
-        return ZFuctoneAPI.get().playerAdapter();
-    }
+    private final PlatformPlayerAdapter playerAdapter = ZFuctoneAPI.get().playerAdapter();
 
     @Override
     public PlatformPlayerService enable() {
@@ -36,7 +33,7 @@ public class PlatformPlayerServiceImpl implements PlatformPlayerService {
 
     @Override
     public @Nullable PlatformPlayer getPlatformPlayer(@NonNull String nickname) {
-        return platformPlayers.get(playerAdapter().getUniqueIdFromNickname(nickname));
+        return platformPlayers.get(playerAdapter.getUUIDFromNickname(nickname));
     }
 
     @Override
@@ -46,7 +43,7 @@ public class PlatformPlayerServiceImpl implements PlatformPlayerService {
 
     @Override
     public PlatformPlayerService addPlatformPlayer(@NonNull PlatformPlayer platformPlayer) {
-        platformPlayers.put(platformPlayer.getUniqueId(), platformPlayer);
+        platformPlayers.put(platformPlayer.uuid(), platformPlayer);
         return this;
     }
 
@@ -58,7 +55,12 @@ public class PlatformPlayerServiceImpl implements PlatformPlayerService {
 
     @Override
     public PlatformPlayerService removePlatformPlayer(@NonNull String nickname) {
-        platformPlayers.remove(playerAdapter().getUniqueIdFromNickname(nickname));
+        platformPlayers.remove(playerAdapter.getUUIDFromNickname(nickname));
+        return this;
+    }
+
+    @Override
+    public PlatformPlayerService reload() {
         return this;
     }
 }

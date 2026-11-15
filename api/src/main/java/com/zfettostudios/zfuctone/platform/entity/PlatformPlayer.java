@@ -1,6 +1,7 @@
 package com.zfettostudios.zfuctone.platform.entity;
 
-import com.zfettostudios.zfuctone.model.constant.player.PlayerEdition;
+import com.zfettostudios.zfuctone.model.constant.minecraft.player.Gamemode;
+import com.zfettostudios.zfuctone.model.constant.minecraft.player.PlayerEdition;
 import net.kyori.adventure.audience.Audience;
 import net.kyori.adventure.text.Component;
 import org.jspecify.annotations.NonNull;
@@ -17,7 +18,7 @@ public interface PlatformPlayer extends Audience {
 
     boolean isPlayer();
 
-    @NonNull UUID getUniqueId();
+    @NonNull UUID uuid();
     @NonNull String getNickname();
     @NonNull String getDisplayNickname();
     @NonNull String getLocale();
@@ -32,9 +33,15 @@ public interface PlatformPlayer extends Audience {
     boolean isDead();
     boolean isOnline();
     int getPing();
+    boolean hasPermission(@NonNull String permission);
+    @NonNull Gamemode getGamemode();
+    @NonNull String getWorldName();
+    @NonNull String getWorldEnvironment();
 
     PlatformPlayer setDisplayNickname(@NonNull String displayNickname);
 
     PlatformPlayer dispatchMessage(@NonNull Component message);
     PlatformPlayer executeCommand(@NonNull String command);
+
+    PlatformPlayer copy();
 }

@@ -10,10 +10,12 @@ public class RuRuLocalization extends Localization {
         messageCollect();
         commandCollect();
         integrationCollect();
+        placeholderCollect();
     }
 
     private void messageCollect() {
-        message();
+        message().join().format("Игрок %player_name% зашел на сервер!");
+        message().quit().format("Игрок %player_name% вышел с сервера!");
     }
 
     private void commandCollect() {
@@ -22,5 +24,9 @@ public class RuRuLocalization extends Localization {
 
     private void integrationCollect() {
         integration();
+    }
+
+    private void placeholderCollect() {
+        placeholder().values().put("example", "пример");
     }
 }

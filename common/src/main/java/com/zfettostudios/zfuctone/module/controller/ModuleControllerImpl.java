@@ -1,0 +1,128 @@
+package com.zfettostudios.zfuctone.module.controller;
+
+import lombok.AccessLevel;
+import lombok.Getter;
+import lombok.experimental.Accessors;
+
+import com.zfettostudios.zfuctone.ZFuctoneAPI;
+import com.zfettostudios.zfuctone.module.placeholder.PlaceholderModule;
+import com.zfettostudios.zfuctone.module.placeholder.PlaceholderModuleImpl;
+import com.zfettostudios.zfuctone.module.ReloadModule;
+import com.zfettostudios.zfuctone.module.command.CommandModule;
+import com.zfettostudios.zfuctone.module.integration.IntegrationModule;
+import com.zfettostudios.zfuctone.module.message.MessageModule;
+import com.zfettostudios.zfuctone.scheduler.TaskScheduler;
+import org.jspecify.annotations.NonNull;
+import org.jspecify.annotations.Nullable;
+
+import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
+import java.util.function.Consumer;
+
+@Getter
+@Accessors(fluent = true)
+public class ModuleControllerImpl implements ModuleController {
+    private final Map<Class<? extends MessageModule<?>>, MessageModule<?>> messageModules = new ConcurrentHashMap<>();
+    private final Map<Class<? extends CommandModule<?>>, CommandModule<?>> commandModules = new ConcurrentHashMap<>();
+    private final Map<Class<? extends IntegrationModule<?>>, IntegrationModule<?>> integrationModules = new ConcurrentHashMap<>();
+    private final PlaceholderModule placeholderModule = new PlaceholderModuleImpl();
+    @Getter(AccessLevel.NONE)
+    private final TaskScheduler taskScheduler = ZFuctoneAPI.get().taskScheduler();
+
+    @Override
+    public <T extends MessageModule<T>> T add(@NonNull Class<T> moduleClass, @NonNull MessageModule<T> module) {
+        return moduleClass.cast(messageModules.put(moduleClass, module));
+    }
+
+    @Override
+    public <T extends CommandModule<T>> T add(@NonNull Class<T> moduleClass, @NonNull CommandModule<T> module) {
+        return moduleClass.cast(commandModules.put(moduleClass, module));
+    }
+
+    @Override
+    public <T extends IntegrationModule<T>> T add(@NonNull Class<T> moduleClass, @NonNull IntegrationModule<T> module) {
+        return moduleClass.cast(integrationModules.put(moduleClass, module));
+    }
+
+    @Override
+    public @Nullable <T extends MessageModule<T>> T removeMessage(@NonNull Class<T> moduleClass) {
+        return moduleClass.cast(messageModules.remove(moduleClass));
+    }
+
+    @Override
+    public @Nullable <T extends CommandModule<T>> T removeCommand(@NonNull Class<T> moduleClass) {
+        return moduleClass.cast(commandModules.remove(moduleClass));
+    }
+
+    @Override
+    public @Nullable <T extends IntegrationModule<T>> T removeIntegration(@NonNull Class<T> moduleClass) {
+        return moduleClass.cast(integrationModules.remove(moduleClass));
+    }
+
+    @Override
+    public @Nullable <T extends MessageModule<T>> T getMessage(@NonNull Class<T> moduleClass) {
+        return moduleClass.cast(messageModules.get(moduleClass));
+    }
+
+    @Override
+    public @Nullable <T extends CommandModule<T>> T getCommand(@NonNull Class<T> moduleClass) {
+        return moduleClass.cast(commandModules.get(moduleClass));
+    }
+
+    @Override
+    public @Nullable <T extends IntegrationModule<T>> T getIntegration(@NonNull Class<T> moduleClass) {
+        return moduleClass.cast(integrationModules.get(moduleClass));
+    }
+
+    @Override
+    @SuppressWarnings("all")
+    public @NonNull <T extends MessageModule<T>> T getMessageOrNew(@NonNull Class<T> moduleClass) {
+        return getMessage(moduleClass);
+    }
+
+    @Override
+    @SuppressWarnings("all")
+    public @NonNull <T extends CommandModule<T>> T getCommandOrNew(@NonNull Class<T> moduleClass) {
+        return getCommand(moduleClass);
+    }
+
+    @Override
+    @SuppressWarnings("all")
+    public @NonNull <T extends IntegrationModule<T>> T getIntegrationOrNew(@NonNull Class<T> moduleClass) {
+        return getIntegration(moduleClass);
+    }
+
+    @Override
+    public ModuleController enable() {
+        placeholderModule.enable();
+        return executeAllModules(ReloadModule::enable);
+    }
+
+    @Override
+    public ModuleController disable() {
+        placeholderModule.disable();
+        return executeAllModules(ReloadModule::disable);
+    }
+
+    @Override
+    public ModuleController reload() {
+        placeholderModule.reload();
+        return executeAllModules(ReloadModule::reload);
+    }
+
+    private ModuleController executeAllModules(Consumer<ReloadModule<?>> consumer) {
+        taskScheduler.runSyncAllOf(
+            taskScheduler.runAsync(() -> {
+                for (MessageModule<?> module : messageModules.values()) consumer.accept(module);
+            }),
+            taskScheduler.runAsync(() -> {
+                for (CommandModule<?> module : commandModules.values()) consumer.accept(module);
+            }),
+            taskScheduler.runAsync(() -> {
+                for (IntegrationModule<?> module : integrationModules.values()) consumer.accept(module);
+            })
+        );
+
+        return this;
+    }
+}

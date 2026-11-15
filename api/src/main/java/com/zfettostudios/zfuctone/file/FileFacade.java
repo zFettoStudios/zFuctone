@@ -3,6 +3,7 @@ package com.zfettostudios.zfuctone.file;
 import com.zfettostudios.zfuctone.model.config.CommandConfig;
 import com.zfettostudios.zfuctone.model.config.Config;
 import com.zfettostudios.zfuctone.model.config.IntegrationConfig;
+import com.zfettostudios.zfuctone.model.config.PlaceholderConfig;
 import com.zfettostudios.zfuctone.model.config.localization.Localization;
 import com.zfettostudios.zfuctone.model.config.MessageConfig;
 import com.zfettostudios.zfuctone.model.config.PermissionConfig;
@@ -23,6 +24,7 @@ public interface FileFacade extends Module<FileFacade> {
     CommandConfig command();
     PermissionConfig permission();
     IntegrationConfig integration();
+    PlaceholderConfig placeholder();
 
     Map<String, Localization> localizations();
 

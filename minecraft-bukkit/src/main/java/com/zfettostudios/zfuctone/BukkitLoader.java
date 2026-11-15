@@ -2,7 +2,7 @@ package com.zfettostudios.zfuctone;
 
 import org.bukkit.plugin.java.JavaPlugin;
 
-public class BukkitBootstrap extends JavaPlugin {
+public class BukkitLoader extends JavaPlugin {
     private BukkitZFuctone plugin;
 
     @Override

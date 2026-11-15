@@ -59,6 +59,7 @@ public class FileLoaderImpl implements FileLoader {
             loadAsync(files.integration()),
             loadAsync(files.message()),
             loadAsync(files.permission()),
+            loadAsync(files.placeholder()),
             loadAsyncLocalizations(files.localizations())
         ).thenApply(_ -> files);
     }

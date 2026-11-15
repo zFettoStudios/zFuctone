@@ -1,6 +1,8 @@
 package com.zfettostudios.zfuctone.module.message;
 
-public interface MessageModule<T> {
+import com.zfettostudios.zfuctone.module.ReloadModule;
+
+public interface MessageModule<T> extends ReloadModule<T> {
     T register();
     T unregister();
 

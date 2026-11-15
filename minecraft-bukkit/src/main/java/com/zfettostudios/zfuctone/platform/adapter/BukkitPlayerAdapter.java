@@ -1,5 +1,6 @@
 package com.zfettostudios.zfuctone.platform.adapter;
 
+import com.zfettostudios.zfuctone.model.constant.minecraft.player.Gamemode;
 import com.zfettostudios.zfuctone.util.StringUtil;
 import net.kyori.adventure.text.Component;
 import org.bukkit.Bukkit;
@@ -136,7 +137,7 @@ public class BukkitPlayerAdapter implements PlatformPlayerAdapter {
     }
 
     @Override
-    public @Nullable UUID getUniqueIdFromNickname(@NonNull String nickname) {
+    public @Nullable UUID getUUIDFromNickname(@NonNull String nickname) {
         Player player = Bukkit.getPlayerExact(nickname);
         return player != null ? player.getUniqueId() : null;
     }
@@ -195,27 +196,10 @@ public class BukkitPlayerAdapter implements PlatformPlayerAdapter {
         return parseVersion(formatOne, format, VERSIONS.get(protocol));
     }
 
-
-    @Override
-    public @NonNull PlatformPlayerAdapter dispatchMessage(@NonNull UUID uuid, @NonNull Component message) {
-        Player platformPlayer = Bukkit.getPlayer(uuid);
-        if (platformPlayer != null) platformPlayer.sendMessage(message);
-
-        return this;
-    }
-
     @Override
     public @NonNull PlatformPlayerAdapter dispatchMessage(@NonNull Object platformPlayer, @NonNull Component message) {
         Player player = getPlayerFrom(platformPlayer);
         if (player != null) player.sendMessage(message);
-
-        return this;
-    }
-
-    @Override
-    public @NonNull PlatformPlayerAdapter executeCommand(@NonNull UUID uuid, @NonNull String command) {
-        Player platformPlayer = Bukkit.getPlayer(uuid);
-        if (platformPlayer != null) Bukkit.dispatchCommand(platformPlayer, command);
 
         return this;
     }
@@ -229,14 +213,6 @@ public class BukkitPlayerAdapter implements PlatformPlayerAdapter {
     }
 
     @Override
-    public @NonNull String getNickname(@NonNull UUID uuid) {
-        Player player = Bukkit.getPlayer(uuid);
-        if (player != null) return player.getName();
-
-        return "";
-    }
-
-    @Override
     public @NonNull String getNickname(@NonNull Object platformPlayer) {
         Player player = getPlayerFrom(platformPlayer);
         if (player != null) return player.getName();
@@ -245,7 +221,7 @@ public class BukkitPlayerAdapter implements PlatformPlayerAdapter {
     }
 
     @Override
-    public @Nullable UUID getUniqueId(@NonNull Object platformPlayer) {
+    public @Nullable UUID getUUID(@NonNull Object platformPlayer) {
         Player player = getPlayerFrom(platformPlayer);
         if (player != null) return player.getUniqueId();
 
@@ -258,14 +234,6 @@ public class BukkitPlayerAdapter implements PlatformPlayerAdapter {
         if (player != null) return player.getPing();
 
         return -1;
-    }
-
-    @Override
-    public int getPing(@NonNull UUID uuid) {
-        Player platformPlayer = Bukkit.getPlayer(uuid);
-        if (platformPlayer == null) return -1;
-
-        return platformPlayer.getPing();
     }
 
     @Override
@@ -285,17 +253,6 @@ public class BukkitPlayerAdapter implements PlatformPlayerAdapter {
     }
 
     @Override
-    public @Nullable String getIp(@NonNull UUID uuid) {
-        Player platformPlayer = Bukkit.getPlayer(uuid);
-        if (platformPlayer == null) return "";
-
-        InetSocketAddress address = platformPlayer.getAddress();
-        if (address == null) return "";
-
-        return address.getHostName();
-    }
-
-    @Override
     public @Nullable String getIp(@NonNull Object platformPlayer) {
         Player player = getPlayerFrom(platformPlayer);
         if (player == null) return "";
@@ -304,14 +261,6 @@ public class BukkitPlayerAdapter implements PlatformPlayerAdapter {
         if (address != null) return address.getHostName();
 
         return "";
-    }
-
-    @Override
-    public boolean isOperator(@NonNull UUID uuid) {
-        Player player = Bukkit.getPlayer(uuid);
-        if (player != null) return player.isOp();
-
-        return Bukkit.getOfflinePlayer(uuid).isOp();
     }
 
     @Override
@@ -326,27 +275,11 @@ public class BukkitPlayerAdapter implements PlatformPlayerAdapter {
     }
 
     @Override
-    public boolean isSneaking(@NonNull UUID uuid) {
-        Player player = Bukkit.getPlayer(uuid);
-        if (player == null) return false;
-
-        return player.isSneaking();
-    }
-
-    @Override
     public boolean isSneaking(@NonNull Object platformPlayer) {
         Player player = getPlayerFrom(platformPlayer);
         if (player != null) return player.isSneaking();
 
         return false;
-    }
-
-    @Override
-    public boolean isDead(@NonNull UUID uuid) {
-        Player player = Bukkit.getPlayer(uuid);
-        if (player == null) return false;
-
-        return player.isDead();
     }
 
     @Override
@@ -358,14 +291,6 @@ public class BukkitPlayerAdapter implements PlatformPlayerAdapter {
     }
 
     @Override
-    public boolean isOnline(@NonNull UUID uuid) {
-        Player player = Bukkit.getPlayer(uuid);
-        if (player == null) return false;
-
-        return player.isOnline();
-    }
-
-    @Override
     public boolean isOnline(@NonNull Object platformPlayer) {
         Player player = getPlayerFrom(platformPlayer);
         if (player != null) return player.isOnline();
@@ -374,11 +299,11 @@ public class BukkitPlayerAdapter implements PlatformPlayerAdapter {
     }
 
     @Override
-    public PlatformPlayerAdapter kick(@NonNull UUID uuid, @NonNull Component reason) {
-        Player platformPlayer = Bukkit.getPlayer(uuid);
-        if (platformPlayer != null) platformPlayer.kick(reason);
+    public boolean hasPermission(@NonNull String permission, @NonNull Object platformPlayer) {
+        Player player = getPlayerFrom(platformPlayer);
+        if (player == null) return false;
 
-        return this;
+        return player.hasPermission(permission);
     }
 
     @Override
@@ -387,6 +312,35 @@ public class BukkitPlayerAdapter implements PlatformPlayerAdapter {
         if (player != null) player.kick(reason);
 
         return this;
+    }
+
+    @Override
+    public @NonNull Gamemode getGamemode(@NonNull Object platformPlayer) {
+        Player player = getPlayerFrom(platformPlayer);
+        if (player != null) return switch (player.getGameMode()) {
+            case CREATIVE -> Gamemode.CREATIVE;
+            case SURVIVAL -> Gamemode.SURVIVAL;
+            case ADVENTURE -> Gamemode.ADVENTURE;
+            case SPECTATOR -> Gamemode.SPECTATOR;
+        };
+
+        return Gamemode.CREATIVE;
+    }
+
+    @Override
+    public @NonNull String getWorldName(@NonNull Object platformPlayer) {
+        Player player = getPlayerFrom(platformPlayer);
+        if (player != null) return player.getWorld().getName();
+
+        return "";
+    }
+
+    @Override
+    public @NonNull String getWorldEnvironment(@NonNull Object platformPlayer) {
+        Player player = getPlayerFrom(platformPlayer);
+        if (player != null) return player.getWorld().getEnvironment().name();
+
+        return "";
     }
 
     private @Nullable Player getPlayerFrom(Object object) {

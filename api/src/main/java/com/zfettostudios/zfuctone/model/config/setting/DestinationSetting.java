@@ -7,8 +7,8 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.experimental.Accessors;
 
-import com.zfettostudios.zfuctone.model.constant.message.BossBar;
-import com.zfettostudios.zfuctone.model.constant.message.Advancement;
+import com.zfettostudios.zfuctone.model.constant.minecraft.BossBar;
+import com.zfettostudios.zfuctone.model.constant.minecraft.Advancement;
 
 @Getter
 @Setter

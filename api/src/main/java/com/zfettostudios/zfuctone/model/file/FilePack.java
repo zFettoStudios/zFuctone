@@ -5,6 +5,7 @@ import com.zfettostudios.zfuctone.annotation.config.LocaleName;
 import com.zfettostudios.zfuctone.model.config.CommandConfig;
 import com.zfettostudios.zfuctone.model.config.Config;
 import com.zfettostudios.zfuctone.model.config.IntegrationConfig;
+import com.zfettostudios.zfuctone.model.config.PlaceholderConfig;
 import com.zfettostudios.zfuctone.model.config.localization.EnUsLocalization;
 import com.zfettostudios.zfuctone.model.config.localization.Localization;
 import com.zfettostudios.zfuctone.model.config.MessageConfig;
@@ -28,6 +29,7 @@ public class FilePack {
     IntegrationConfig integration = new IntegrationConfig();
     MessageConfig message = new MessageConfig();
     PermissionConfig permission = new PermissionConfig();
+    PlaceholderConfig placeholder = new PlaceholderConfig();
     Map<String, Localization> localizations = new ConcurrentHashMap<>();
 
     public FilePack() {

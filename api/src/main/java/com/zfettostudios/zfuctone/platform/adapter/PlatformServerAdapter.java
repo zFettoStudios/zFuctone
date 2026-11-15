@@ -10,4 +10,11 @@ public interface PlatformServerAdapter {
     @NonNull List<Object> getOnlinePlatformPlayers();
 
     PlatformServerAdapter runTask(Runnable task);
+
+    @NonNull String getVersion();
+
+    int getPlayersOnline();
+    int getPlayersMax();
+
+    double[] getTPS();
 }

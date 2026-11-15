@@ -38,6 +38,11 @@ public class GeyserModuleImpl extends IntegrationModuleImpl implements GeyserMod
     }
 
     @Override
+    public GeyserModule get() {
+        return this;
+    }
+
+    @Override
     public int getProtocolVersion(@NonNull UUID uuid) {
         if (!isEnable()) return -1;
 
@@ -45,5 +50,10 @@ public class GeyserModuleImpl extends IntegrationModuleImpl implements GeyserMod
         if (connection == null) return -1;
 
         return connection.protocolVersion();
+    }
+
+    @Override
+    public GeyserModule reload() {
+        return this;
     }
 }

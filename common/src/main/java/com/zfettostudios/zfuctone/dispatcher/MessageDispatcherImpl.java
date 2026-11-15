@@ -5,7 +5,8 @@ import com.zfettostudios.zfuctone.file.FileFacade;
 import com.zfettostudios.zfuctone.logging.ZLogger;
 import com.zfettostudios.zfuctone.model.config.localization.Localization;
 import com.zfettostudios.zfuctone.model.constant.LocalizationType;
-import com.zfettostudios.zfuctone.module.integration.Integration;
+import com.zfettostudios.zfuctone.module.integration.miniplaceholders.MiniPlaceholdersModule;
+import com.zfettostudios.zfuctone.module.integration.placeholdersapi.PlaceholderAPIModule;
 import com.zfettostudios.zfuctone.platform.adapter.PlatformPlayerAdapter;
 import com.zfettostudios.zfuctone.platform.adapter.PlatformServerAdapter;
 import com.zfettostudios.zfuctone.platform.entity.PlatformPlayer;
@@ -17,8 +18,12 @@ import java.util.concurrent.CompletableFuture;
 import java.util.function.Function;
 
 public class MessageDispatcherImpl implements MessageDispatcher {
-    private Integration integration() {
-        return ZFuctoneAPI.get().integration();
+    private MiniPlaceholdersModule miniPlaceholders() {
+        return ZFuctoneAPI.get().moduleController().getIntegrationOrNew(MiniPlaceholdersModule.class);
+    }
+
+    private PlaceholderAPIModule placeholderAPI() {
+        return ZFuctoneAPI.get().moduleController().getIntegrationOrNew(PlaceholderAPIModule.class);
     }
 
     private TaskScheduler taskScheduler() {
@@ -51,9 +56,8 @@ public class MessageDispatcherImpl implements MessageDispatcher {
 
                 futures[i] = taskScheduler().runSync(() ->
                     playerAdapter().dispatchMessage(recipient,
-                        integration().miniPlaceholders().setPlaceholders(
-                            sender,
-                            integration().placeholderAPI().setPlaceholders(sender, getMessage.apply(
+                        miniPlaceholders().setPlaceholders(sender,
+                            placeholderAPI().setPlaceholders(sender, getMessage.apply(
                                 fileFacade().localizationOrDefault(playerAdapter().getLocale(recipient), LocalizationType.PLAYER))))));
             }
 
@@ -71,20 +75,17 @@ public class MessageDispatcherImpl implements MessageDispatcher {
             CompletableFuture<?>[] futures = new CompletableFuture<?>[recipients.size() + 1];
 
             futures[0] = taskScheduler().runSync(() -> {
-                logger().info(integration().miniPlaceholders().setPlaceholders(
-                    sender,
-                    integration().placeholderAPI().setPlaceholders(sender,
-                        getMessage.apply(fileFacade().localization(LocalizationType.CONSOLE)))));
-            });
+                logger().info(miniPlaceholders().setPlaceholders(sender,
+                    placeholderAPI().setPlaceholders(sender,
+                        getMessage.apply(fileFacade().localization(LocalizationType.CONSOLE)))));});
 
             for (int i = 1; i < recipients.size(); i++) {
                 Object recipient = recipients.get(i);
 
                 futures[i] = taskScheduler().runSync(() ->
                     playerAdapter().dispatchMessage(recipient,
-                        integration().miniPlaceholders().setPlaceholders(
-                            sender,
-                            integration().placeholderAPI().setPlaceholders(sender, getMessage.apply(
+                        miniPlaceholders().setPlaceholders(sender,
+                            placeholderAPI().setPlaceholders(sender, getMessage.apply(
                                 fileFacade().localizationOrDefault(playerAdapter().getLocale(recipient), LocalizationType.PLAYER))))));
             }
 

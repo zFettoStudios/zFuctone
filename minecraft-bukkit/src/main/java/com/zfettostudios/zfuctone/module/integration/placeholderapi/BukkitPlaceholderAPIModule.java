@@ -43,4 +43,14 @@ public class BukkitPlaceholderAPIModule extends PlaceholderAPIModuleImpl {
     private String setPlaceholders(String input) {
         return setPlaceholders((Player) null, input);
     }
+
+    @Override
+    public PlaceholderAPIModule get() {
+        return this;
+    }
+
+    @Override
+    public PlaceholderAPIModule reload() {
+        return this;
+    }
 }

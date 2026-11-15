@@ -25,6 +25,11 @@ public class ViaVersionModuleImpl extends IntegrationModuleImpl implements ViaVe
         return isEnable(config().enable());
     }
 
+    @Override
+    public ViaVersionModule get() {
+        return this;
+    }
+
     public String getName() {
         return "ViaVersion";
     }
@@ -46,7 +51,7 @@ public class ViaVersionModuleImpl extends IntegrationModuleImpl implements ViaVe
         if (!isEnable()) return null;
 
         return fileFacade().localizationOrDefault(player.getLocale(), LocalizationType.PLAYER)
-            .message().player().version().java().get(getProtocolVersion(player.getUniqueId()));
+            .message().player().version().java().get(getProtocolVersion(player.uuid()));
     }
 
     @Override
@@ -56,6 +61,11 @@ public class ViaVersionModuleImpl extends IntegrationModuleImpl implements ViaVe
 
     @Override
     public ViaVersionModule disable() {
+        return this;
+    }
+
+    @Override
+    public ViaVersionModule reload() {
         return this;
     }
 }

@@ -20,7 +20,7 @@ processResources {
             "description": "$project_description",
             "prefix": "$project_name",
             "version": "$project_version",
-            "main": "${project_group}.BukkitBootstrap",
+            "main": "${project_group}.BukkitLoader",
             "api_version": "1.8",
             "load": "POSTWORLD",
             "folia_supported": true,

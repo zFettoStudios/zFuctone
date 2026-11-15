@@ -14,6 +14,7 @@ public class Localization {
     private final Message message = new Message();
     private final Command command = new Command();
     private final Integration integration = new Integration();
+    private final Placeholder placeholder = new Placeholder();
 
     @Getter
     @Setter
@@ -71,5 +72,11 @@ public class Localization {
     @Getter
     @Setter
     public static class Integration {
+    }
+
+    @Getter
+    @Setter
+    public static class Placeholder {
+        private final Map<String, String> values = new LinkedHashMap<>();
     }
 }

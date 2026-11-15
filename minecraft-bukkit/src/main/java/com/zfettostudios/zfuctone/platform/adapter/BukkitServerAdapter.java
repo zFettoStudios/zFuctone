@@ -28,4 +28,24 @@ public class BukkitServerAdapter implements PlatformServerAdapter {
         Bukkit.getScheduler().runTask(plugin, task);
         return this;
     }
+
+    @Override
+    public @NonNull String getVersion() {
+        return Bukkit.getMinecraftVersion();
+    }
+
+    @Override
+    public int getPlayersOnline() {
+        return Bukkit.getOnlinePlayers().size();
+    }
+
+    @Override
+    public int getPlayersMax() {
+        return Bukkit.getMaxPlayers();
+    }
+
+    @Override
+    public double[] getTPS() {
+        return Bukkit.getTPS();
+    }
 }

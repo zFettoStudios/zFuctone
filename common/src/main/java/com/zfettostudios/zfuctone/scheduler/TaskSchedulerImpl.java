@@ -201,12 +201,12 @@ public class TaskSchedulerImpl implements TaskScheduler {
     }
 
     @Override
-    public CompletableFuture<Void> runAsyncAllOf(CompletableFuture<?>[] futures) {
+    public CompletableFuture<Void> runAsyncAllOf(CompletableFuture<?>... futures) {
         return CompletableFuture.allOf(futures).thenRunAsync(() -> {}, executorService);
     }
 
     @Override
-    public TaskScheduler runSyncAllOf(CompletableFuture<?>[] futures) {
+    public TaskScheduler runSyncAllOf(CompletableFuture<?>... futures) {
         CompletableFuture.allOf(futures).join();
         return this;
     }

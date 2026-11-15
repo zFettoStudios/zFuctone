@@ -7,7 +7,7 @@ import com.zfettostudios.zfuctone.file.FileFacade;
 import com.zfettostudios.zfuctone.model.config.IntegrationConfig;
 import com.zfettostudios.zfuctone.model.config.localization.Localization;
 import com.zfettostudios.zfuctone.model.constant.LocalizationType;
-import com.zfettostudios.zfuctone.model.constant.player.PlayerEdition;
+import com.zfettostudios.zfuctone.model.constant.minecraft.player.PlayerEdition;
 import com.zfettostudios.zfuctone.module.integration.IntegrationModuleImpl;
 import com.zfettostudios.zfuctone.module.integration.geyser.GeyserModule;
 import com.zfettostudios.zfuctone.platform.entity.PlatformPlayer;
@@ -40,6 +40,11 @@ public class FloodgateModuleImpl extends IntegrationModuleImpl implements Floodg
     }
 
     @Override
+    public FloodgateModule get() {
+        return this;
+    }
+
+    @Override
     public FloodgateModule enable() {
         return this;
     }
@@ -66,7 +71,7 @@ public class FloodgateModuleImpl extends IntegrationModuleImpl implements Floodg
         Localization.Message.Player.Edition localization = fileFacade().localizationOrDefault(player.getLocale(),
             LocalizationType.PLAYER).message().player().edition();
 
-        return switch (getEdition(player.getUniqueId())) {
+        return switch (getEdition(player.uuid())) {
             case JAVA -> localization.java();
             case BEDROCK -> localization.bedrock();
         };
@@ -82,7 +87,7 @@ public class FloodgateModuleImpl extends IntegrationModuleImpl implements Floodg
     public @Nullable String getDisplayVersion(@NonNull PlatformPlayer player) {
         if (!isEnable()) return null;
 
-        int protocol = geyser.getProtocolVersion(player.getUniqueId());
+        int protocol = geyser.getProtocolVersion(player.uuid());
         if (protocol == -1) return null;
 
         return fileFacade().localizationOrDefault(player.getLocale(), LocalizationType.PLAYER)
@@ -91,5 +96,10 @@ public class FloodgateModuleImpl extends IntegrationModuleImpl implements Floodg
 
     private boolean isBedrockEdition(UUID uuid) {
         return FloodgateApi.getInstance().getPlayer(uuid) != null;
+    }
+
+    @Override
+    public FloodgateModule reload() {
+        return this;
     }
 }

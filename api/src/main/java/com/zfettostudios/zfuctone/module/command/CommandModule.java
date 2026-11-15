@@ -1,9 +1,10 @@
 package com.zfettostudios.zfuctone.module.command;
 
+import com.zfettostudios.zfuctone.module.ReloadModule;
 import com.zfettostudios.zfuctone.platform.entity.PlatformPlayer;
 import org.incendo.cloud.context.CommandContext;
 
-public interface CommandModule<T> {
+public interface CommandModule<T> extends ReloadModule<T> {
     T execute(PlatformPlayer player, CommandContext<PlatformPlayer> commandContext);
 
     T register();

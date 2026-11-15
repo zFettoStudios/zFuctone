@@ -35,4 +35,14 @@ public class BukkitMiniPlaceholdersModule extends MiniPlaceholdersModuleImpl {
         if (isEnable()) return MiniPlaceholders.audienceGlobalPlaceholders();
         return TagResolver.empty();
     }
+
+    @Override
+    public MiniPlaceholdersModule get() {
+        return this;
+    }
+
+    @Override
+    public MiniPlaceholdersModule reload() {
+        return this;
+    }
 }

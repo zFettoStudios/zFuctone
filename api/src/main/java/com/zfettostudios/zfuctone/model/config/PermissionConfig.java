@@ -6,7 +6,7 @@ import lombok.experimental.Accessors;
 
 import com.zfettostudios.zfuctone.annotation.config.FilePath;
 import com.zfettostudios.zfuctone.model.config.setting.PermissionSetting;
-import com.zfettostudios.zfuctone.model.constant.world.PermissionType;
+import com.zfettostudios.zfuctone.model.constant.minecraft.world.PermissionType;
 
 @Getter
 @Setter
@@ -81,60 +81,100 @@ public class PermissionConfig {
     public static class Placeholder {
         private String name = "zfuctone.module.placeholder";
         private PermissionType type = PermissionType.TRUE;
-        private final PermissionSetting use = new PermissionSetting(
-            "zfuctone.module.placeholder.use", PermissionType.OP);
-
-        private final PlaceholderPermissionSetting projectAuthors = new PlaceholderPermissionSetting(
-            "zfuctone.module.placeholder.project_authors.use", PermissionType.OP
-        );
-        private final PlaceholderPermissionSetting projectDescription = new PlaceholderPermissionSetting(
-            "zfuctone.module.placeholder.project_description.use", PermissionType.OP
-        );
-        private final PlaceholderPermissionSetting projectWebsite = new PlaceholderPermissionSetting(
-            "zfuctone.module.placeholder.project_website.use", PermissionType.OP
-        );
-        private final PlaceholderPermissionSetting projectVersion = new PlaceholderPermissionSetting(
-            "zfuctone.module.placeholder.project_version.use", PermissionType.OP
-        );
-        private final PlaceholderPermissionSetting projectReload = new PlaceholderPermissionSetting(
-            "zfuctone.module.placeholder.project_reload.use", PermissionType.OP
-        );
-        private final PlaceholderPermissionSetting playerLocale = new PlaceholderPermissionSetting(
-            "zfuctone.module.placeholder.player_locale.use", PermissionType.OP
-        );
-        private final PlaceholderPermissionSetting playerVersion = new PlaceholderPermissionSetting(
-            "zfuctone.module.placeholder.player_version.use", PermissionType.OP
-        );
-        private final PlaceholderPermissionSetting playerEdition = new PlaceholderPermissionSetting(
-            "zfuctone.module.placeholder.player_edition.use", PermissionType.OP
-        );
-        private final PlaceholderPermissionSetting playerDisplayEdition = new PlaceholderPermissionSetting(
-            "zfuctone.module.placeholder.player_display_edition.use", PermissionType.OP
-        );
-        private final PlaceholderPermissionSetting playerDisplayVersion = new PlaceholderPermissionSetting(
-            "zfuctone.module.placeholder.player_display_version.use", PermissionType.OP
-        );
-        private final PlaceholderPermissionSetting serverType = new PlaceholderPermissionSetting(
-            "zfuctone.module.placeholder.server_type.use", PermissionType.OP
-        );
-        private final PlaceholderPermissionSetting serverVersion = new PlaceholderPermissionSetting(
-            "zfuctone.module.placeholder.server_version.use", PermissionType.OP
-        );
+        private final Standard standard = new Standard();
 
         @Getter
         @Setter
-        public static class PlaceholderPermissionSetting {
-            private String name;
-            private PermissionType type;
-            private final PermissionSetting use;
+        public static class Standard {
+            private final PermissionSetting projectAuthorsUse = new PermissionSetting(
+                "zfuctone.module.placeholder.standard.project_authors.use", PermissionType.OP
+            );
+            private final PermissionSetting projectDescriptionUse = new PermissionSetting(
+                "zfuctone.module.placeholder.standard.project_description.use", PermissionType.OP
+            );
+            private final PermissionSetting projectWebsiteUse = new PermissionSetting(
+                "zfuctone.module.placeholder.standard.project_website.use", PermissionType.OP
+            );
+            private final PermissionSetting projectVersionUse = new PermissionSetting(
+                "zfuctone.module.placeholder.standard.project_version.use", PermissionType.OP
+            );
+            private final PermissionSetting projectReloadUse = new PermissionSetting(
+                "zfuctone.module.placeholder.standard.project_reload.use", PermissionType.OP
+            );
 
-            public PlaceholderPermissionSetting(String name, PermissionType type) {
-                use = new PermissionSetting(name, type);
-            }
+            private final PermissionSetting serverTypeUse = new PermissionSetting(
+                "zfuctone.module.placeholder.standard.server_type.use", PermissionType.OP
+            );
+            private final PermissionSetting serverVersionUse = new PermissionSetting(
+                "zfuctone.module.placeholder.standard.server_version.use", PermissionType.OP
+            );
+            private final PermissionSetting serverPlayersOnlineUse = new PermissionSetting(
+                "zfuctone.module.placeholder.standard.server_players_online.use", PermissionType.OP
+            );
+            private final PermissionSetting serverPlayersMaxUse = new PermissionSetting(
+                "zfuctone.module.placeholder.standard.server_players_max.use", PermissionType.OP
+            );
+            private final PermissionSetting serverTps1Use = new PermissionSetting(
+                "zfuctone.module.placeholder.standard.server_tps_1.use", PermissionType.OP
+            );
+            private final PermissionSetting serverTps5Use = new PermissionSetting(
+                "zfuctone.module.placeholder.standard.server_tps_5.use", PermissionType.OP
+            );
+            private final PermissionSetting serverTps15Use = new PermissionSetting(
+                "zfuctone.module.placeholder.standard.server_tps_15.use", PermissionType.OP
+            );
 
-            public PlaceholderPermissionSetting() {
-                use = new PermissionSetting();
-            }
+            private final PermissionSetting playerNicknameUse = new PermissionSetting(
+                "zfuctone.module.placeholder.standard.player_nickname.use", PermissionType.OP
+            );
+            private final PermissionSetting playerUuidUse = new PermissionSetting(
+                "zfuctone.module.placeholder.standard.player_uuid.use", PermissionType.OP
+            );
+            private final PermissionSetting playerIpUse = new PermissionSetting(
+                "zfuctone.module.placeholder.standard.player_ip.use", PermissionType.OP
+            );
+            private final PermissionSetting playerLocaleUse = new PermissionSetting(
+                "zfuctone.module.placeholder.standard.player_locale.use", PermissionType.OP
+            );
+            private final PermissionSetting playerPingUse = new PermissionSetting(
+                "zfuctone.module.placeholder.standard.player_ping.use", PermissionType.OP
+            );
+            private final PermissionSetting playerProtocolVersionUse = new PermissionSetting(
+                "zfuctone.module.placeholder.standard.player_protocol_version.use", PermissionType.OP
+            );
+            private final PermissionSetting playerVersionUse = new PermissionSetting(
+                "zfuctone.module.placeholder.standard.player_version.use", PermissionType.OP
+            );
+            private final PermissionSetting playerDisplayVersionUse = new PermissionSetting(
+                "zfuctone.module.placeholder.standard.player_display_version.use", PermissionType.OP
+            );
+            private final PermissionSetting playerEditionUse = new PermissionSetting(
+                "zfuctone.module.placeholder.standard.player_edition.use", PermissionType.OP
+            );
+            private final PermissionSetting playerDisplayEditionUse = new PermissionSetting(
+                "zfuctone.module.placeholder.standard.player_display_edition.use", PermissionType.OP
+            );
+            private final PermissionSetting playerGamemodeUse = new PermissionSetting(
+                "zfuctone.module.placeholder.standard.player_gamemode.use", PermissionType.OP
+            );
+            private final PermissionSetting playerWorldNameUse = new PermissionSetting(
+                "zfuctone.module.placeholder.standard.player_world_name.use", PermissionType.OP
+            );
+            private final PermissionSetting playerWorldEnvironmentUse = new PermissionSetting(
+                "zfuctone.module.placeholder.standard.player_world_environment.use", PermissionType.OP
+            );
+            private final PermissionSetting playerHasPermissionUse = new PermissionSetting(
+                "zfuctone.module.placeholder.standard.player_has_permission.use", PermissionType.OP
+            );
+            private final PermissionSetting playerIsOperatorUse = new PermissionSetting(
+                "zfuctone.module.placeholder.standard.player_is_operator.use", PermissionType.OP
+            );
+            private final PermissionSetting playerIsSneakingUse = new PermissionSetting(
+                "zfuctone.module.placeholder.standard.player_is_sneaking.use", PermissionType.OP
+            );
+            private final PermissionSetting playerIsDeadUse = new PermissionSetting(
+                "zfuctone.module.placeholder.standard.player_is_dead.use", PermissionType.OP
+            );
         }
     }
 }

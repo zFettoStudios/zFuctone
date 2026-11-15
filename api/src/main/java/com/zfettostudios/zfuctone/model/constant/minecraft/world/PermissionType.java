@@ -1,4 +1,4 @@
-package com.zfettostudios.zfuctone.model.constant.world;
+package com.zfettostudios.zfuctone.model.constant.minecraft.world;
 
 public enum PermissionType {
     OP,

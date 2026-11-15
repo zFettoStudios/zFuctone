@@ -1,6 +1,6 @@
 package com.zfettostudios.zfuctone.module.integration.floodgate;
 
-import com.zfettostudios.zfuctone.model.constant.player.PlayerEdition;
+import com.zfettostudios.zfuctone.model.constant.minecraft.player.PlayerEdition;
 import com.zfettostudios.zfuctone.module.integration.IntegrationModule;
 import com.zfettostudios.zfuctone.platform.entity.PlatformPlayer;
 import org.jspecify.annotations.NonNull;

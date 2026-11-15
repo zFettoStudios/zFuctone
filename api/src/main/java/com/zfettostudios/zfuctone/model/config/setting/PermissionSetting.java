@@ -6,7 +6,7 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.experimental.Accessors;
 
-import com.zfettostudios.zfuctone.model.constant.world.PermissionType;
+import com.zfettostudios.zfuctone.model.constant.minecraft.world.PermissionType;
 
 @Getter
 @Setter

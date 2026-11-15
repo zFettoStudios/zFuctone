@@ -52,6 +52,7 @@ public class FileWriterImpl implements FileWriter {
             saveAsync(files.integration()),
             saveAsync(files.message()),
             saveAsync(files.permission()),
+            saveAsync(files.placeholder()),
             saveAsyncLocalizations(files.localizations())
         ).thenApply(_ -> files);
     }

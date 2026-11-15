@@ -7,15 +7,16 @@ import com.zfettostudios.zfuctone.exception.InvalidTypeException;
 import com.zfettostudios.zfuctone.listener.BukkitPlayerJoinListener;
 import com.zfettostudios.zfuctone.listener.BukkitPlayerQuitListener;
 import com.zfettostudios.zfuctone.model.constant.PlatformType;
-import com.zfettostudios.zfuctone.module.integration.BukkitIntegration;
-import com.zfettostudios.zfuctone.module.integration.Integration;
+import com.zfettostudios.zfuctone.module.integration.miniplaceholders.BukkitMiniPlaceholdersModule;
+import com.zfettostudios.zfuctone.module.integration.miniplaceholders.MiniPlaceholdersModule;
+import com.zfettostudios.zfuctone.module.integration.placeholderapi.BukkitPlaceholderAPIModule;
+import com.zfettostudios.zfuctone.module.integration.placeholdersapi.PlaceholderAPIModule;
 import com.zfettostudios.zfuctone.platform.adapter.BukkitEntityAdapter;
 import com.zfettostudios.zfuctone.platform.adapter.BukkitPlayerAdapter;
 import com.zfettostudios.zfuctone.platform.adapter.BukkitServerAdapter;
 import com.zfettostudios.zfuctone.platform.adapter.PlatformEntityAdapter;
 import com.zfettostudios.zfuctone.platform.adapter.PlatformPlayerAdapter;
 import com.zfettostudios.zfuctone.platform.adapter.PlatformServerAdapter;
-import net.kyori.adventure.text.logger.slf4j.ComponentLogger;
 import org.bukkit.Bukkit;
 import org.bukkit.event.HandlerList;
 import org.bukkit.event.Listener;
@@ -52,6 +53,12 @@ public class BukkitZFuctone extends ZFuctoneImpl {
     }
 
     @Override
+    protected void addedPlatformModules() {
+        moduleController.add(PlaceholderAPIModule.class, new BukkitPlaceholderAPIModule());
+        moduleController.add(MiniPlaceholdersModule.class, new BukkitMiniPlaceholdersModule());
+    }
+
+    @Override
     protected PlatformType detectPlatformType() {
         if (reflectionResolver.hasClass("io.papermc.paper.threadedregions.RegionizedServer")) return PlatformType.FOLIA;
         if (reflectionResolver.hasClass("io.papermc.paper.ServerBuildInfo") ||
@@ -63,16 +70,6 @@ public class BukkitZFuctone extends ZFuctoneImpl {
     @Override
     protected Path getDataPath() {
         return javaPlugin.getDataPath();
-    }
-
-    @Override
-    protected ComponentLogger getComponentLogger() {
-        return javaPlugin.getComponentLogger();
-    }
-
-    @Override
-    protected Integration createIntegration() {
-        return new BukkitIntegration();
     }
 
     @Override

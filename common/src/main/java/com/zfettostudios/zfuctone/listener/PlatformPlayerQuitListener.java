@@ -27,7 +27,7 @@ public abstract class PlatformPlayerQuitListener {
     }
 
     protected void execute(Object platformPlayer) {
-        UUID uuid = playerAdapter().getUniqueId(platformPlayer);
+        UUID uuid = playerAdapter().getUUID(platformPlayer);
         if (uuid == null) return;
 
         PlatformPlayer player = playerService().getPlatformPlayer(uuid);

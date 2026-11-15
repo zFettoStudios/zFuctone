@@ -1,4 +1,4 @@
-package com.zfettostudios.zfuctone.model.constant.message;
+package com.zfettostudios.zfuctone.model.constant.minecraft;
 
 public interface Advancement {
     enum Style {

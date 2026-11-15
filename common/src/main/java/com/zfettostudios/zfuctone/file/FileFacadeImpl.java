@@ -22,6 +22,7 @@ import com.zfettostudios.zfuctone.file.serializer.TimeUnitSerializer;
 import com.zfettostudios.zfuctone.model.config.CommandConfig;
 import com.zfettostudios.zfuctone.model.config.Config;
 import com.zfettostudios.zfuctone.model.config.IntegrationConfig;
+import com.zfettostudios.zfuctone.model.config.PlaceholderConfig;
 import com.zfettostudios.zfuctone.model.config.localization.Localization;
 import com.zfettostudios.zfuctone.model.config.MessageConfig;
 import com.zfettostudios.zfuctone.model.config.PermissionConfig;
@@ -100,6 +101,11 @@ public class FileFacadeImpl implements FileFacade {
     @Override
     public IntegrationConfig integration() {
         return files.integration();
+    }
+
+    @Override
+    public PlaceholderConfig placeholder() {
+        return files.placeholder();
     }
 
     @Override
