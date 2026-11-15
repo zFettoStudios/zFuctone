@@ -129,31 +129,31 @@ public class PlatformPlayerImpl implements PlatformPlayer {
     @Override
     public boolean isOperator() {
         if (!isPlayer()) return false;
-        return playerAdapter.isOperator(uuid);
+        return playerAdapter.isOperator(rawPlayer);
     }
 
     @Override
     public boolean isSneaking() {
         if (!isPlayer()) return false;
-        return playerAdapter.isSneaking(uuid);
+        return playerAdapter.isSneaking(rawPlayer);
     }
 
     @Override
     public boolean isDead() {
         if (!isPlayer()) return false;
-        return playerAdapter.isDead(uuid);
+        return playerAdapter.isDead(rawPlayer);
     }
 
     @Override
     public boolean isOnline() {
         if (!isPlayer()) return false;
-        return playerAdapter.isOnline(uuid);
+        return playerAdapter.isOnline(rawPlayer);
     }
 
     @Override
     public int getPing() {
         if (!isPlayer()) return -1;
-        return playerAdapter.getPing(uuid);
+        return playerAdapter.getPing(rawPlayer);
     }
 
     @Override
