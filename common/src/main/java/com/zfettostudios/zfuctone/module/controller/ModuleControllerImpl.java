@@ -13,7 +13,6 @@ import com.zfettostudios.zfuctone.module.integration.IntegrationModule;
 import com.zfettostudios.zfuctone.module.message.MessageModule;
 import com.zfettostudios.zfuctone.scheduler.TaskScheduler;
 import org.jspecify.annotations.NonNull;
-import org.jspecify.annotations.Nullable;
 
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
@@ -45,51 +44,33 @@ public class ModuleControllerImpl implements ModuleController {
     }
 
     @Override
-    public @Nullable <T extends MessageModule<T>> T removeMessage(@NonNull Class<T> moduleClass) {
+    public <T extends MessageModule<T>> T removeMessage(@NonNull Class<T> moduleClass) {
         return moduleClass.cast(messageModules.remove(moduleClass));
     }
 
     @Override
-    public @Nullable <T extends CommandModule<T>> T removeCommand(@NonNull Class<T> moduleClass) {
+    public <T extends CommandModule<T>> T removeCommand(@NonNull Class<T> moduleClass) {
         return moduleClass.cast(commandModules.remove(moduleClass));
     }
 
     @Override
-    public @Nullable <T extends IntegrationModule<T>> T removeIntegration(@NonNull Class<T> moduleClass) {
+    public <T extends IntegrationModule<T>> T removeIntegration(@NonNull Class<T> moduleClass) {
         return moduleClass.cast(integrationModules.remove(moduleClass));
     }
 
     @Override
-    public @Nullable <T extends MessageModule<T>> T getMessage(@NonNull Class<T> moduleClass) {
+    public <T extends MessageModule<T>> T getMessage(@NonNull Class<T> moduleClass) {
         return moduleClass.cast(messageModules.get(moduleClass));
     }
 
     @Override
-    public @Nullable <T extends CommandModule<T>> T getCommand(@NonNull Class<T> moduleClass) {
+    public <T extends CommandModule<T>> T getCommand(@NonNull Class<T> moduleClass) {
         return moduleClass.cast(commandModules.get(moduleClass));
     }
 
     @Override
-    public @Nullable <T extends IntegrationModule<T>> T getIntegration(@NonNull Class<T> moduleClass) {
+    public <T extends IntegrationModule<T>> T getIntegration(@NonNull Class<T> moduleClass) {
         return moduleClass.cast(integrationModules.get(moduleClass));
-    }
-
-    @Override
-    @SuppressWarnings("all")
-    public @NonNull <T extends MessageModule<T>> T getMessageOrNew(@NonNull Class<T> moduleClass) {
-        return getMessage(moduleClass);
-    }
-
-    @Override
-    @SuppressWarnings("all")
-    public @NonNull <T extends CommandModule<T>> T getCommandOrNew(@NonNull Class<T> moduleClass) {
-        return getCommand(moduleClass);
-    }
-
-    @Override
-    @SuppressWarnings("all")
-    public @NonNull <T extends IntegrationModule<T>> T getIntegrationOrNew(@NonNull Class<T> moduleClass) {
-        return getIntegration(moduleClass);
     }
 
     @Override

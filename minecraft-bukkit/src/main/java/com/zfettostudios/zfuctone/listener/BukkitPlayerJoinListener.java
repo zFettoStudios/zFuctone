@@ -8,7 +8,7 @@ import org.bukkit.event.player.PlayerJoinEvent;
 public class BukkitPlayerJoinListener extends PlatformPlayerJoinListener implements Listener {
     @EventHandler(priority = EventPriority.NORMAL)
     public void onPlayerJoin(PlayerJoinEvent event) {
-        event.joinMessage(null);
+        event.setJoinMessage(null);
         execute(event.getPlayer());
     }
 }

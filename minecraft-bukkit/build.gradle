@@ -1,17 +1,13 @@
-plugins {
-    id "io.papermc.paperweight.userdev" version "$paperweight_userdev_version"
-}
-
 dependencies {
     implementation project(":api")
     implementation project(":common")
+    implementation project(":minecraft-paper")
 
-    implementation libraries.cloud.paper
+    implementation libraries.cloud.bukkit
+
+    compileOnly libraries.platform.spigot
 
     compileOnly libraries.integration.placeholderapi
-    compileOnly libraries.integration.miniplaceholders
-
-    paperweightDevelopmentBundle libraries.platform.paper
 }
 
 processResources {

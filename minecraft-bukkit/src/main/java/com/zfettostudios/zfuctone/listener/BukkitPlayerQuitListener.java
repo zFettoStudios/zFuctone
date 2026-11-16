@@ -7,7 +7,7 @@ import org.bukkit.event.player.PlayerQuitEvent;
 public class BukkitPlayerQuitListener extends PlatformPlayerQuitListener implements Listener {
     @EventHandler
     public void onPlayerQuit(PlayerQuitEvent event) {
-        event.quitMessage(null);
+        event.setQuitMessage(null);
         execute(event.getPlayer());
     }
 }

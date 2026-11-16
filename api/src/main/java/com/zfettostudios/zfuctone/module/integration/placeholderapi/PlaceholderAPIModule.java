@@ -1,4 +1,4 @@
-package com.zfettostudios.zfuctone.module.integration.placeholdersapi;
+package com.zfettostudios.zfuctone.module.integration.placeholderapi;
 
 import com.zfettostudios.zfuctone.module.integration.IntegrationModule;
 import com.zfettostudios.zfuctone.platform.entity.PlatformPlayer;

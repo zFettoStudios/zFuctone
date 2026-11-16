@@ -3,16 +3,16 @@ package com.zfettostudios.zfuctone;
 import org.bukkit.plugin.java.JavaPlugin;
 
 public class BukkitLoader extends JavaPlugin {
-    private BukkitZFuctone plugin;
+    private ZFuctone zfuctone;
 
     @Override
     public void onEnable() {
-        plugin = new BukkitZFuctone(this);
-        plugin.enable();
+        zfuctone = new BukkitZFuctone(this);
+        zfuctone.enable();
     }
 
     @Override
     public void onDisable() {
-        plugin.disable();
+        zfuctone.disable();
     }
 }

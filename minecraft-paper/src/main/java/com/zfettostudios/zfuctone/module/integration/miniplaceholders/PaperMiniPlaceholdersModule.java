@@ -1,10 +1,16 @@
 package com.zfettostudios.zfuctone.module.integration.miniplaceholders;
 
+import com.zfettostudios.zfuctone.module.integration.IntegrationHook;
 import io.github.miniplaceholders.api.MiniPlaceholders;
 import net.kyori.adventure.text.minimessage.tag.resolver.TagResolver;
 
-public class BukkitMiniPlaceholdersModule extends MiniPlaceholdersModuleImpl {
-    private final BukkitMiniPlaceholdersIntegration integration = new BukkitMiniPlaceholdersIntegration();
+public class PaperMiniPlaceholdersModule extends MiniPlaceholdersModuleImpl {
+    private final IntegrationHook<?> integration;
+
+    public PaperMiniPlaceholdersModule() {
+        if (isEnable()) integration = new PaperMiniPlaceholdersIntegration();
+        else integration = null;
+    }
 
     @Override
     public MiniPlaceholdersModule enable() {

@@ -6,7 +6,7 @@ import com.zfettostudios.zfuctone.logging.ZLogger;
 import com.zfettostudios.zfuctone.model.config.localization.Localization;
 import com.zfettostudios.zfuctone.model.constant.LocalizationType;
 import com.zfettostudios.zfuctone.module.integration.miniplaceholders.MiniPlaceholdersModule;
-import com.zfettostudios.zfuctone.module.integration.placeholdersapi.PlaceholderAPIModule;
+import com.zfettostudios.zfuctone.module.integration.placeholderapi.PlaceholderAPIModule;
 import com.zfettostudios.zfuctone.platform.adapter.PlatformPlayerAdapter;
 import com.zfettostudios.zfuctone.platform.adapter.PlatformServerAdapter;
 import com.zfettostudios.zfuctone.platform.entity.PlatformPlayer;
@@ -19,11 +19,11 @@ import java.util.function.Function;
 
 public class MessageDispatcherImpl implements MessageDispatcher {
     private MiniPlaceholdersModule miniPlaceholders() {
-        return ZFuctoneAPI.get().moduleController().getIntegrationOrNew(MiniPlaceholdersModule.class);
+        return ZFuctoneAPI.get().moduleController().getIntegration(MiniPlaceholdersModule.class);
     }
 
     private PlaceholderAPIModule placeholderAPI() {
-        return ZFuctoneAPI.get().moduleController().getIntegrationOrNew(PlaceholderAPIModule.class);
+        return ZFuctoneAPI.get().moduleController().getIntegration(PlaceholderAPIModule.class);
     }
 
     private TaskScheduler taskScheduler() {

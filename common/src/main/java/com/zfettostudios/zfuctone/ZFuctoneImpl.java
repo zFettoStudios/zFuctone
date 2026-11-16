@@ -18,7 +18,6 @@ import com.zfettostudios.zfuctone.module.integration.geyser.GeyserModule;
 import com.zfettostudios.zfuctone.module.integration.geyser.GeyserModuleImpl;
 import com.zfettostudios.zfuctone.module.integration.viaversion.ViaVersionModule;
 import com.zfettostudios.zfuctone.module.integration.viaversion.ViaVersionModuleImpl;
-import com.zfettostudios.zfuctone.platform.adapter.PlatformEntityAdapter;
 import com.zfettostudios.zfuctone.platform.adapter.PlatformPlayerAdapter;
 import com.zfettostudios.zfuctone.platform.adapter.PlatformServerAdapter;
 import com.zfettostudios.zfuctone.platform.registry.ListenerRegistry;
@@ -43,7 +42,6 @@ public abstract class ZFuctoneImpl implements ZFuctone {
     protected final PlatformPlayerService playerService;
     protected final PlatformPlayerAdapter playerAdapter;
     protected final PlatformServerAdapter serverAdapter;
-    protected final PlatformEntityAdapter entityAdapter;
     protected final MessageDispatcher messageDispatcher;
     protected final ReflectionResolver reflectionResolver;
     protected final ListenerRegistry listenerRegistry;
@@ -57,7 +55,6 @@ public abstract class ZFuctoneImpl implements ZFuctone {
 
         playerAdapter = createPlayerAdapter();
         serverAdapter = createServerAdapter();
-        entityAdapter = createEntityAdapter();
 
         logger = new ZLoggerImpl();
         fileFacade = new FileFacadeImpl(getDataPath());
@@ -149,9 +146,10 @@ public abstract class ZFuctoneImpl implements ZFuctone {
     protected abstract Path getDataPath();
 
     protected abstract PlatformPlayerAdapter createPlayerAdapter();
-    protected abstract PlatformEntityAdapter createEntityAdapter();
     protected abstract PlatformServerAdapter createServerAdapter();
 
     protected abstract void registerListeners();
     protected abstract void unregisterListeners();
+
+    protected abstract void registerTaskScheduler();
 }

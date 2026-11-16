@@ -7,7 +7,6 @@ import com.zfettostudios.zfuctone.logging.ZLogger;
 import com.zfettostudios.zfuctone.model.constant.PlatformType;
 import com.zfettostudios.zfuctone.module.Module;
 import com.zfettostudios.zfuctone.module.controller.ModuleController;
-import com.zfettostudios.zfuctone.platform.adapter.PlatformEntityAdapter;
 import com.zfettostudios.zfuctone.platform.adapter.PlatformPlayerAdapter;
 import com.zfettostudios.zfuctone.platform.adapter.PlatformServerAdapter;
 import com.zfettostudios.zfuctone.platform.registry.ListenerRegistry;
@@ -34,7 +33,6 @@ public interface ZFuctone extends Module<ZFuctone> {
 
     PlatformPlayerAdapter playerAdapter();
     PlatformServerAdapter serverAdapter();
-    PlatformEntityAdapter entityAdapter();
 
     MessageDispatcher messageDispatcher();
 

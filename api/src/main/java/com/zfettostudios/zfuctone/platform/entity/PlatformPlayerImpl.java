@@ -12,6 +12,7 @@ import com.zfettostudios.zfuctone.model.constant.minecraft.player.Gamemode;
 import com.zfettostudios.zfuctone.model.constant.minecraft.player.PlayerEdition;
 import com.zfettostudios.zfuctone.module.controller.ModuleController;
 import com.zfettostudios.zfuctone.module.integration.floodgate.FloodgateModule;
+import com.zfettostudios.zfuctone.module.integration.geyser.GeyserModule;
 import com.zfettostudios.zfuctone.module.integration.viaversion.ViaVersionModule;
 import com.zfettostudios.zfuctone.platform.adapter.PlatformPlayerAdapter;
 import net.kyori.adventure.text.Component;
@@ -29,8 +30,9 @@ public class PlatformPlayerImpl implements PlatformPlayer {
     private final PlatformPlayerAdapter playerAdapter = ZFuctoneAPI.get().playerAdapter();
     private final FileFacade fileFacade = ZFuctoneAPI.get().fileFacade();
     private final ModuleController moduleController = ZFuctoneAPI.get().moduleController();
-    private final FloodgateModule floodgateModule = moduleController.getIntegrationOrNew(FloodgateModule.class);
-    private final ViaVersionModule viaVersionModule =  moduleController.getIntegrationOrNew(ViaVersionModule.class);
+    private final FloodgateModule floodgateModule = moduleController.getIntegration(FloodgateModule.class);
+    private final ViaVersionModule viaVersionModule = moduleController.getIntegration(ViaVersionModule.class);
+    private final GeyserModule geyserModule = moduleController.getIntegration(GeyserModule.class);
 
     private PlatformPlayerImpl(UUID uuid, Object rawPlayer) {
         this.uuid = uuid;
@@ -66,7 +68,17 @@ public class PlatformPlayerImpl implements PlatformPlayer {
     @Override
     public int getProtocolVersion() {
         if (!isPlayer()) return -1;
-        return playerAdapter.getProtocolVersion(rawPlayer);
+
+        int protocol = -1;
+
+        switch (getEdition()) {
+            case JAVA -> protocol = viaVersionModule.getProtocolVersion(uuid);
+            case BEDROCK -> protocol = geyserModule.getProtocolVersion(uuid);
+        }
+
+        if (protocol == -1) protocol = playerAdapter.getProtocolVersion(rawPlayer);
+
+        return protocol;
     }
 
     @Override

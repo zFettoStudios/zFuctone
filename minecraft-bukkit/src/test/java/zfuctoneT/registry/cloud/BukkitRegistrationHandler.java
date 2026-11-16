@@ -28,7 +28,7 @@ public class BukkitRegistrationHandler extends PlatformRegistrationHandler<Comma
     private final Map<String, BukkitCommand> registeredCommands = new ConcurrentHashMap<>();
     private final Plugin plugin;
 
-    private final CommandMap commandMap = Bukkit.getCommandMap();
+    private final CommandMap commandMap = Bukkit    .getCommandMap();
     private final Map<String, org.bukkit.command.Command> knownCommands = commandMap.getKnownCommands();
 
     @Override

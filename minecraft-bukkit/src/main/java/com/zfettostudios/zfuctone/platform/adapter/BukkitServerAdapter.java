@@ -31,7 +31,7 @@ public class BukkitServerAdapter implements PlatformServerAdapter {
 
     @Override
     public @NonNull String getVersion() {
-        return Bukkit.getMinecraftVersion();
+        return Bukkit.getVersion();
     }
 
     @Override
@@ -46,6 +46,6 @@ public class BukkitServerAdapter implements PlatformServerAdapter {
 
     @Override
     public double[] getTPS() {
-        return Bukkit.getTPS();
+        return new double[]{};
     }
 }

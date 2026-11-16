@@ -10,7 +10,7 @@ import com.zfettostudios.zfuctone.model.config.IntegrationConfig;
 import com.zfettostudios.zfuctone.model.config.PlaceholderConfig;
 import com.zfettostudios.zfuctone.model.config.localization.Localization;
 import com.zfettostudios.zfuctone.model.constant.LocalizationType;
-import com.zfettostudios.zfuctone.module.integration.placeholdersapi.PlaceholderAPIModule;
+import com.zfettostudios.zfuctone.module.integration.placeholderapi.PlaceholderAPIModule;
 import com.zfettostudios.zfuctone.module.placeholder.handler.PlayerPlaceholderHandler;
 import com.zfettostudios.zfuctone.module.placeholder.handler.ProjectPlaceholderHandler;
 import com.zfettostudios.zfuctone.module.placeholder.handler.ServerPlaceholderHandler;
@@ -38,7 +38,7 @@ public class PlaceholderModuleImpl implements PlaceholderModule {
     private final ZLogger logger = ZFuctoneAPI.get().logger();
 
     private PlaceholderAPIModule placeholderAPI() {
-        return ZFuctoneAPI.get().moduleController().getIntegrationOrNew(PlaceholderAPIModule.class);
+        return ZFuctoneAPI.get().moduleController().getIntegration(PlaceholderAPIModule.class);
     }
 
     @Override
@@ -143,7 +143,7 @@ public class PlaceholderModuleImpl implements PlaceholderModule {
                     if (REPORTED_CYCLES.add(name))
                         logger.warn("Placeholder \"{}\" refers to itself. Check your localization.", name);
 
-                    return "";
+                    return null;
                 }
 
                 try {

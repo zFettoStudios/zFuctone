@@ -3,7 +3,6 @@ package com.zfettostudios.zfuctone.module.integration.placeholderapi;
 import com.zfettostudios.zfuctone.ZFuctoneAPI;
 import com.zfettostudios.zfuctone.model.config.IntegrationConfig;
 import com.zfettostudios.zfuctone.module.integration.IntegrationModuleImpl;
-import com.zfettostudios.zfuctone.module.integration.placeholdersapi.PlaceholderAPIModule;
 
 public abstract class PlaceholderAPIModuleImpl extends IntegrationModuleImpl implements PlaceholderAPIModule {
     protected IntegrationConfig.PlaceholderAPI config() {
