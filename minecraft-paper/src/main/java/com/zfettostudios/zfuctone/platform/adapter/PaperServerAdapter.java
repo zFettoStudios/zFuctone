@@ -48,4 +48,9 @@ public class PaperServerAdapter implements PlatformServerAdapter {
     public double[] getTPS() {
         return Bukkit.getTPS();
     }
+
+    @Override
+    public boolean isPrimaryThread() {
+        return Bukkit.isPrimaryThread();
+    }
 }

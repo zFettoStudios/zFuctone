@@ -17,4 +17,6 @@ public interface PlatformServerAdapter {
     int getPlayersMax();
 
     double[] getTPS();
+
+    boolean isPrimaryThread();
 }

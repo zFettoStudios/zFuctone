@@ -36,8 +36,6 @@ public interface TaskScheduler {
 
     CompletableFuture<Void> runSyncTimer(Runnable runnable, long delay, long period);
 
-    CompletableFuture<Void> runImmediately(Runnable runnable);
-
     <T> CompletableFuture<T> runAsync(Supplier<T> supplier);
 
     <T> CompletableFuture<T> runAsyncLater(Supplier<T> supplier, long delay);
@@ -53,8 +51,6 @@ public interface TaskScheduler {
     <T> CompletableFuture<T> runSyncTimer(Supplier<T> supplier, long period);
 
     <T> CompletableFuture<T> runSyncTimer(Supplier<T> supplier, long delay, long period);
-
-    <T> CompletableFuture<T> runImmediately(Supplier<T> supplier);
 
     CompletableFuture<Void> runAsyncAllOf(CompletableFuture<?>... futures);
     TaskScheduler runSyncAllOf(CompletableFuture<?>... futures);

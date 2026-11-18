@@ -48,4 +48,9 @@ public class BukkitServerAdapter implements PlatformServerAdapter {
     public double[] getTPS() {
         return new double[]{};
     }
+
+    @Override
+    public boolean isPrimaryThread() {
+        return Bukkit.isPrimaryThread();
+    }
 }

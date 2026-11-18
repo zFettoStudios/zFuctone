@@ -15,4 +15,6 @@ public interface PlatformPlayerService extends ReloadModule<PlatformPlayerServic
     PlatformPlayerService addPlatformPlayer(@NonNull PlatformPlayer platformPlayer);
     PlatformPlayerService removePlatformPlayer(@NonNull UUID uuid);
     PlatformPlayerService removePlatformPlayer(@NonNull String nickname);
+
+    List<PlatformPlayer> getOnlinePlayers();
 }

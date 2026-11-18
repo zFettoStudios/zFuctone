@@ -60,6 +60,11 @@ public class PlatformPlayerServiceImpl implements PlatformPlayerService {
     }
 
     @Override
+    public List<PlatformPlayer> getOnlinePlayers() {
+        return List.copyOf(platformPlayers.values());
+    }
+
+    @Override
     public PlatformPlayerService reload() {
         return this;
     }
