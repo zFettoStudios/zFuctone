@@ -99,7 +99,7 @@ public class ModuleControllerImpl implements ModuleController {
             taskScheduler.runAsync(() -> {
                 for (CommandModule<?> module : commandModules.values()) consumer.accept(module);
             }),
-            taskScheduler.runAsync(() -> {
+            taskScheduler.runSync(() -> {
                 for (IntegrationModule<?> module : integrationModules.values()) consumer.accept(module);
             })
         );
