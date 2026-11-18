@@ -53,4 +53,6 @@ public interface PlatformPlayerAdapter {
     @NonNull String getWorldName(@NonNull Object platformPlayer);
 
     @NonNull String getWorldEnvironment(@NonNull Object platformPlayer);
+
+    PlatformPlayerAdapter chat(@NonNull Object platformPlayer, @NonNull Component message);
 }

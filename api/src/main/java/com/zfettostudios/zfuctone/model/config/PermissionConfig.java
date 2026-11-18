@@ -8,6 +8,9 @@ import com.zfettostudios.zfuctone.annotation.config.FilePath;
 import com.zfettostudios.zfuctone.model.config.setting.PermissionSetting;
 import com.zfettostudios.zfuctone.model.constant.minecraft.world.PermissionType;
 
+import java.util.LinkedHashMap;
+import java.util.Map;
+
 @Getter
 @Setter
 @Accessors(fluent = true)
@@ -81,6 +84,7 @@ public class PermissionConfig {
     public static class Placeholder {
         private String name = "zfuctone.module.placeholder";
         private PermissionType type = PermissionType.TRUE;
+        private final Map<String, PermissionSetting> values = new LinkedHashMap<>();
         private final Standard standard = new Standard();
 
         @Getter

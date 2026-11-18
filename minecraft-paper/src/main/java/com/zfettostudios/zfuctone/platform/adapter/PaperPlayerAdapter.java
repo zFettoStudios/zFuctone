@@ -3,6 +3,7 @@ package com.zfettostudios.zfuctone.platform.adapter;
 import com.zfettostudios.zfuctone.model.constant.minecraft.player.Gamemode;
 import com.zfettostudios.zfuctone.util.StringUtil;
 import net.kyori.adventure.text.Component;
+import net.kyori.adventure.text.serializer.legacy.LegacyComponentSerializer;
 import net.kyori.adventure.text.serializer.plain.PlainTextComponentSerializer;
 import org.bukkit.Bukkit;
 import org.bukkit.OfflinePlayer;
@@ -196,6 +197,14 @@ public class PaperPlayerAdapter extends PlatformPlayerAdapterImpl {
         if (player == null) return "";
 
         return player.getWorld().getEnvironment().name();
+    }
+
+    @Override
+    public PlatformPlayerAdapter chat(@NonNull Object platformPlayer, @NonNull Component message) {
+        Player player = getPlayerFrom(platformPlayer);
+        if (player != null) player.chat(LegacyComponentSerializer.legacySection().serialize(message));
+
+        return this;
     }
 
     private @Nullable Player getPlayerFrom(Object object) {

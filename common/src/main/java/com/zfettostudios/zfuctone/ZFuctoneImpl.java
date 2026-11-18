@@ -3,6 +3,8 @@ package com.zfettostudios.zfuctone;
 import lombok.Getter;
 import lombok.experimental.Accessors;
 
+import com.zfettostudios.zfuctone.checker.PermissionChecker;
+import com.zfettostudios.zfuctone.checker.PermissionCheckerImpl;
 import com.zfettostudios.zfuctone.dispatcher.MessageDispatcher;
 import com.zfettostudios.zfuctone.dispatcher.MessageDispatcherImpl;
 import com.zfettostudios.zfuctone.file.FileFacade;
@@ -16,6 +18,8 @@ import com.zfettostudios.zfuctone.module.integration.floodgate.FloodgateModule;
 import com.zfettostudios.zfuctone.module.integration.floodgate.FloodgateModuleImpl;
 import com.zfettostudios.zfuctone.module.integration.geyser.GeyserModule;
 import com.zfettostudios.zfuctone.module.integration.geyser.GeyserModuleImpl;
+import com.zfettostudios.zfuctone.module.integration.luckperms.LuckPermsModule;
+import com.zfettostudios.zfuctone.module.integration.luckperms.LuckPermsModuleImpl;
 import com.zfettostudios.zfuctone.module.integration.viaversion.ViaVersionModule;
 import com.zfettostudios.zfuctone.module.integration.viaversion.ViaVersionModuleImpl;
 import com.zfettostudios.zfuctone.platform.adapter.PlatformPlayerAdapter;
@@ -46,6 +50,7 @@ public abstract class ZFuctoneImpl implements ZFuctone {
     protected final ReflectionResolver reflectionResolver;
     protected final ListenerRegistry listenerRegistry;
     protected final ModuleController moduleController;
+    protected final PermissionChecker permissionChecker;
 
     public ZFuctoneImpl() {
         ZFuctoneAPI.setInstance(this);
@@ -59,6 +64,8 @@ public abstract class ZFuctoneImpl implements ZFuctone {
         logger = new ZLoggerImpl();
         fileFacade = new FileFacadeImpl(getDataPath());
         taskScheduler = new TaskSchedulerImpl(((FileFacadeImpl) fileFacade).executor());
+
+        permissionChecker = new PermissionCheckerImpl();
 
         listenerRegistry = new ListenerRegistryImpl();
 
@@ -127,6 +134,7 @@ public abstract class ZFuctoneImpl implements ZFuctone {
         moduleController.add(ViaVersionModule.class, new ViaVersionModuleImpl());
         moduleController.add(GeyserModule.class, geyserModule);
         moduleController.add(FloodgateModule.class, new FloodgateModuleImpl(geyserModule));
+        moduleController.add(LuckPermsModule.class, new LuckPermsModuleImpl());
     }
 
     protected abstract void addedPlatformModules();

@@ -199,6 +199,14 @@ public class BukkitPlayerAdapter extends PlatformPlayerAdapterImpl {
         return player.getWorld().getEnvironment().name();
     }
 
+    @Override
+    public PlatformPlayerAdapter chat(@NonNull Object platformPlayer, @NonNull Component message) {
+        Player player = getPlayerFrom(platformPlayer);
+        if (player != null) player.chat(LegacyComponentSerializer.legacySection().serialize(message));
+
+        return this;
+    }
+
     private @Nullable Player getPlayerFrom(Object object) {
         if (object instanceof Player player) return player;
         return null;

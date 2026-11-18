@@ -4,17 +4,22 @@ import lombok.Getter;
 import lombok.experimental.Accessors;
 
 import com.zfettostudios.zfuctone.ZFuctoneAPI;
+import com.zfettostudios.zfuctone.checker.PermissionChecker;
 import com.zfettostudios.zfuctone.file.FileFacade;
 import com.zfettostudios.zfuctone.logging.ZLogger;
 import com.zfettostudios.zfuctone.model.config.IntegrationConfig;
+import com.zfettostudios.zfuctone.model.config.PermissionConfig;
 import com.zfettostudios.zfuctone.model.config.PlaceholderConfig;
 import com.zfettostudios.zfuctone.model.config.localization.Localization;
+import com.zfettostudios.zfuctone.model.config.setting.PermissionSetting;
+import com.zfettostudios.zfuctone.model.config.setting.PlaceholderSetting;
 import com.zfettostudios.zfuctone.model.constant.LocalizationType;
 import com.zfettostudios.zfuctone.module.integration.placeholderapi.PlaceholderAPIModule;
 import com.zfettostudios.zfuctone.module.placeholder.handler.PlayerPlaceholderHandler;
 import com.zfettostudios.zfuctone.module.placeholder.handler.ProjectPlaceholderHandler;
 import com.zfettostudios.zfuctone.module.placeholder.handler.ServerPlaceholderHandler;
 import com.zfettostudios.zfuctone.platform.entity.PlatformPlayer;
+import org.jspecify.annotations.NonNull;
 
 import java.util.LinkedHashSet;
 import java.util.LinkedList;
@@ -35,15 +40,12 @@ public class PlaceholderModuleImpl implements PlaceholderModule {
     private final FileFacade fileFacade = ZFuctoneAPI.get().fileFacade();
     private final PlaceholderConfig config = fileFacade.placeholder();
     private final IntegrationConfig.PlaceholderAPI configPlaceholderAPI = fileFacade.integration().placeholderapi();
+    private final PermissionConfig.Placeholder permissionConfig = fileFacade.permission().placeholder();
     private final ZLogger logger = ZFuctoneAPI.get().logger();
+    private final PermissionChecker permissionChecker = ZFuctoneAPI.get().permissionChecker();
 
     private PlaceholderAPIModule placeholderAPI() {
         return ZFuctoneAPI.get().moduleController().getIntegration(PlaceholderAPIModule.class);
-    }
-
-    @Override
-    public List<String> getPlaceholderAPIPlaceholders() {
-        return placeholderAPIPlaceholders;
     }
 
     @Override
@@ -65,59 +67,48 @@ public class PlaceholderModuleImpl implements PlaceholderModule {
     public PlaceholderModule reload() {
         if (!isEnable()) return this;
 
-        createPlaceholderAPIPlaceholders();
         createPlaceholders();
 
         return this;
     }
 
-    private void createPlaceholderAPIPlaceholders() {
-        placeholderAPIPlaceholders.clear();
-
-        for (String name : config.values().keySet()) createPlaceholderAPIPlaceholder(name);
-        for (Localization localization : fileFacade.localizations().values())
-            for (String name : localization.placeholder().values().keySet())
-                createPlaceholderAPIPlaceholder(name);
-
-        if (!config.standard().enable()) return;
-
-        createPlaceholderAPIPlaceholder(config.standard().projectAuthors());
-        createPlaceholderAPIPlaceholder(config.standard().projectDescription());
-        createPlaceholderAPIPlaceholder(config.standard().projectWebsite());
-        createPlaceholderAPIPlaceholder(config.standard().projectVersion());
-        createPlaceholderAPIPlaceholder(config.standard().projectReload());
-
-        createPlaceholderAPIPlaceholder(config.standard().serverType());
-        createPlaceholderAPIPlaceholder(config.standard().serverVersion());
-        createPlaceholderAPIPlaceholder(config.standard().serverPlayersOnline());
-        createPlaceholderAPIPlaceholder(config.standard().serverPlayersMax());
-        createPlaceholderAPIPlaceholder(config.standard().serverTps1());
-        createPlaceholderAPIPlaceholder(config.standard().serverTps5());
-        createPlaceholderAPIPlaceholder(config.standard().serverTps15());
-
-        createPlaceholderAPIPlaceholder(config.standard().playerNickname());
-        createPlaceholderAPIPlaceholder(config.standard().playerUuid());
-        createPlaceholderAPIPlaceholder(config.standard().playerIp());
-        createPlaceholderAPIPlaceholder(config.standard().playerLocale());
-        createPlaceholderAPIPlaceholder(config.standard().playerPing());
-        createPlaceholderAPIPlaceholder(config.standard().playerProtocolVersion());
-        createPlaceholderAPIPlaceholder(config.standard().playerVersion());
-        createPlaceholderAPIPlaceholder(config.standard().playerDisplayVersion());
-        createPlaceholderAPIPlaceholder(config.standard().playerEdition());
-        createPlaceholderAPIPlaceholder(config.standard().playerDisplayEdition());
-        createPlaceholderAPIPlaceholder(config.standard().playerGamemode());
-        createPlaceholderAPIPlaceholder(config.standard().playerWorldName());
-        createPlaceholderAPIPlaceholder(config.standard().playerWorldEnvironment());
-        createPlaceholderAPIPlaceholder(config.standard().playerHasPermission());
-        createPlaceholderAPIPlaceholder(config.standard().playerIsOperator());
-        createPlaceholderAPIPlaceholder(config.standard().playerIsSneaking());
-        createPlaceholderAPIPlaceholder(config.standard().playerIsDead());
+    @Override
+    public PlaceholderModule addPlaceholder(@NonNull PlaceholderSetting config,
+                                            @NonNull PermissionSetting permission,
+                                            @NonNull Function<PlaceholderContext, String> handler) {
+        return addPlaceholder(config, permission, handler, true);
     }
 
-    private void createPlaceholderAPIPlaceholder(PlaceholderConfig.Standard.PlaceholderSetting setting) {
-        if (!setting.enable()) return;
+    @Override
+    public PlaceholderModule addPlaceholder(@NonNull PlaceholderSetting config,
+                                            @NonNull Function<PlaceholderContext, String> handler) {
+        return addPlaceholder(config, null, handler, false);
+    }
 
-       createPlaceholderAPIPlaceholder(setting.name());
+    private PlaceholderModule addPlaceholder(@NonNull PlaceholderSetting config,
+                                             PermissionSetting permission,
+                                             @NonNull Function<PlaceholderContext, String> handler,
+                                             boolean shouldCheckPermission) {
+        if (!config.enable()) return this;
+
+        createPlaceholderAPIPlaceholder(config.name());
+
+        if (shouldCheckPermission) {
+            placeholders.put(config.name(), context -> {
+                PlatformPlayer sender = context.getSender();
+                if (sender == null || !permissionChecker.check(sender, permission.name())) return null;
+
+                return handler.apply(context);
+            });
+        }
+        else placeholders.put(config.name(), handler);
+
+        return this;
+    }
+
+    @Override
+    public List<String> getPlaceholderAPIPlaceholders() {
+        return placeholderAPIPlaceholders;
     }
 
     private void createPlaceholderAPIPlaceholder(String name) {
@@ -126,48 +117,47 @@ public class PlaceholderModuleImpl implements PlaceholderModule {
 
     private void createPlaceholders() {
         placeholders.clear();
+        placeholderAPIPlaceholders.clear();
 
-        for (Map.Entry<String, String> entry : config.values().entrySet())
-            placeholders.put(entry.getKey(), context ->
-                placeholderAPI().setPlaceholders(context.getSender(), entry.getValue()));
+        for (Map.Entry<String, PlaceholderSetting> entry : config.values().entrySet()) {
+            String placeholderKey = entry.getKey();
 
-        Set<String> names = new LinkedHashSet<>();
-        for (Localization localization : fileFacade.localizations().values())
-            names.addAll(localization.placeholder().values().keySet());
+            Function<PlaceholderContext, String> handler = context -> {
+                PlatformPlayer sender = context.getSender();
+                if (sender == null) return null;
 
-        for (String name : names) {
-            placeholders.put(name, context -> {
                 Set<String> resolving = RESOLVING.get();
 
-                if (!resolving.add(name)) {
-                    if (REPORTED_CYCLES.add(name))
-                        logger.warn("Placeholder \"{}\" refers to itself. Check your localization.", name);
+                if (!resolving.add(placeholderKey)) {
+                    if (REPORTED_CYCLES.add(placeholderKey))
+                        logger.warn("Placeholder \"{}\" refers to itself. Check your localization.", placeholderKey);
 
                     return null;
                 }
 
                 try {
-                    PlatformPlayer sender = context.getSender();
+                    Localization localization = fileFacade.localizationOrDefault(sender.getLocale(), LocalizationType.PLAYER);
+                    if (localization == null) return placeholderAPI().setPlaceholders(sender, entry.getValue().name());
 
-                    Localization localization = sender == null
-                        ? fileFacade.localization(LocalizationType.PLAYER)
-                        : fileFacade.localizationOrDefault(sender.getLocale(), LocalizationType.PLAYER);
+                    String value = localization.placeholder().values().get(placeholderKey);
+                    if (value == null) return placeholderAPI().setPlaceholders(sender, entry.getValue().name());
 
-                    String text = localization.placeholder().values().get(name);
-                    if (text == null) text = fileFacade.localization(LocalizationType.PLAYER).placeholder().values().get(name);
-
-                    return text == null ? null : placeholderAPI().setPlaceholders(sender, text);
+                    return placeholderAPI().setPlaceholders(sender, value);
                 } finally {
-                    resolving.remove(name);
+                    resolving.remove(placeholderKey);
                     if (resolving.isEmpty()) RESOLVING.remove();
                 }
-            });
+            };
+
+            PermissionSetting permission = permissionConfig.values().get(placeholderKey);
+            if (permission != null) addPlaceholder(entry.getValue(), permission, handler);
+            else addPlaceholder(entry.getValue(), handler);
         }
 
         if (!config.standard().enable()) return;
 
-        ProjectPlaceholderHandler.createPlaceholders(placeholders);
-        ServerPlaceholderHandler.createPlaceholders(placeholders);
-        PlayerPlaceholderHandler.createPlaceholders(placeholders);
+        ProjectPlaceholderHandler.createPlaceholders();
+        ServerPlaceholderHandler.createPlaceholders();
+        PlayerPlaceholderHandler.createPlaceholders();
     }
 }

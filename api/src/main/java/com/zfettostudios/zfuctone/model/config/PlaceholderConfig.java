@@ -1,11 +1,11 @@
 package com.zfettostudios.zfuctone.model.config;
 
 import lombok.Getter;
-import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.experimental.Accessors;
 
 import com.zfettostudios.zfuctone.annotation.config.FilePath;
+import com.zfettostudios.zfuctone.model.config.setting.PlaceholderSetting;
 
 import java.util.LinkedHashMap;
 import java.util.Map;
@@ -16,7 +16,7 @@ import java.util.Map;
 @FilePath(path = "placeholder.yml")
 public class PlaceholderConfig {
     private Boolean enable = true;
-    private final Map<String, String> values = new LinkedHashMap<>();
+    private final Map<String, PlaceholderSetting> values = new LinkedHashMap<>();
     private final Standard standard = new Standard();
 
     @Getter
@@ -55,18 +55,5 @@ public class PlaceholderConfig {
         private final PlaceholderSetting playerIsOperator = new PlaceholderSetting("player_is_operator");
         private final PlaceholderSetting playerIsSneaking = new PlaceholderSetting("player_is_sneaking");
         private final PlaceholderSetting playerIsDead = new PlaceholderSetting("player_is_dead");
-
-        @Getter
-        @Setter
-        @NoArgsConstructor
-        public static class PlaceholderSetting {
-            private Boolean enable;
-            private String name;
-
-            public PlaceholderSetting(String name) {
-                this.enable = true;
-                this.name = name;
-            }
-        }
     }
 }
