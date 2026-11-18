@@ -2,6 +2,7 @@ package com.zfettostudios.zfuctone.module.placeholder;
 
 import com.zfettostudios.zfuctone.model.config.setting.PermissionSetting;
 import com.zfettostudios.zfuctone.model.config.setting.PlaceholderSetting;
+import com.zfettostudios.zfuctone.model.config.setting.PlaceholderValueSetting;
 import com.zfettostudios.zfuctone.module.ReloadModule;
 import org.jspecify.annotations.NonNull;
 
@@ -14,7 +15,7 @@ public interface PlaceholderModule extends ReloadModule<PlaceholderModule> {
     List<String> getPlaceholderAPIPlaceholders();
     PlaceholderModule addPlaceholder(@NonNull PlaceholderSetting config,
                                      @NonNull PermissionSetting permission,
-                        @NonNull Function<PlaceholderContext, String> handler);
+                                     @NonNull Function<PlaceholderContext, String> handler);
     PlaceholderModule addPlaceholder(@NonNull PlaceholderSetting config,
                                      @NonNull Function<PlaceholderContext, String> handler);
     boolean isEnable();

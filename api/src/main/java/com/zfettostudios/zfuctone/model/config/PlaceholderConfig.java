@@ -6,6 +6,7 @@ import lombok.experimental.Accessors;
 
 import com.zfettostudios.zfuctone.annotation.config.FilePath;
 import com.zfettostudios.zfuctone.model.config.setting.PlaceholderSetting;
+import com.zfettostudios.zfuctone.model.config.setting.PlaceholderValueSetting;
 
 import java.util.LinkedHashMap;
 import java.util.Map;
@@ -16,7 +17,7 @@ import java.util.Map;
 @FilePath(path = "placeholder.yml")
 public class PlaceholderConfig {
     private Boolean enable = true;
-    private final Map<String, PlaceholderSetting> values = new LinkedHashMap<>();
+    private final Map<String, PlaceholderValueSetting> values = new LinkedHashMap<>();
     private final Standard standard = new Standard();
 
     @Getter

@@ -13,6 +13,7 @@ import com.zfettostudios.zfuctone.model.config.PlaceholderConfig;
 import com.zfettostudios.zfuctone.model.config.localization.Localization;
 import com.zfettostudios.zfuctone.model.config.setting.PermissionSetting;
 import com.zfettostudios.zfuctone.model.config.setting.PlaceholderSetting;
+import com.zfettostudios.zfuctone.model.config.setting.PlaceholderValueSetting;
 import com.zfettostudios.zfuctone.model.constant.LocalizationType;
 import com.zfettostudios.zfuctone.module.integration.placeholderapi.PlaceholderAPIModule;
 import com.zfettostudios.zfuctone.module.placeholder.handler.PlayerPlaceholderHandler;
@@ -106,6 +107,27 @@ public class PlaceholderModuleImpl implements PlaceholderModule {
         return this;
     }
 
+    private void addPlaceholder(String name,
+                                boolean enable,
+                                PermissionSetting permission,
+                                Function<PlaceholderContext, String> handler,
+                                boolean shouldCheckPermission) {
+        if (!enable) return;
+
+        createPlaceholderAPIPlaceholder(name);
+
+        if (shouldCheckPermission) {
+            placeholders.put(name, context -> {
+                PlatformPlayer sender = context.getSender();
+                if (sender == null || !permissionChecker.check(sender, permission.name())) return null;
+
+                return handler.apply(context);
+            });
+        }
+        else placeholders.put(name, handler);
+
+    }
+
     @Override
     public List<String> getPlaceholderAPIPlaceholders() {
         return placeholderAPIPlaceholders;
@@ -119,7 +141,7 @@ public class PlaceholderModuleImpl implements PlaceholderModule {
         placeholders.clear();
         placeholderAPIPlaceholders.clear();
 
-        for (Map.Entry<String, PlaceholderSetting> entry : config.values().entrySet()) {
+        for (Map.Entry<String, PlaceholderValueSetting> entry : config.values().entrySet()) {
             String placeholderKey = entry.getKey();
 
             Function<PlaceholderContext, String> handler = context -> {
@@ -137,10 +159,10 @@ public class PlaceholderModuleImpl implements PlaceholderModule {
 
                 try {
                     Localization localization = fileFacade.localizationOrDefault(sender.getLocale(), LocalizationType.PLAYER);
-                    if (localization == null) return placeholderAPI().setPlaceholders(sender, entry.getValue().name());
+                    if (localization == null) return placeholderAPI().setPlaceholders(sender, entry.getValue().value());
 
                     String value = localization.placeholder().values().get(placeholderKey);
-                    if (value == null) return placeholderAPI().setPlaceholders(sender, entry.getValue().name());
+                    if (value == null) return placeholderAPI().setPlaceholders(sender, entry.getValue().value());
 
                     return placeholderAPI().setPlaceholders(sender, value);
                 } finally {
@@ -150,8 +172,8 @@ public class PlaceholderModuleImpl implements PlaceholderModule {
             };
 
             PermissionSetting permission = permissionConfig.values().get(placeholderKey);
-            if (permission != null) addPlaceholder(entry.getValue(), permission, handler);
-            else addPlaceholder(entry.getValue(), handler);
+            if (permission != null) addPlaceholder(placeholderKey, entry.getValue().enable(), permission, handler, false);
+            else addPlaceholder(placeholderKey, entry.getValue().enable(), null, handler, true);
         }
 
         if (!config.standard().enable()) return;
