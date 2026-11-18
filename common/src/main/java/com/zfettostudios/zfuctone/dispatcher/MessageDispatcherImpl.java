@@ -44,8 +44,15 @@ public class MessageDispatcherImpl implements MessageDispatcher {
                                               @NonNull Function<Localization, String> getMessage) {
         List<PlatformPlayer> recipients = playerService.getOnlinePlayers();
 
-        taskScheduler.runAsync(() -> logger.info(
-            formatPlaceholders(sender, getMessage.apply(fileFacade.localization(LocalizationType.CONSOLE)))));
+        taskScheduler.runAsync(() -> {
+            Component component = formatPlaceholders(sender, getMessage.apply(fileFacade.localization(LocalizationType.CONSOLE)));
+            if (component == null) {
+                logger.warn("The message component is null for the Console (check the localization configuration)");
+                return;
+            }
+
+            logger.info(component);
+        });
 
         for (PlatformPlayer recipient : recipients) dispatchAsyncToPlayer(sender, recipient, getMessage);
 
@@ -59,12 +66,22 @@ public class MessageDispatcherImpl implements MessageDispatcher {
             String message = getMessage.apply(fileFacade.localizationOrDefault(recipient.getLocale(),
                 LocalizationType.PLAYER));
 
-            taskScheduler.runSync(() ->
-                recipient.dispatchMessage(formatPlaceholders(sender, message)));
+            taskScheduler.runSync(() -> {
+                Component component = formatPlaceholders(sender, message);
+                if (component == null) {
+                    logger.warn("The message component is null for the recipient \"{}\" (check the localization configuration)",
+                        recipient.getNickname());
+                    return;
+                }
+
+                recipient.dispatchMessage(component);
+            });
         });
     }
 
-    private Component formatPlaceholders(@NonNull PlatformPlayer sender, @NonNull String message) {
+    private Component formatPlaceholders(@NonNull PlatformPlayer sender, String message) {
+        if (message == null || message.isEmpty()) return null;
+
         return miniPlaceholders().setPlaceholders(sender, placeholderAPI().setPlaceholders(sender, message));
     }
 }
