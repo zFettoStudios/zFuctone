@@ -117,9 +117,6 @@ public abstract class ZFuctoneImpl implements ZFuctone {
 
         moduleController.reload();
 
-        unregisterListeners();
-        registerListeners();
-
         logger.logReloaded();
         return this;
     }
