@@ -14,8 +14,8 @@ public class RuRuLocalization extends Localization {
     }
 
     private void messageCollect() {
-        message().join().format("Игрок %player_name% зашел на сервер!");
-        message().quit().format("Игрок %player_name% вышел с сервера!");
+        message().join().format("Игрок %zfuctone_player_nickname% зашел на сервер!");
+        message().quit().format("Игрок %zfuctone_player_nickname% вышел с сервера!");
     }
 
     private void commandCollect() {
