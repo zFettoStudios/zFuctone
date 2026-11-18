@@ -7,25 +7,17 @@ import com.zfettostudios.zfuctone.platform.entity.PlatformPlayer;
 import com.zfettostudios.zfuctone.service.PlatformPlayerService;
 
 public abstract class PlatformPlayerJoinListener {
-    private PlatformPlayerService playerService() {
-        return ZFuctoneAPI.get().playerService();
-    }
-
-    private MessageConfig message() {
-        return ZFuctoneAPI.get().fileFacade().message();
-    }
-
-    private MessageDispatcher messageDispatcher() {
-        return ZFuctoneAPI.get().messageDispatcher();
-    }
+    private final PlatformPlayerService playerService = ZFuctoneAPI.get().playerService();
+    private final MessageDispatcher messageDispatcher = ZFuctoneAPI.get().messageDispatcher();
+    private final MessageConfig config = ZFuctoneAPI.get().fileFacade().message();
 
     protected void execute(Object platformPlayer) {
         PlatformPlayer player = PlatformPlayer.builder().platformPlayer(platformPlayer).build();
 
-        playerService().addPlatformPlayer(player);
+        playerService.addPlatformPlayer(player);
 
-        if (!message().join().enable()) return;
+        if (!config.join().enable()) return;
 
-        messageDispatcher().dispatchEveryone(player, localization -> localization.message().join().format());
+        messageDispatcher.dispatchEveryone(player, localization -> localization.message().join().format());
     }
 }

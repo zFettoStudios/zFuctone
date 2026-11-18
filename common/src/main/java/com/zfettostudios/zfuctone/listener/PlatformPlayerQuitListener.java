@@ -10,33 +10,22 @@ import com.zfettostudios.zfuctone.service.PlatformPlayerService;
 import java.util.UUID;
 
 public abstract class PlatformPlayerQuitListener {
-    private PlatformPlayerService playerService() {
-        return ZFuctoneAPI.get().playerService();
-    }
-
-    private PlatformPlayerAdapter playerAdapter() {
-        return ZFuctoneAPI.get().playerAdapter();
-    }
-
-    private MessageConfig message() {
-        return ZFuctoneAPI.get().fileFacade().message();
-    }
-
-    private MessageDispatcher messageDispatcher() {
-        return ZFuctoneAPI.get().messageDispatcher();
-    }
+    private final PlatformPlayerService playerService = ZFuctoneAPI.get().playerService();
+    private final MessageDispatcher messageDispatcher = ZFuctoneAPI.get().messageDispatcher();
+    private final MessageConfig config = ZFuctoneAPI.get().fileFacade().message();
+    private final PlatformPlayerAdapter playerAdapter = ZFuctoneAPI.get().playerAdapter();
 
     protected void execute(Object platformPlayer) {
-        UUID uuid = playerAdapter().getUUID(platformPlayer);
+        UUID uuid = playerAdapter.getUUID(platformPlayer);
         if (uuid == null) return;
 
-        PlatformPlayer player = playerService().getPlatformPlayer(uuid);
+        PlatformPlayer player = playerService.getPlatformPlayer(uuid);
         if (player == null) return;
 
-        if (!message().quit().enable()) return;
+        if (!config.quit().enable()) return;
 
-        messageDispatcher().dispatchEveryone(player, localization -> localization.message().quit().format());
+        messageDispatcher.dispatchEveryone(player, localization -> localization.message().quit().format());
 
-        playerService().removePlatformPlayer(uuid);
+        playerService.removePlatformPlayer(uuid);
     }
 }

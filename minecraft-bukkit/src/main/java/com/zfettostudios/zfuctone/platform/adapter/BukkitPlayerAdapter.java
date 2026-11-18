@@ -2,7 +2,7 @@ package com.zfettostudios.zfuctone.platform.adapter;
 
 import com.zfettostudios.zfuctone.model.constant.minecraft.player.Gamemode;
 import net.kyori.adventure.text.Component;
-import net.kyori.adventure.text.serializer.plain.PlainTextComponentSerializer;
+import net.kyori.adventure.text.serializer.legacy.LegacyComponentSerializer;
 import org.bukkit.Bukkit;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.entity.Player;
@@ -55,7 +55,7 @@ public class BukkitPlayerAdapter extends PlatformPlayerAdapterImpl {
     @Override
     public @NonNull PlatformPlayerAdapter dispatchMessage(@NonNull Object platformPlayer, @NonNull Component message) {
         Player player = getPlayerFrom(platformPlayer);
-        if (player != null) player.sendMessage(PlainTextComponentSerializer.plainText().serialize(message));
+        if (player != null) player.sendMessage(LegacyComponentSerializer.legacySection().serialize(message));
 
         return this;
     }
@@ -165,7 +165,7 @@ public class BukkitPlayerAdapter extends PlatformPlayerAdapterImpl {
     @Override
     public PlatformPlayerAdapter kick(@NonNull Object platformPlayer, @NonNull Component reason) {
         Player player = getPlayerFrom(platformPlayer);
-        if (player != null) player.kickPlayer(PlainTextComponentSerializer.plainText().serialize(reason));
+        if (player != null) player.kickPlayer(LegacyComponentSerializer.legacySection().serialize(reason));
 
         return this;
     }

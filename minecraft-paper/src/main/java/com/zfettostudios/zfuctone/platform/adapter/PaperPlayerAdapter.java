@@ -54,7 +54,7 @@ public class PaperPlayerAdapter extends PlatformPlayerAdapterImpl {
     @Override
     public @NonNull PlatformPlayerAdapter dispatchMessage(@NonNull Object platformPlayer, @NonNull Component message) {
         Player player = getPlayerFrom(platformPlayer);
-        if (player != null) player.sendMessage(PlainTextComponentSerializer.plainText().serialize(message));
+        if (player != null) player.sendMessage(message);
 
         return this;
     }

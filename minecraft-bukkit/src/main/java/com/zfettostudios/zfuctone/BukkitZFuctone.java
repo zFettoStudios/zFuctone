@@ -86,12 +86,12 @@ public class BukkitZFuctone extends ZFuctoneImpl {
 
     private Listener createPlayerJoinListener() {
         if (platformType == PlatformType.BUKKIT) return new BukkitPlayerJoinListener();
-        else return new PaperPlayerJoinListener();
+        return new PaperPlayerJoinListener();
     }
 
     private Listener createPlayerQuitListener() {
         if (platformType == PlatformType.BUKKIT) return new BukkitPlayerQuitListener();
-        else return new PaperPlayerQuitListener();
+        return new PaperPlayerQuitListener();
     }
 
     @Override
