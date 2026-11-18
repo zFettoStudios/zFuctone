@@ -27,7 +27,7 @@ public class ListDeserializer extends ValueDeserializer<List<Object>> {
         if (property != null) {
             JavaType elementType = property.getType().containedType(0);
             if (elementType != null) {
-                ValueDeserializer<Object> found = context.findNonContextualValueDeserializer(elementType);
+                ValueDeserializer<Object> found = context.findContextualValueDeserializer(elementType, property);
                 return new ListDeserializer(found);
             }
         }

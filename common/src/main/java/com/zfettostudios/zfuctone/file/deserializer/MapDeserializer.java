@@ -34,7 +34,7 @@ public class MapDeserializer extends ValueDeserializer<Map<Object, Object>> {
             if (keyType != null) keyDeserializer = context.findKeyDeserializer(keyType, property);
 
             ValueDeserializer<Object> valueDeserializer = null;
-            if (valueType != null) valueDeserializer = context.findNonContextualValueDeserializer(valueType);
+            if (valueType != null) valueDeserializer = context.findContextualValueDeserializer(valueType, property);
 
             return new MapDeserializer(keyDeserializer, valueDeserializer);
         }

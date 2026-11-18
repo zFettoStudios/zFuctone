@@ -172,8 +172,8 @@ public class PlaceholderModuleImpl implements PlaceholderModule {
             };
 
             PermissionSetting permission = permissionConfig.values().get(placeholderKey);
-            if (permission != null) addPlaceholder(placeholderKey, entry.getValue().enable(), permission, handler, false);
-            else addPlaceholder(placeholderKey, entry.getValue().enable(), null, handler, true);
+            addPlaceholder(placeholderKey, entry.getValue().enable(),
+                permission, handler, permission != null);
         }
 
         if (!config.standard().enable()) return;
