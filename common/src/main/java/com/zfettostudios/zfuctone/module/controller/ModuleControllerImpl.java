@@ -93,13 +93,13 @@ public class ModuleControllerImpl implements ModuleController {
 
     private ModuleController executeAllModules(Consumer<ReloadModule<?>> consumer) {
         taskScheduler.runSyncAllOf(
-            taskScheduler.runImmediately(() -> {
+            taskScheduler.runAsync(() -> {
                 for (MessageModule<?> module : messageModules.values()) consumer.accept(module);
             }),
-            taskScheduler.runImmediately(() -> {
+            taskScheduler.runAsync(() -> {
                 for (CommandModule<?> module : commandModules.values()) consumer.accept(module);
             }),
-            taskScheduler.runImmediately(() -> {
+            taskScheduler.runAsync(() -> {
                 for (IntegrationModule<?> module : integrationModules.values()) consumer.accept(module);
             })
         );
