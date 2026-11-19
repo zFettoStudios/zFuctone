@@ -3,8 +3,7 @@ package com.zfettostudios.zfuctone;
 import lombok.Getter;
 import lombok.experimental.Accessors;
 
-import com.zfettostudios.zfuctone.checker.PermissionChecker;
-import com.zfettostudios.zfuctone.checker.PermissionCheckerImpl;
+import com.github.retrooper.packetevents.PacketEvents;
 import com.zfettostudios.zfuctone.dispatcher.MessageDispatcher;
 import com.zfettostudios.zfuctone.dispatcher.MessageDispatcherImpl;
 import com.zfettostudios.zfuctone.file.FileFacade;
@@ -50,10 +49,10 @@ public abstract class ZFuctoneImpl implements ZFuctone {
     protected final ReflectionResolver reflectionResolver;
     protected final ListenerRegistry listenerRegistry;
     protected final ModuleController moduleController;
-    protected final PermissionChecker permissionChecker;
 
     public ZFuctoneImpl() {
         ZFuctoneAPI.setInstance(this);
+        PacketEvents.getAPI().init();
 
         reflectionResolver = new ReflectionResolverImpl();
         platformType = detectPlatformType();
@@ -64,8 +63,6 @@ public abstract class ZFuctoneImpl implements ZFuctone {
         logger = new ZLoggerImpl();
         fileFacade = new FileFacadeImpl(getDataPath());
         taskScheduler = new TaskSchedulerImpl(((FileFacadeImpl) fileFacade).executor());
-
-        permissionChecker = new PermissionCheckerImpl();
 
         listenerRegistry = new ListenerRegistryImpl();
 
@@ -81,6 +78,7 @@ public abstract class ZFuctoneImpl implements ZFuctone {
 
         fileFacade.enable();
         taskScheduler.start();
+        registerTaskScheduler();
 
         logger.logDescription();
 

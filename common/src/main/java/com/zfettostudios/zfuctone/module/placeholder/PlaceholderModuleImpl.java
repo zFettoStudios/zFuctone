@@ -4,7 +4,6 @@ import lombok.Getter;
 import lombok.experimental.Accessors;
 
 import com.zfettostudios.zfuctone.ZFuctoneAPI;
-import com.zfettostudios.zfuctone.checker.PermissionChecker;
 import com.zfettostudios.zfuctone.file.FileFacade;
 import com.zfettostudios.zfuctone.logging.ZLogger;
 import com.zfettostudios.zfuctone.model.config.IntegrationConfig;
@@ -43,7 +42,6 @@ public class PlaceholderModuleImpl implements PlaceholderModule {
     private final IntegrationConfig.PlaceholderAPI configPlaceholderAPI = fileFacade.integration().placeholderapi();
     private final PermissionConfig.Placeholder permissionConfig = fileFacade.permission().placeholder();
     private final ZLogger logger = ZFuctoneAPI.get().logger();
-    private final PermissionChecker permissionChecker = ZFuctoneAPI.get().permissionChecker();
 
     private PlaceholderAPIModule placeholderAPI() {
         return ZFuctoneAPI.get().moduleController().getIntegration(PlaceholderAPIModule.class);
@@ -97,7 +95,7 @@ public class PlaceholderModuleImpl implements PlaceholderModule {
         if (shouldCheckPermission) {
             placeholders.put(config.name(), context -> {
                 PlatformPlayer sender = context.getSender();
-                if (sender == null || !permissionChecker.check(sender, permission.name())) return null;
+                if (sender == null || !sender.hasPermission(permission.name())) return null;
 
                 return handler.apply(context);
             });
@@ -119,7 +117,7 @@ public class PlaceholderModuleImpl implements PlaceholderModule {
         if (shouldCheckPermission) {
             placeholders.put(name, context -> {
                 PlatformPlayer sender = context.getSender();
-                if (sender == null || !permissionChecker.check(sender, permission.name())) return null;
+                if (sender == null || !sender.hasPermission(permission.name())) return null;
 
                 return handler.apply(context);
             });

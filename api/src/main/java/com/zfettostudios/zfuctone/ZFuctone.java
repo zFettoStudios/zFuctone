@@ -1,6 +1,5 @@
 package com.zfettostudios.zfuctone;
 
-import com.zfettostudios.zfuctone.checker.PermissionChecker;
 import com.zfettostudios.zfuctone.dispatcher.MessageDispatcher;
 import com.zfettostudios.zfuctone.exception.ReloadException;
 import com.zfettostudios.zfuctone.file.FileFacade;
@@ -42,6 +41,4 @@ public interface ZFuctone extends Module<ZFuctone> {
     ListenerRegistry listenerRegistry();
 
     ModuleController moduleController();
-
-    PermissionChecker permissionChecker();
 }

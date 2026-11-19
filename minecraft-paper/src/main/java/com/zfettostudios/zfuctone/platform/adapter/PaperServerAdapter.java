@@ -6,9 +6,6 @@ import org.bukkit.Bukkit;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.jspecify.annotations.NonNull;
 
-import java.util.Collections;
-import java.util.List;
-
 @RequiredArgsConstructor
 public class PaperServerAdapter implements PlatformServerAdapter {
     private final JavaPlugin plugin;
@@ -19,19 +16,9 @@ public class PaperServerAdapter implements PlatformServerAdapter {
     }
 
     @Override
-    public @NonNull List<Object> getOnlinePlatformPlayers() {
-        return Collections.singletonList(Bukkit.getOnlinePlayers());
-    }
-
-    @Override
     public PlatformServerAdapter runTask(Runnable task) {
         Bukkit.getScheduler().runTask(plugin, task);
         return this;
-    }
-
-    @Override
-    public @NonNull String getVersion() {
-        return Bukkit.getMinecraftVersion();
     }
 
     @Override

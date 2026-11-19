@@ -1,9 +1,13 @@
 package com.zfettostudios.zfuctone.platform.entity;
 
 import lombok.Getter;
+import lombok.RequiredArgsConstructor;
 import lombok.Setter;
 import lombok.experimental.Accessors;
 
+import com.github.retrooper.packetevents.PacketEvents;
+import com.github.retrooper.packetevents.protocol.player.User;
+import com.github.retrooper.packetevents.wrapper.play.server.WrapperPlayServerDisconnect;
 import com.zfettostudios.zfuctone.ZFuctoneAPI;
 import com.zfettostudios.zfuctone.exception.InvalidTypeException;
 import com.zfettostudios.zfuctone.file.FileFacade;
@@ -13,31 +17,31 @@ import com.zfettostudios.zfuctone.model.constant.minecraft.player.PlayerEdition;
 import com.zfettostudios.zfuctone.module.controller.ModuleController;
 import com.zfettostudios.zfuctone.module.integration.floodgate.FloodgateModule;
 import com.zfettostudios.zfuctone.module.integration.geyser.GeyserModule;
+import com.zfettostudios.zfuctone.module.integration.luckperms.LuckPermsModule;
 import com.zfettostudios.zfuctone.module.integration.viaversion.ViaVersionModule;
 import com.zfettostudios.zfuctone.platform.adapter.PlatformPlayerAdapter;
 import net.kyori.adventure.text.Component;
 import org.jspecify.annotations.NonNull;
+import org.jspecify.annotations.Nullable;
 
 import java.util.UUID;
 
+@RequiredArgsConstructor
 public class PlatformPlayerImpl implements PlatformPlayer {
+    private static final PlatformPlayerAdapter playerAdapter = ZFuctoneAPI.get().playerAdapter();
+    private static final FileFacade fileFacade = ZFuctoneAPI.get().fileFacade();
+    private static final ModuleController moduleController = ZFuctoneAPI.get().moduleController();
+    private static final FloodgateModule floodgateModule = moduleController.getIntegration(FloodgateModule.class);
+    private static final ViaVersionModule viaVersionModule = moduleController.getIntegration(ViaVersionModule.class);
+    private static final LuckPermsModule luckPermsModule = moduleController.getIntegration(LuckPermsModule.class);
+    private static final GeyserModule geyserModule = moduleController.getIntegration(GeyserModule.class);
+
     @Getter
     @Accessors(fluent = true)
-    UUID uuid;
+    private final UUID uuid;
     @Getter @Setter private String displayNickname;
     @Getter private final Object rawPlayer;
-
-    private final PlatformPlayerAdapter playerAdapter = ZFuctoneAPI.get().playerAdapter();
-    private final FileFacade fileFacade = ZFuctoneAPI.get().fileFacade();
-    private final ModuleController moduleController = ZFuctoneAPI.get().moduleController();
-    private final FloodgateModule floodgateModule = moduleController.getIntegration(FloodgateModule.class);
-    private final ViaVersionModule viaVersionModule = moduleController.getIntegration(ViaVersionModule.class);
-    private final GeyserModule geyserModule = moduleController.getIntegration(GeyserModule.class);
-
-    private PlatformPlayerImpl(UUID uuid, Object rawPlayer) {
-        this.uuid = uuid;
-        this.rawPlayer = rawPlayer;
-    }
+    private final User user;
 
     @Override
     public <T> T getRawPlayer(@NonNull Class<T> type) {
@@ -48,27 +52,21 @@ public class PlatformPlayerImpl implements PlatformPlayer {
 
     @Override
     public @NonNull String getNickname() {
-        if (!isPlayer()) return "";
         return playerAdapter.getNickname(rawPlayer);
     }
 
     @Override
     public @NonNull String getLocale() {
-        if (!isPlayer()) return "";
         return playerAdapter.getLocale(rawPlayer);
     }
 
     @Override
     public @NonNull String getIp() {
-        if (!isPlayer()) return "";
-        String ip = playerAdapter.getIp(rawPlayer);
-        return ip != null ? ip : "";
+        return user.getAddress().getHostString();
     }
 
     @Override
     public int getProtocolVersion() {
-        if (!isPlayer()) return -1;
-
         int protocol = -1;
 
         switch (getEdition()) {
@@ -76,15 +74,13 @@ public class PlatformPlayerImpl implements PlatformPlayer {
             case BEDROCK -> protocol = geyserModule.getProtocolVersion(uuid);
         }
 
-        if (protocol == -1) protocol = playerAdapter.getProtocolVersion(rawPlayer);
+        if (protocol == -1) protocol = user.getClientVersion().getProtocolVersion();
 
         return protocol;
     }
 
     @Override
     public @NonNull String getVersion() {
-        if (!isPlayer()) return "";
-
         String version = null;
 
         switch (getEdition()) {
@@ -92,15 +88,13 @@ public class PlatformPlayerImpl implements PlatformPlayer {
             case BEDROCK -> version = floodgateModule.getVersion(uuid);
         }
 
-        if (version == null) version = playerAdapter.getVersionFromProtocolVersion(playerAdapter.getProtocolVersion(rawPlayer));
+        if (version == null) version = user.getClientVersion().getReleaseName();
 
         return version;
     }
 
     @Override
     public @NonNull String getDisplayVersion() {
-        if (!isPlayer()) return "";
-
         String version = null;
 
         switch (getEdition()) {
@@ -114,7 +108,7 @@ public class PlatformPlayerImpl implements PlatformPlayer {
             version = fileFacade.localizationOrDefault(getLocale(), LocalizationType.PLAYER)
                 .message().player().version().java().get(protocolVersion);
 
-            if (version == null) version = playerAdapter.getVersionFromProtocolVersion(protocolVersion);
+            if (version == null) version = user.getClientVersion().getReleaseName();
         }
 
         return version;
@@ -122,16 +116,12 @@ public class PlatformPlayerImpl implements PlatformPlayer {
 
     @Override
     public @NonNull PlayerEdition getEdition() {
-        if (!isPlayer()) return PlayerEdition.JAVA;
-
         return floodgateModule.getEdition(uuid);
 
     }
 
     @Override
     public @NonNull String getDisplayEdition() {
-        if (!isPlayer()) return "";
-
         String edition = floodgateModule.getDisplayEdition(this);
         if (edition != null) return edition;
 
@@ -140,115 +130,90 @@ public class PlatformPlayerImpl implements PlatformPlayer {
 
     @Override
     public boolean isOperator() {
-        if (!isPlayer()) return false;
         return playerAdapter.isOperator(rawPlayer);
     }
 
     @Override
     public boolean isSneaking() {
-        if (!isPlayer()) return false;
         return playerAdapter.isSneaking(rawPlayer);
     }
 
     @Override
     public boolean isDead() {
-        if (!isPlayer()) return false;
         return playerAdapter.isDead(rawPlayer);
     }
 
     @Override
     public boolean isOnline() {
-        if (!isPlayer()) return false;
         return playerAdapter.isOnline(rawPlayer);
     }
 
     @Override
     public int getPing() {
-        if (!isPlayer()) return -1;
         return playerAdapter.getPing(rawPlayer);
     }
 
     @Override
     public boolean hasPermission(@NonNull String permission) {
-        if (!isPlayer()) return false;
-        return playerAdapter.hasPermission(permission, rawPlayer);
+        if (luckPermsModule.isEnable()) return luckPermsModule.hasPermission(uuid, permission);
+
+        return playerAdapter.hasPermission(rawPlayer, permission);
     }
 
     @Override
     public @NonNull Gamemode getGamemode() {
-        if (!isPlayer()) return Gamemode.CREATIVE;
         return playerAdapter.getGamemode(rawPlayer);
     }
 
     @Override
     public @NonNull String getWorldName() {
-        if (!isPlayer()) return "";
         return playerAdapter.getWorldName(rawPlayer);
     }
 
     @Override
     public @NonNull String getWorldEnvironment() {
-        if (!isPlayer()) return "";
         return playerAdapter.getWorldEnvironment(rawPlayer);
     }
 
     @Override
     public PlatformPlayer dispatchMessage(@NonNull Component message) {
-        if (isPlayer()) playerAdapter.dispatchMessage(rawPlayer, message);
+        user.sendMessage(message);
         return this;
     }
 
     @Override
     public PlatformPlayer executeCommand(@NonNull String command) {
-        if (isPlayer()) playerAdapter.executeCommand(rawPlayer, command);
+        playerAdapter.executeCommand(rawPlayer, command);
         return this;
     }
 
     @Override
-    public PlatformPlayer copy() {
-        return builder().platformPlayer(rawPlayer).build();
+    public PlatformPlayer kick(@NonNull Component reason) {
+        user.sendPacket(new WrapperPlayServerDisconnect(reason));
+        user.closeConnection();
+
+        return this;
     }
 
-    public static Builder builder() {
-        return new Builder();
+    public static @Nullable PlatformPlayer build(@NonNull UUID uuid) {
+        Object receivedPlayer = ZFuctoneAPI.get().playerAdapter().getPlatformPlayer(uuid);
+        if (receivedPlayer == null) return null;
+
+        User receivedUser = PacketEvents.getAPI().getPlayerManager().getUser(uuid);
+        if (receivedUser == null) return null;
+
+        return new PlatformPlayerImpl(uuid, receivedPlayer, receivedUser);
     }
 
-    @Override
-    public boolean isPlayer() {
-        return playerAdapter.isPlatformPlayer(rawPlayer);
-    }
+    public static @Nullable PlatformPlayer build(@NonNull Object rawPlayer) {
+        if (!ZFuctoneAPI.get().playerAdapter().isPlatformPlayer(rawPlayer)) return null;
 
-    @Setter
-    @Accessors(fluent = true)
-    public static class Builder {
-        private UUID uuid;
-        private Object platformPlayer;
+        UUID uuid = playerAdapter.getUUID(rawPlayer);
+        if (uuid == null) return null;
 
-        private PlatformPlayerAdapter playerAdapter() {
-            return ZFuctoneAPI.get().playerAdapter();
-        }
+        User receivedUser = PacketEvents.getAPI().getPlayerManager().getUser(uuid);
+        if (receivedUser == null) return null;
 
-        public PlatformPlayerImpl build() {
-            if (platformPlayer == null && uuid == null)
-                throw new NullPointerException("Argument \"platformPlayer\" and \"uuid\" is null");
-
-            if (platformPlayer == null) {
-                Object receivedPlayer = playerAdapter().getPlatformPlayer(uuid);
-                if (receivedPlayer == null) throw new InvalidTypeException("Argument \"platformPlayer\" is not player");
-
-                platformPlayer = receivedPlayer;
-            }
-            else if (!playerAdapter().isPlatformPlayer(platformPlayer))
-                throw new InvalidTypeException("Argument \"platformPlayer\" is not player");
-
-            if (uuid == null) {
-                UUID receivedUuid = playerAdapter().getUUID(platformPlayer);
-                if (receivedUuid == null) throw new NullPointerException("Argument \"uuid\" is null");
-
-                uuid = receivedUuid;
-            }
-
-            return new PlatformPlayerImpl(uuid, platformPlayer);
-        }
+        return new PlatformPlayerImpl(uuid, rawPlayer, receivedUser);
     }
 }

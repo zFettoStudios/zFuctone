@@ -5,6 +5,7 @@ import com.zfettostudios.zfuctone.model.constant.minecraft.player.PlayerEdition;
 import net.kyori.adventure.audience.Audience;
 import net.kyori.adventure.text.Component;
 import org.jspecify.annotations.NonNull;
+import org.jspecify.annotations.Nullable;
 
 import java.util.UUID;
 
@@ -12,11 +13,13 @@ public interface PlatformPlayer extends Audience {
     <T> T getRawPlayer(@NonNull Class<T> type);
     Object getRawPlayer();
 
-    static PlatformPlayerImpl.Builder builder() {
-        return PlatformPlayerImpl.builder();
+    static @Nullable PlatformPlayer build(@NonNull UUID uuid) {
+        return PlatformPlayerImpl.build(uuid);
     }
 
-    boolean isPlayer();
+    static @Nullable PlatformPlayer build(@NonNull Object rawPlayer) {
+        return PlatformPlayerImpl.build(rawPlayer);
+    }
 
     @NonNull UUID uuid();
     @NonNull String getNickname();
@@ -43,5 +46,5 @@ public interface PlatformPlayer extends Audience {
     PlatformPlayer dispatchMessage(@NonNull Component message);
     PlatformPlayer executeCommand(@NonNull String command);
 
-    PlatformPlayer copy();
+    PlatformPlayer kick(@NonNull Component reason);
 }

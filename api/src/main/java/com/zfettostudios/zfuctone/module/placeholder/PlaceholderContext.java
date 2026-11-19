@@ -48,14 +48,8 @@ public class PlaceholderContext {
         return sender;
     }
 
-    public @Nullable PlatformPlayer removeSender() {
-        if (sender == null) return null;
-
-        PlatformPlayer cachedSender = sender.copy();
-
+    public void removeSender() {
         sender = null;
-
-        return cachedSender;
     }
 
     public String setRawText(String rawText) {

@@ -2,6 +2,7 @@ package com.zfettostudios.zfuctone.module.placeholder.handler;
 
 import lombok.experimental.UtilityClass;
 
+import com.github.retrooper.packetevents.PacketEvents;
 import com.zfettostudios.zfuctone.ZFuctoneAPI;
 import com.zfettostudios.zfuctone.model.config.PermissionConfig;
 import com.zfettostudios.zfuctone.model.config.PlaceholderConfig;
@@ -19,7 +20,7 @@ public class ServerPlaceholderHandler {
         placeholderModule.addPlaceholder(config.serverType(),
             permissionConfig.serverTypeUse(), _ -> ZFuctoneAPI.get().getPlatformType().name());
         placeholderModule.addPlaceholder(config.serverVersion(),
-            permissionConfig.serverVersionUse(), _ -> serverAdapter.getVersion());
+            permissionConfig.serverVersionUse(), _ -> PacketEvents.getAPI().getServerManager().getVersion().getReleaseName());
         placeholderModule.addPlaceholder(config.serverPlayersOnline(),
             permissionConfig.serverPlayersOnlineUse(), _ -> String.valueOf(serverAdapter.getPlayersOnline()));
         placeholderModule.addPlaceholder(config.serverPlayersMax(),

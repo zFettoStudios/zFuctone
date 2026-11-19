@@ -1,18 +1,15 @@
 package com.zfettostudios.zfuctone.platform.adapter;
 
 import com.zfettostudios.zfuctone.model.constant.minecraft.player.Gamemode;
-import net.kyori.adventure.text.Component;
-import net.kyori.adventure.text.serializer.legacy.LegacyComponentSerializer;
 import org.bukkit.Bukkit;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.entity.Player;
 import org.jspecify.annotations.NonNull;
 import org.jspecify.annotations.Nullable;
 
-import java.net.InetSocketAddress;
 import java.util.UUID;
 
-public class BukkitPlayerAdapter extends PlatformPlayerAdapterImpl {
+public class BukkitPlayerAdapter implements PlatformPlayerAdapter {
     @Override
     public @Nullable <T> T getPlatformPlayer(@NonNull UUID uuid, @NonNull Class<T> target) {
         return target.cast(Bukkit.getPlayer(uuid));
@@ -29,41 +26,15 @@ public class BukkitPlayerAdapter extends PlatformPlayerAdapterImpl {
     }
 
     @Override
-    @Deprecated(forRemoval = true)
-    public int getProtocolVersion(@NonNull UUID uuid) {
-        Player platformPlayer = Bukkit.getPlayer(uuid);
-        if (platformPlayer == null) return -1;
-
-        return -1;
-    }
-
-    @Override
-    @Deprecated(forRemoval = true)
-    public int getProtocolVersion(@NonNull Object platformPlayer) {
-        Player player = getPlayerFrom(platformPlayer);
-        if (player == null) return -1;
-
-        return -1;
-    }
-
-    @Override
     public @Nullable UUID getUUIDFromNickname(@NonNull String nickname) {
         Player player = Bukkit.getPlayerExact(nickname);
         return player != null ? player.getUniqueId() : null;
     }
 
     @Override
-    public @NonNull PlatformPlayerAdapter dispatchMessage(@NonNull Object platformPlayer, @NonNull Component message) {
-        Player player = getPlayerFrom(platformPlayer);
-        if (player != null) player.sendMessage(LegacyComponentSerializer.legacySection().serialize(message));
-
-        return this;
-    }
-
-    @Override
     public @NonNull PlatformPlayerAdapter executeCommand(@NonNull Object platformPlayer, @NonNull String command) {
         Player player = getPlayerFrom(platformPlayer);
-        if (player != null) Bukkit.dispatchCommand(player, command);
+        if (player != null) player.performCommand(command);
 
         return this;
     }
@@ -93,30 +64,11 @@ public class BukkitPlayerAdapter extends PlatformPlayerAdapterImpl {
     }
 
     @Override
-    public @NonNull String getLocale(@NonNull UUID uuid) {
-        Player platformPlayer = Bukkit.getPlayer(uuid);
-        if (platformPlayer == null) return "";
-
-        return platformPlayer.getLocale();
-    }
-
-    @Override
     public @NonNull String getLocale(@NonNull Object platformPlayer) {
         Player player = getPlayerFrom(platformPlayer);
         if (player == null) return "";
 
         return player.getLocale();
-    }
-
-    @Override
-    public @Nullable String getIp(@NonNull Object platformPlayer) {
-        Player player = getPlayerFrom(platformPlayer);
-        if (player == null) return "";
-
-        InetSocketAddress address = player.getAddress();
-        if (address == null) return "";
-
-        return address.getHostName();
     }
 
     @Override
@@ -155,19 +107,11 @@ public class BukkitPlayerAdapter extends PlatformPlayerAdapterImpl {
     }
 
     @Override
-    public boolean hasPermission(@NonNull String permission, @NonNull Object platformPlayer) {
+    public boolean hasPermission(@NonNull Object platformPlayer, @NonNull String permission) {
         Player player = getPlayerFrom(platformPlayer);
         if (player == null) return false;
 
         return player.hasPermission(permission);
-    }
-
-    @Override
-    public PlatformPlayerAdapter kick(@NonNull Object platformPlayer, @NonNull Component reason) {
-        Player player = getPlayerFrom(platformPlayer);
-        if (player != null) player.kickPlayer(LegacyComponentSerializer.legacySection().serialize(reason));
-
-        return this;
     }
 
     @Override
@@ -197,14 +141,6 @@ public class BukkitPlayerAdapter extends PlatformPlayerAdapterImpl {
         if (player == null) return "";
 
         return player.getWorld().getEnvironment().name();
-    }
-
-    @Override
-    public PlatformPlayerAdapter chat(@NonNull Object platformPlayer, @NonNull Component message) {
-        Player player = getPlayerFrom(platformPlayer);
-        if (player != null) player.chat(LegacyComponentSerializer.legacySection().serialize(message));
-
-        return this;
     }
 
     private @Nullable Player getPlayerFrom(Object object) {

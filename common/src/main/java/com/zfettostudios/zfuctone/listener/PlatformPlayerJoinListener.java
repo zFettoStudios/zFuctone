@@ -12,7 +12,8 @@ public abstract class PlatformPlayerJoinListener {
     private final MessageConfig config = ZFuctoneAPI.get().fileFacade().message();
 
     protected void execute(Object platformPlayer) {
-        PlatformPlayer player = PlatformPlayer.builder().platformPlayer(platformPlayer).build();
+        PlatformPlayer player = PlatformPlayer.build(platformPlayer);
+        if (player == null) return;
 
         playerService.addPlatformPlayer(player);
 

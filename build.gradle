@@ -56,6 +56,8 @@ subprojects {
         compileOnly libraries.annotation.mapstruct.core
         annotationProcessor libraries.annotation.mapstruct.processor
 
+        implementation libraries.packeteventsmodern.api
+
         implementation libraries.jackson.core
         implementation libraries.jackson.databind
         implementation libraries.jackson.annotations
@@ -130,6 +132,9 @@ subprojects {
         relocate("io.leangen.geantyref", "${project_path_libraries}.cloud")
         relocate("com.google.gson", "${project_path_libraries}.gson")
         relocate("com.google.errorprone", "${project_path_libraries}.errorprone")
+        relocate("com.github.retrooper.packetevents", "${project_path_libraries}.packetevents")
+        relocate("io.github.retrooper.packetevents", "${project_path_libraries}.packetevents")
+        relocate("assets.mappings", "${project_path_libraries}.packetevents.mappings")
 
         duplicatesStrategy = DuplicatesStrategy.EXCLUDE
 

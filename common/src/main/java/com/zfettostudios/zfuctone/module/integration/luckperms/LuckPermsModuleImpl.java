@@ -3,10 +3,11 @@ package com.zfettostudios.zfuctone.module.integration.luckperms;
 import com.zfettostudios.zfuctone.ZFuctoneAPI;
 import com.zfettostudios.zfuctone.model.config.IntegrationConfig;
 import com.zfettostudios.zfuctone.module.integration.IntegrationModuleImpl;
-import com.zfettostudios.zfuctone.platform.entity.PlatformPlayer;
 import net.luckperms.api.LuckPermsProvider;
 import net.luckperms.api.model.user.User;
 import org.jspecify.annotations.NonNull;
+
+import java.util.UUID;
 
 public class LuckPermsModuleImpl extends IntegrationModuleImpl implements LuckPermsModule {
     private final IntegrationConfig.LuckPerms config = ZFuctoneAPI.get().fileFacade().integration().luckperms();
@@ -42,10 +43,10 @@ public class LuckPermsModuleImpl extends IntegrationModuleImpl implements LuckPe
     }
 
     @Override
-    public boolean hasPermission(@NonNull PlatformPlayer player, @NonNull String permission) {
+    public boolean hasPermission(@NonNull UUID uuid, @NonNull String permission) {
         if (!isEnable()) return false;
 
-        User user = LuckPermsProvider.get().getUserManager().getUser(player.uuid());
+        User user = LuckPermsProvider.get().getUserManager().getUser(uuid);
         if (user == null) return false;
 
         return user.getCachedData().getPermissionData().checkPermission(permission).asBoolean();

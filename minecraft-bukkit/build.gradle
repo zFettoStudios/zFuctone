@@ -5,6 +5,8 @@ dependencies {
 
     implementation libraries.cloud.bukkit
 
+    implementation libraries.packeteventsmodern.spigot
+
     compileOnly libraries.platform.spigot
 
     compileOnly libraries.integration.placeholderapi

@@ -11,8 +11,6 @@ import com.zfettostudios.zfuctone.module.integration.miniplaceholders.PaperMiniP
 import com.zfettostudios.zfuctone.module.integration.placeholderapi.BukkitPlaceholderAPIModule;
 import com.zfettostudios.zfuctone.module.integration.placeholderapi.PlaceholderAPIModule;
 import com.zfettostudios.zfuctone.platform.adapter.BukkitPlayerAdapter;
-import com.zfettostudios.zfuctone.platform.adapter.BukkitServerAdapter;
-import com.zfettostudios.zfuctone.platform.adapter.PaperPlayerAdapter;
 import com.zfettostudios.zfuctone.platform.adapter.PaperServerAdapter;
 import com.zfettostudios.zfuctone.platform.adapter.PlatformPlayerAdapter;
 import com.zfettostudios.zfuctone.platform.adapter.PlatformServerAdapter;
@@ -61,14 +59,12 @@ public class BukkitZFuctone extends ZFuctoneImpl {
 
     @Override
     protected PlatformPlayerAdapter createPlayerAdapter() {
-        if (platformType == PlatformType.BUKKIT) return new BukkitPlayerAdapter();
-        else return new PaperPlayerAdapter();
+        return new BukkitPlayerAdapter();
     }
 
     @Override
     protected PlatformServerAdapter createServerAdapter() {
-        if (platformType == PlatformType.BUKKIT) return new BukkitServerAdapter(loader);
-        else return new PaperServerAdapter(loader);
+        return new PaperServerAdapter(loader);
     }
 
     @Override
