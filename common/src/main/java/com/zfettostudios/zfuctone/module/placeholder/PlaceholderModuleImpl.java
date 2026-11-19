@@ -29,7 +29,6 @@ import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.function.Function;
 
-@Accessors(fluent = true)
 public class PlaceholderModuleImpl implements PlaceholderModule {
     private static final ThreadLocal<Set<String>> RESOLVING = ThreadLocal.withInitial(LinkedHashSet::new);
     private static final Set<String> REPORTED_CYCLES = ConcurrentHashMap.newKeySet();

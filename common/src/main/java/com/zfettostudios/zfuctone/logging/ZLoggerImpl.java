@@ -17,39 +17,41 @@ public class ZLoggerImpl implements ZLogger {
     }
 
     @Override
-    public void logEnabling() {
-        info("Enabling...");
+    public ZLogger logEnabling() {
+        return info("Enabling...");
     }
 
     @Override
-    public void logEnabled() {
-        info("{} v{} enabled", BuildConstant.PROJECT_NAME, BuildConstant.PROJECT_VERSION);
+    public ZLogger logEnabled() {
+        return info("{} v{} enabled", BuildConstant.PROJECT_NAME, BuildConstant.PROJECT_VERSION);
     }
 
     @Override
-    public void logDisabling() {
-        info("Disabling...");
+    public ZLogger logDisabling() {
+        return info("Disabling...");
     }
 
     @Override
-    public void logDisabled() {
-        info("{} v{} disabled", BuildConstant.PROJECT_NAME, BuildConstant.PROJECT_VERSION);
+    public ZLogger logDisabled() {
+        return info("{} v{} disabled", BuildConstant.PROJECT_NAME, BuildConstant.PROJECT_VERSION);
     }
 
     @Override
-    public void logReloading() {
-        info("Reloading...");
+    public ZLogger logReloading() {
+        return info("Reloading...");
     }
 
     @Override
-    public void logReloaded() {
-        info("{} v{} reloaded", BuildConstant.PROJECT_NAME, BuildConstant.PROJECT_VERSION);
+    public ZLogger logReloaded() {
+        return info("{} v{} reloaded", BuildConstant.PROJECT_NAME, BuildConstant.PROJECT_VERSION);
     }
 
     @Override
-    public void logDescription() {
+    public ZLogger logDescription() {
         config().description().forEach(string ->
             info(string.replace("<version>", BuildConstant.PROJECT_VERSION)));
+
+        return this;
     }
 
     @Override
