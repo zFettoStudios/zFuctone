@@ -18,7 +18,7 @@ public abstract class MiniPlaceholdersModuleImpl extends IntegrationModuleImpl i
         return isEnable(config().enable());
     }
 
-    public String getName() {
+    public @NonNull String getName() {
         return "MiniPlaceholders";
     }
 

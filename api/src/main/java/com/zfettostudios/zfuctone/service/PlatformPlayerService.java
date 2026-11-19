@@ -12,9 +12,10 @@ public interface PlatformPlayerService extends ReloadModule<PlatformPlayerServic
     @Nullable PlatformPlayer getPlatformPlayer(@NonNull UUID uuid);
     @Nullable PlatformPlayer getPlatformPlayer(@NonNull String nickname);
     @NonNull List<PlatformPlayer> getPlatformPlayers();
+
     PlatformPlayerService addPlatformPlayer(@NonNull PlatformPlayer platformPlayer);
     PlatformPlayerService removePlatformPlayer(@NonNull UUID uuid);
     PlatformPlayerService removePlatformPlayer(@NonNull String nickname);
 
-    List<PlatformPlayer> getOnlinePlayers();
+    @NonNull List<PlatformPlayer> getOnlinePlayers();
 }

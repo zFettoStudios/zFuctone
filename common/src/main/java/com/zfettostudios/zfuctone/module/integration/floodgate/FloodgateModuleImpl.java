@@ -30,7 +30,7 @@ public class FloodgateModuleImpl extends IntegrationModuleImpl implements Floodg
     }
 
     @Override
-    public String getName() {
+    public @NonNull String getName() {
         return "Floodgate";
     }
 

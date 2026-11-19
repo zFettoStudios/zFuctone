@@ -12,7 +12,7 @@ import com.zfettostudios.zfuctone.ZFuctoneAPI;
 import com.zfettostudios.zfuctone.exception.InvalidTypeException;
 import com.zfettostudios.zfuctone.file.FileFacade;
 import com.zfettostudios.zfuctone.model.constant.LocalizationType;
-import com.zfettostudios.zfuctone.model.constant.minecraft.player.Gamemode;
+import com.zfettostudios.zfuctone.model.constant.minecraft.player.PlayerGameMode;
 import com.zfettostudios.zfuctone.model.constant.minecraft.player.PlayerEdition;
 import com.zfettostudios.zfuctone.module.controller.ModuleController;
 import com.zfettostudios.zfuctone.module.integration.floodgate.FloodgateModule;
@@ -161,7 +161,7 @@ public class PlatformPlayerImpl implements PlatformPlayer {
     }
 
     @Override
-    public @NonNull Gamemode getGamemode() {
+    public @NonNull PlayerGameMode getGamemode() {
         return playerAdapter.getGamemode(rawPlayer);
     }
 

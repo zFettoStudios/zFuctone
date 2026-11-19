@@ -23,8 +23,6 @@ import com.zfettostudios.zfuctone.module.integration.viaversion.ViaVersionModule
 import com.zfettostudios.zfuctone.module.integration.viaversion.ViaVersionModuleImpl;
 import com.zfettostudios.zfuctone.platform.adapter.PlatformPlayerAdapter;
 import com.zfettostudios.zfuctone.platform.adapter.PlatformServerAdapter;
-import com.zfettostudios.zfuctone.platform.registry.ListenerRegistry;
-import com.zfettostudios.zfuctone.platform.registry.ListenerRegistryImpl;
 import com.zfettostudios.zfuctone.resolver.LibraryResolver;
 import com.zfettostudios.zfuctone.resolver.ReflectionResolver;
 import com.zfettostudios.zfuctone.scheduler.TaskScheduler;
@@ -47,12 +45,11 @@ public abstract class ZFuctoneImpl implements ZFuctone {
     protected final PlatformServerAdapter serverAdapter;
     protected final MessageDispatcher messageDispatcher;
     protected final ReflectionResolver reflectionResolver;
-    protected final ListenerRegistry listenerRegistry;
     protected final ModuleController moduleController;
     protected final LibraryResolver libraryResolver;
 
     public ZFuctoneImpl(ReflectionResolver reflectionResolver, PlatformType platformType, LibraryResolver libraryResolver) {
-        ZFuctoneAPI.setInstance(this);
+        ZFuctoneAPIImpl.set(this);
 
         this.reflectionResolver = reflectionResolver;
         this.platformType = platformType;
@@ -67,8 +64,6 @@ public abstract class ZFuctoneImpl implements ZFuctone {
         logger = new ZLoggerImpl();
         fileFacade = new FileFacadeImpl(getDataPath());
         taskScheduler = new TaskSchedulerImpl(((FileFacadeImpl) fileFacade).executor());
-
-        listenerRegistry = new ListenerRegistryImpl();
 
         playerService = new PlatformPlayerServiceImpl();
         messageDispatcher = new MessageDispatcherImpl();
@@ -121,7 +116,7 @@ public abstract class ZFuctoneImpl implements ZFuctone {
     public ZFuctone reload() {
         logger.logReloading();
 
-        fileFacade.updateFiles();
+        fileFacade.reload();
         taskScheduler.reload();
 
         playerService.reload();

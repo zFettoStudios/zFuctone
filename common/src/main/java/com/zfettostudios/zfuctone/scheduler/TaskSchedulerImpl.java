@@ -8,6 +8,7 @@ import com.zfettostudios.zfuctone.file.FileFacade;
 import com.zfettostudios.zfuctone.logging.ZLogger;
 import com.zfettostudios.zfuctone.model.config.Config;
 import com.zfettostudios.zfuctone.platform.adapter.PlatformServerAdapter;
+import org.jspecify.annotations.NonNull;
 
 import java.time.Duration;
 import java.util.Queue;
@@ -24,6 +25,8 @@ import java.util.concurrent.atomic.AtomicLong;
 import java.util.function.Supplier;
 
 public class TaskSchedulerImpl implements TaskScheduler {
+    private final static Duration DEFAULT_AWAIT_TIMEOUT = Duration.ofSeconds(3);
+
     private final PlatformServerAdapter serverAdapter = ZFuctoneAPI.get().serverAdapter();
     private final FileFacade fileFacade = ZFuctoneAPI.get().fileFacade();
     private final ZLogger logger = ZFuctoneAPI.get().logger();
@@ -76,7 +79,7 @@ public class TaskSchedulerImpl implements TaskScheduler {
     }
 
     @Override
-    public <T> T await(CompletableFuture<T> future, T fallback, Duration timeout, String description) {
+    public <T> T await(@NonNull CompletableFuture<T> future, @NonNull T fallback, @NonNull Duration timeout, @NonNull String description) {
         try {
             return future.get(timeout.toMillis(), TimeUnit.MILLISECONDS);
         } catch (TimeoutException e) {
@@ -89,88 +92,94 @@ public class TaskSchedulerImpl implements TaskScheduler {
     }
 
     @Override
-    public CompletableFuture<Void> runAsync(Runnable runnable) {
+    public <T> T await(@NonNull CompletableFuture<T> future, @NonNull T fallback, @NonNull String description) {
+        return await(future, fallback, DEFAULT_AWAIT_TIMEOUT, description);
+    }
+
+    @Override
+    public CompletableFuture<Void> runAsync(@NonNull Runnable runnable) {
         return scheduleRunnable(runnable, 0, 0, true);
     }
 
     @Override
-    public CompletableFuture<Void> runAsyncLater(Runnable runnable, long delay) {
+    public CompletableFuture<Void> runAsyncLater(@NonNull Runnable runnable, long delay) {
         return scheduleRunnable(runnable, delay, 0, true);
     }
 
     @Override
-    public CompletableFuture<Void> runAsyncTimer(Runnable runnable, long period) {
+    public CompletableFuture<Void> runAsyncTimer(@NonNull Runnable runnable, long period) {
         return scheduleRunnable(runnable, 0, period, true);
     }
 
     @Override
-    public CompletableFuture<Void> runAsyncTimer(Runnable runnable, long delay, long period) {
+    public CompletableFuture<Void> runAsyncTimer(@NonNull Runnable runnable, long delay, long period) {
         return scheduleRunnable(runnable, delay, period, true);
     }
 
     @Override
-    public CompletableFuture<Void> runSync(Runnable runnable) {
+    public CompletableFuture<Void> runSync(@NonNull Runnable runnable) {
         return scheduleRunnable(runnable, 0, 0, false);
     }
 
     @Override
-    public CompletableFuture<Void> runSyncLater(Runnable runnable, long delay) {
+    public CompletableFuture<Void> runSyncLater(@NonNull Runnable runnable, long delay) {
         return scheduleRunnable(runnable, delay, 0, false);
     }
 
     @Override
-    public CompletableFuture<Void> runSyncTimer(Runnable runnable, long period) {
+    public CompletableFuture<Void> runSyncTimer(@NonNull Runnable runnable, long period) {
         return scheduleRunnable(runnable, 0, period, false);
     }
 
     @Override
-    public CompletableFuture<Void> runSyncTimer(Runnable runnable, long delay, long period) {
+    public CompletableFuture<Void> runSyncTimer(@NonNull Runnable runnable, long delay, long period) {
         return scheduleRunnable(runnable, delay, period, false);
     }
 
     @Override
-    public <T> CompletableFuture<T> runAsync(Supplier<T> supplier) {
+    public <T> CompletableFuture<T> runAsync(@NonNull Supplier<T> supplier) {
         return scheduleSupplier(supplier, 0, 0, true);
     }
 
     @Override
-    public <T> CompletableFuture<T> runAsyncLater(Supplier<T> supplier, long delay) {
+    public <T> CompletableFuture<T> runAsyncLater(@NonNull Supplier<T> supplier, long delay) {
         return scheduleSupplier(supplier, delay, 0, true);
     }
 
     @Override
-    public <T> CompletableFuture<T> runAsyncTimer(Supplier<T> supplier, long period) {
+    public <T> CompletableFuture<T> runAsyncTimer(@NonNull Supplier<T> supplier, long period) {
         return scheduleSupplier(supplier, 0, period, true);
     }
 
     @Override
-    public <T> CompletableFuture<T> runAsyncTimer(Supplier<T> supplier, long delay, long period) {
+    public <T> CompletableFuture<T> runAsyncTimer(@NonNull Supplier<T> supplier, long delay, long period) {
         return scheduleSupplier(supplier, delay, period, true);
     }
 
     @Override
-    public <T> CompletableFuture<T> runSync(Supplier<T> supplier) {
+    public <T> CompletableFuture<T> runSync(@NonNull Supplier<T> supplier) {
         return scheduleSupplier(supplier, 0, 0, false);
     }
 
     @Override
-    public <T> CompletableFuture<T> runSyncLater(Supplier<T> supplier, long delay) {
+    public <T> CompletableFuture<T> runSyncLater(@NonNull Supplier<T> supplier, long delay) {
         return scheduleSupplier(supplier, delay, 0, false);
     }
 
     @Override
-    public <T> CompletableFuture<T> runSyncTimer(Supplier<T> supplier, long period) {
+    public <T> CompletableFuture<T> runSyncTimer(@NonNull Supplier<T> supplier, long period) {
         return scheduleSupplier(supplier, 0, period, false);
     }
 
     @Override
-    public <T> CompletableFuture<T> runSyncTimer(Supplier<T> supplier, long delay, long period) {
+    public <T> CompletableFuture<T> runSyncTimer(@NonNull Supplier<T> supplier, long delay, long period) {
         return scheduleSupplier(supplier, delay, period, false);
     }
 
     @Override
-    public CompletableFuture<Void> runAsyncAllOf(CompletableFuture<?>... futures) {
-        return CompletableFuture.allOf(futures).thenRunAsync(() -> {}, executorService);
+    public TaskScheduler runAsyncAllOf(CompletableFuture<?>... futures) {
+        CompletableFuture.allOf(futures).thenRunAsync(() -> {}, executorService);
+        return this;
     }
 
     @Override

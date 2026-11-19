@@ -35,7 +35,7 @@ public class PlaceholderModuleImpl implements PlaceholderModule {
     private static final Set<String> REPORTED_CYCLES = ConcurrentHashMap.newKeySet();
 
     @Getter
-    private final Map<String, Function<PlaceholderContext, String>> placeholders = new ConcurrentHashMap<>();
+    private final Map<String, Function<PlaceholderContextImpl, String>> placeholders = new ConcurrentHashMap<>();
     private final List<String> placeholderAPIPlaceholders = new LinkedList<>();
     private final FileFacade fileFacade = ZFuctoneAPI.get().fileFacade();
     private final PlaceholderConfig config = fileFacade.placeholder();
@@ -74,19 +74,19 @@ public class PlaceholderModuleImpl implements PlaceholderModule {
     @Override
     public PlaceholderModule addPlaceholder(@NonNull PlaceholderSetting config,
                                             @NonNull PermissionSetting permission,
-                                            @NonNull Function<PlaceholderContext, String> handler) {
+                                            @NonNull Function<PlaceholderContextImpl, String> handler) {
         return addPlaceholder(config, permission, handler, true);
     }
 
     @Override
     public PlaceholderModule addPlaceholder(@NonNull PlaceholderSetting config,
-                                            @NonNull Function<PlaceholderContext, String> handler) {
+                                            @NonNull Function<PlaceholderContextImpl, String> handler) {
         return addPlaceholder(config, null, handler, false);
     }
 
     private PlaceholderModule addPlaceholder(@NonNull PlaceholderSetting config,
                                              PermissionSetting permission,
-                                             @NonNull Function<PlaceholderContext, String> handler,
+                                             @NonNull Function<PlaceholderContextImpl, String> handler,
                                              boolean shouldCheckPermission) {
         if (!config.enable()) return this;
 
@@ -108,7 +108,7 @@ public class PlaceholderModuleImpl implements PlaceholderModule {
     private void addPlaceholder(String name,
                                 boolean enable,
                                 PermissionSetting permission,
-                                Function<PlaceholderContext, String> handler,
+                                Function<PlaceholderContextImpl, String> handler,
                                 boolean shouldCheckPermission) {
         if (!enable) return;
 
@@ -127,7 +127,7 @@ public class PlaceholderModuleImpl implements PlaceholderModule {
     }
 
     @Override
-    public List<String> getPlaceholderAPIPlaceholders() {
+    public @NonNull List<String> getPlaceholderAPIPlaceholders() {
         return placeholderAPIPlaceholders;
     }
 
@@ -142,7 +142,7 @@ public class PlaceholderModuleImpl implements PlaceholderModule {
         for (Map.Entry<String, PlaceholderValueSetting> entry : config.values().entrySet()) {
             String placeholderKey = entry.getKey();
 
-            Function<PlaceholderContext, String> handler = context -> {
+            Function<PlaceholderContextImpl, String> handler = context -> {
                 PlatformPlayer sender = context.getSender();
                 if (sender == null) return null;
 

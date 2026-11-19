@@ -1,6 +1,6 @@
 package com.zfettostudios.zfuctone.platform.adapter;
 
-import com.zfettostudios.zfuctone.model.constant.minecraft.player.Gamemode;
+import com.zfettostudios.zfuctone.model.constant.minecraft.player.PlayerGameMode;
 import org.jspecify.annotations.NonNull;
 import org.jspecify.annotations.Nullable;
 
@@ -34,7 +34,7 @@ public interface PlatformPlayerAdapter {
 
     boolean hasPermission(@NonNull Object platformPlayer, @NonNull String permission);
 
-    @NonNull Gamemode getGamemode(@NonNull Object platformPlayer);
+    @NonNull PlayerGameMode getGamemode(@NonNull Object platformPlayer);
 
     @NonNull String getWorldName(@NonNull Object platformPlayer);
 

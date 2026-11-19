@@ -3,6 +3,7 @@ package com.zfettostudios.zfuctone.module.integration.placeholderapi;
 import com.zfettostudios.zfuctone.ZFuctoneAPI;
 import com.zfettostudios.zfuctone.model.config.IntegrationConfig;
 import com.zfettostudios.zfuctone.module.integration.IntegrationModuleImpl;
+import org.jspecify.annotations.NonNull;
 
 public abstract class PlaceholderAPIModuleImpl extends IntegrationModuleImpl implements PlaceholderAPIModule {
     protected IntegrationConfig.PlaceholderAPI config() {
@@ -13,7 +14,7 @@ public abstract class PlaceholderAPIModuleImpl extends IntegrationModuleImpl imp
         return isEnable(config().enable());
     }
 
-    public String getName() {
+    public @NonNull String getName() {
         return "PlaceholderAPI";
     }
 }

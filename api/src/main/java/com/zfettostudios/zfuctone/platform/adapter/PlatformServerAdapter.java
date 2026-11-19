@@ -5,7 +5,7 @@ import org.jspecify.annotations.NonNull;
 public interface PlatformServerAdapter {
     boolean isProjectExits(@NonNull String name);
 
-    PlatformServerAdapter runTask(Runnable task);
+    PlatformServerAdapter runTask(@NonNull Runnable task);
 
     int getPlayersOnline();
     int getPlayersMax();

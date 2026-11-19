@@ -6,6 +6,7 @@ import com.zfettostudios.zfuctone.model.constant.BuildConstant;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.logger.slf4j.ComponentLogger;
 import net.kyori.adventure.text.minimessage.MiniMessage;
+import org.jspecify.annotations.NonNull;
 
 public class ZLoggerImpl implements ZLogger {
     private final ComponentLogger logger = ComponentLogger.logger("");
@@ -52,37 +53,37 @@ public class ZLoggerImpl implements ZLogger {
     }
 
     @Override
-    public ZLogger warn(String format, Object... arguments) {
+    public ZLogger warn(@NonNull String format, Object... arguments) {
         logger.warn(mm.deserialize(config().prefix() + config().warn() + format), arguments);
         return this;
     }
 
     @Override
-    public ZLogger warn(String message) {
+    public ZLogger warn(@NonNull String message) {
         logger.warn(mm.deserialize(config().prefix() + config().warn() + message));
         return this;
     }
 
     @Override
-    public ZLogger warn(Component message) {
+    public ZLogger warn(@NonNull Component message) {
         logger.warn(mm.deserialize(config().prefix() + config().warn()).append(message));
         return this;
     }
 
     @Override
-    public ZLogger info(String format, Object... arguments) {
+    public ZLogger info(@NonNull String format, Object... arguments) {
         logger.info(mm.deserialize(config().prefix() + config().info() + format), arguments);
         return this;
     }
 
     @Override
-    public ZLogger info(String message) {
+    public ZLogger info(@NonNull String message) {
         logger.info(mm.deserialize(config().prefix() + config().info() + message));
         return this;
     }
 
     @Override
-    public ZLogger info(Component message) {
+    public ZLogger info(@NonNull Component message) {
         logger.info(mm.deserialize(config().prefix() + config().info()).append(message));
         return this;
     }

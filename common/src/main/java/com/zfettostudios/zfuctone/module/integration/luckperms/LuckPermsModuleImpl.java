@@ -33,7 +33,7 @@ public class LuckPermsModuleImpl extends IntegrationModuleImpl implements LuckPe
     }
 
     @Override
-    public String getName() {
+    public @NonNull String getName() {
         return "LuckPerms";
     }
 

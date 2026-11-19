@@ -86,7 +86,7 @@ subprojects {
 
         compileOnly libraries.rest.slf4j
 
-        //implementation libraries.rest.zjtime
+        compileOnly libraries.rest.zjtime
 
         compileOnly libraries.integration.viaversion
         compileOnly libraries.integration.geyser
@@ -117,7 +117,6 @@ subprojects {
         relocate("tools.jackson", "${project_path_libraries}.jackson")
         relocate("com.fasterxml.jackson", "${project_path_libraries}.jackson")
         relocate("org.snakeyaml", "${project_path_libraries}.snakeyaml")
-        relocate("com.zfettostudios.zjanots", "${project_path_libraries}.zjanots")
         relocate("com.zfettostudios.zjtime", "${project_path_libraries}.zjtime")
         relocate("org.objectweb.asm", "${project_path_libraries}.asm")
         relocate("me.lucko.jarrelocator", "${project_path_libraries}.jarrelocator")

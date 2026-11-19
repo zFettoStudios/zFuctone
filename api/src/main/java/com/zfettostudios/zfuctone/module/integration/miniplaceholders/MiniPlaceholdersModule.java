@@ -13,6 +13,6 @@ public interface MiniPlaceholdersModule extends IntegrationModule<MiniPlaceholde
 
     TagResolver audienceGlobalPlaceholders();
 
-    @NonNull Component setPlaceholders(@NonNull PlatformPlayer sender,
-                                       @NonNull String input, @NonNull TagResolver... tagResolvers);
+    @NonNull Component setPlaceholders(@NonNull PlatformPlayer sender, @NonNull String input,
+                                       @NonNull TagResolver... tagResolvers);
 }

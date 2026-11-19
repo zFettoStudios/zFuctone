@@ -30,7 +30,7 @@ public class ViaVersionModuleImpl extends IntegrationModuleImpl implements ViaVe
         return this;
     }
 
-    public String getName() {
+    public @NonNull String getName() {
         return "ViaVersion";
     }
 

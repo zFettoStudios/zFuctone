@@ -173,7 +173,7 @@ public class FileFacadeImpl implements FileFacade {
     }
 
     @Override
-    public Path getFilePath(Object config, Path dataPath, Path localizationsPath) {
+    public Path getFilePath(@NonNull Object config, @NonNull Path dataPath, @NonNull Path localizationsPath) {
         FilePath filePath = reflectionResolver.getAnnotation(FilePath.class, config);
         if (filePath.localization()) return localizationsPath.resolve(filePath.path());
 
@@ -188,6 +188,11 @@ public class FileFacadeImpl implements FileFacade {
     @Override
     public FileFacade disable() {
         return saveFiles();
+    }
+
+    @Override
+    public FileFacade reload() {
+        return updateFiles();
     }
 
     private YAMLMapper createMapper() {

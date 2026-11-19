@@ -5,6 +5,7 @@ import lombok.RequiredArgsConstructor;
 import com.zfettostudios.zfuctone.exception.FileLoadException;
 import com.zfettostudios.zfuctone.model.config.localization.Localization;
 import com.zfettostudios.zfuctone.model.file.FilePack;
+import org.jspecify.annotations.NonNull;
 import tools.jackson.dataformat.yaml.YAMLMapper;
 
 import java.io.File;
@@ -42,17 +43,17 @@ public class FileLoaderImpl implements FileLoader {
     }
 
     @Override
-    public <T> CompletableFuture<T> loadAsync(T file) {
+    public <T> CompletableFuture<T> loadAsync(@NonNull T file) {
         return loadAsync(file, fileFacade.getFilePath(file, dataPath, localizationsPath));
     }
 
     @Override
-    public <T> CompletableFuture<T> loadAsync(T file, Path path) {
+    public <T> CompletableFuture<T> loadAsync(@NonNull T file, @NonNull Path path) {
         return CompletableFuture.supplyAsync(() -> load(file, path), executor);
     }
 
     @Override
-    public CompletableFuture<FilePack> loadAsync(FilePack files) {
+    public CompletableFuture<FilePack> loadAsync(@NonNull FilePack files) {
         return CompletableFuture.allOf(
             loadAsync(files.config()),
             loadAsync(files.command()),

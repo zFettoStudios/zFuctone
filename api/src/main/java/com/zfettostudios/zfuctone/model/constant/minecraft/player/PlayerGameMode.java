@@ -1,6 +1,6 @@
 package com.zfettostudios.zfuctone.model.constant.minecraft.player;
 
-public enum Gamemode {
+public enum PlayerGameMode {
     CREATIVE,
     ADVENTURE,
     SPECTATOR,

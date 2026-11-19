@@ -24,13 +24,13 @@ import java.util.concurrent.ConcurrentHashMap;
 public class FilePack {
     private final static ReflectionResolver reflectionResolver = ZFuctoneAPI.get().reflectionResolver();
 
-    Config config = new Config();
-    CommandConfig command = new CommandConfig();
-    IntegrationConfig integration = new IntegrationConfig();
-    MessageConfig message = new MessageConfig();
-    PermissionConfig permission = new PermissionConfig();
-    PlaceholderConfig placeholder = new PlaceholderConfig();
-    Map<String, Localization> localizations = new ConcurrentHashMap<>();
+    private final Config config = new Config();
+    private final CommandConfig command = new CommandConfig();
+    private final IntegrationConfig integration = new IntegrationConfig();
+    private final MessageConfig message = new MessageConfig();
+    private final PermissionConfig permission = new PermissionConfig();
+    private final PlaceholderConfig placeholder = new PlaceholderConfig();
+    private final Map<String, Localization> localizations = new ConcurrentHashMap<>();
 
     public FilePack() {
         localizations.put(reflectionResolver.getAnnotation(LocaleName.class, RuRuLocalization.class).value(), new RuRuLocalization());

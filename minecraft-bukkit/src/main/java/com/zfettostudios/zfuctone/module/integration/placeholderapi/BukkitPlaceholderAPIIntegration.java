@@ -4,7 +4,7 @@ import com.zfettostudios.zfuctone.ZFuctoneAPI;
 import com.zfettostudios.zfuctone.file.FileFacade;
 import com.zfettostudios.zfuctone.model.config.IntegrationConfig;
 import com.zfettostudios.zfuctone.model.constant.BuildConstant;
-import com.zfettostudios.zfuctone.module.placeholder.PlaceholderContext;
+import com.zfettostudios.zfuctone.module.placeholder.PlaceholderContextImpl;
 import com.zfettostudios.zfuctone.module.placeholder.PlaceholderModule;
 import com.zfettostudios.zfuctone.module.integration.IntegrationHook;
 import com.zfettostudios.zfuctone.platform.entity.PlatformPlayer;
@@ -72,14 +72,14 @@ public class BukkitPlaceholderAPIIntegration extends PlaceholderExpansion implem
     @Override
     public @Nullable String onPlaceholderRequest(Player player, @NotNull String params) {
         params = params.toLowerCase();
-        PlaceholderContext context = new PlaceholderContext(params);
+        PlaceholderContextImpl context = new PlaceholderContextImpl(params);
 
         if (player != null) {
             PlatformPlayer platformPlayer = playerService().getPlatformPlayer(player.getUniqueId());
             if (platformPlayer != null) context.setSender(platformPlayer);
         }
 
-        for (Map.Entry<String, Function<PlaceholderContext, String>> entry : placeholderModule.placeholders().entrySet())
+        for (Map.Entry<String, Function<PlaceholderContextImpl, String>> entry : placeholderModule.placeholders().entrySet())
             if (params.equals(entry.getKey())) return entry.getValue().apply(context);
 
         return null;

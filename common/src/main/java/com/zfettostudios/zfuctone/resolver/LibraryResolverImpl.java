@@ -268,6 +268,20 @@ public class LibraryResolverImpl extends LibraryManager implements LibraryResolv
             )
             .build()
         );
+
+        loadLibrary(Library.builder()
+            .groupId("com{}github{}zfettostudios")
+            .artifactId("zjtime")
+            .version(BuildConstant.ZJTIME_VERSION)
+            .repository(BuildConstant.JITPACK_REPOSITORY)
+            .resolveTransitiveDependencies(true)
+            .relocate(Relocation.builder()
+                .pattern("com{}github{}zfettostudios{}zjtime")
+                .relocatedPattern(BuildConstant.PROJECT_PATH_LIBRARIES + ".zjtime")
+                .build()
+            )
+            .build()
+        );
     }
 
     private void resolveRepositories() {
@@ -277,5 +291,27 @@ public class LibraryResolverImpl extends LibraryManager implements LibraryResolv
         addRepository(BuildConstant.OPENCOLLAB_REPOSITORY);
         addRepository(BuildConstant.SPIGOTMC_REPOSITORY);
         addRepository(BuildConstant.PAPERMC_REPOSITORY);
+    }
+
+    private List<String> getAdventureArtifactIds() {
+        return List.of(
+            "adventure-api",
+            "adventure-nbt",
+            "adventure-key",
+            "adventure-text-minimessage",
+            "adventure-text-serializer-ansi",
+            "adventure-text-serializer-plain",
+            "adventure-text-serializer-legacy",
+            "adventure-text-serializer-gson",
+            "adventure-text-logger-slf4j"
+        );
+    }
+
+    private List<String> getPacketEventsArtifactIds() {
+        return List.of(
+            "packeteventsmodern-api",
+            "packeteventsmodern-netty-common",
+            "packeteventsmodern-spigot"
+        );
     }
 }

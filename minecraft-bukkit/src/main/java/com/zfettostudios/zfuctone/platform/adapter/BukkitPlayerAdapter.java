@@ -1,6 +1,6 @@
 package com.zfettostudios.zfuctone.platform.adapter;
 
-import com.zfettostudios.zfuctone.model.constant.minecraft.player.Gamemode;
+import com.zfettostudios.zfuctone.model.constant.minecraft.player.PlayerGameMode;
 import org.bukkit.Bukkit;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.entity.Player;
@@ -115,15 +115,15 @@ public class BukkitPlayerAdapter implements PlatformPlayerAdapter {
     }
 
     @Override
-    public @NonNull Gamemode getGamemode(@NonNull Object platformPlayer) {
+    public @NonNull PlayerGameMode getGamemode(@NonNull Object platformPlayer) {
         Player player = getPlayerFrom(platformPlayer);
-        if (player == null) return Gamemode.CREATIVE;
+        if (player == null) return PlayerGameMode.CREATIVE;
 
         return switch (player.getGameMode()) {
-            case CREATIVE -> Gamemode.CREATIVE;
-            case SURVIVAL -> Gamemode.SURVIVAL;
-            case ADVENTURE -> Gamemode.ADVENTURE;
-            case SPECTATOR -> Gamemode.SPECTATOR;
+            case CREATIVE -> PlayerGameMode.CREATIVE;
+            case SURVIVAL -> PlayerGameMode.SURVIVAL;
+            case ADVENTURE -> PlayerGameMode.ADVENTURE;
+            case SPECTATOR -> PlayerGameMode.SPECTATOR;
         };
     }
 

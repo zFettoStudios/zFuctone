@@ -1,6 +1,6 @@
 package com.zfettostudios.zfuctone.platform.entity;
 
-import com.zfettostudios.zfuctone.model.constant.minecraft.player.Gamemode;
+import com.zfettostudios.zfuctone.model.constant.minecraft.player.PlayerGameMode;
 import com.zfettostudios.zfuctone.model.constant.minecraft.player.PlayerEdition;
 import net.kyori.adventure.audience.Audience;
 import net.kyori.adventure.text.Component;
@@ -37,7 +37,7 @@ public interface PlatformPlayer extends Audience {
     boolean isOnline();
     int getPing();
     boolean hasPermission(@NonNull String permission);
-    @NonNull Gamemode getGamemode();
+    @NonNull PlayerGameMode getGamemode();
     @NonNull String getWorldName();
     @NonNull String getWorldEnvironment();
 

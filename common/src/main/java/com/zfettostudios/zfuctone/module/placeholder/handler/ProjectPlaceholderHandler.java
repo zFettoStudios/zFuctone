@@ -7,7 +7,7 @@ import com.zfettostudios.zfuctone.exception.ReloadException;
 import com.zfettostudios.zfuctone.model.config.PermissionConfig;
 import com.zfettostudios.zfuctone.model.config.PlaceholderConfig;
 import com.zfettostudios.zfuctone.model.constant.BuildConstant;
-import com.zfettostudios.zfuctone.module.placeholder.PlaceholderContext;
+import com.zfettostudios.zfuctone.module.placeholder.PlaceholderContextImpl;
 import com.zfettostudios.zfuctone.module.placeholder.PlaceholderModule;
 
 @UtilityClass
@@ -29,7 +29,7 @@ public class ProjectPlaceholderHandler {
             permissionConfig.projectReloadUse(), ProjectPlaceholderHandler::handlerReload);
     }
 
-    private String handlerReload(PlaceholderContext context) {
+    private String handlerReload(PlaceholderContextImpl context) {
         try {
             ZFuctoneAPI.get().reload();
         } catch (ReloadException e) {

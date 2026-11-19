@@ -1,16 +1,13 @@
 package com.zfettostudios.zfuctone;
 
-import lombok.experimental.UtilityClass;
+public abstract class ZFuctoneAPI {
+    protected static ZFuctone instance;
 
-@UtilityClass
-public class ZFuctoneAPI {
-    private ZFuctone instance;
-
-    ZFuctone setInstance(ZFuctone zfuctone) {
-        return instance = zfuctone;
+    public static ZFuctone get() {
+        return instance;
     }
 
-    public ZFuctone get() {
-        return instance;
+    public static boolean isReady() {
+        return instance != null;
     }
 }

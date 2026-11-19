@@ -28,7 +28,7 @@ public class GeyserModuleImpl extends IntegrationModuleImpl implements GeyserMod
     }
 
     @Override
-    public String getName() {
+    public @NonNull String getName() {
         return "Geyser";
     }
 

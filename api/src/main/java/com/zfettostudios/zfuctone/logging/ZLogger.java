@@ -1,24 +1,25 @@
 package com.zfettostudios.zfuctone.logging;
 
 import net.kyori.adventure.text.Component;
+import org.jspecify.annotations.NonNull;
 
 public interface ZLogger {
-    void logEnabling();
-    void logEnabled();
+    ZLogger logEnabling();
+    ZLogger logEnabled();
 
-    void logDisabling();
-    void logDisabled();
+    ZLogger logDisabling();
+    ZLogger logDisabled();
 
-    void logReloading();
-    void logReloaded();
+    ZLogger logReloading();
+    ZLogger logReloaded();
 
-    void logDescription();
+    ZLogger logDescription();
 
-    ZLogger warn(String format, Object... arguments);
-    ZLogger warn(String message);
-    ZLogger warn(Component component);
+    ZLogger warn(@NonNull String format, @NonNull Object... arguments);
+    ZLogger warn(@NonNull String message);
+    ZLogger warn(@NonNull Component component);
 
-    ZLogger info(String format, Object... arguments);
-    ZLogger info(String message);
-    ZLogger info(Component message);
+    ZLogger info(@NonNull String format, @NonNull Object... arguments);
+    ZLogger info(@NonNull String message);
+    ZLogger info(@NonNull Component message);
 }

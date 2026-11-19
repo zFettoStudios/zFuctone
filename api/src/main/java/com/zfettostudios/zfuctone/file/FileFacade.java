@@ -8,7 +8,7 @@ import com.zfettostudios.zfuctone.model.config.localization.Localization;
 import com.zfettostudios.zfuctone.model.config.MessageConfig;
 import com.zfettostudios.zfuctone.model.config.PermissionConfig;
 import com.zfettostudios.zfuctone.model.constant.LocalizationType;
-import com.zfettostudios.zfuctone.module.Module;
+import com.zfettostudios.zfuctone.module.ReloadModule;
 import org.jspecify.annotations.NonNull;
 import org.jspecify.annotations.Nullable;
 import tools.jackson.dataformat.yaml.YAMLMapper;
@@ -16,7 +16,7 @@ import tools.jackson.dataformat.yaml.YAMLMapper;
 import java.nio.file.Path;
 import java.util.Map;
 
-public interface FileFacade extends Module<FileFacade> {
+public interface FileFacade extends ReloadModule<FileFacade> {
     Path dataPath();
     Path localizationsPath();
     Config config();
@@ -25,6 +25,12 @@ public interface FileFacade extends Module<FileFacade> {
     PermissionConfig permission();
     IntegrationConfig integration();
     PlaceholderConfig placeholder();
+
+    YAMLMapper mapper();
+
+    FileLoader loader();
+
+    FileWriter writer();
 
     Map<String, Localization> localizations();
 
@@ -38,11 +44,5 @@ public interface FileFacade extends Module<FileFacade> {
 
     FileFacade updateFiles();
 
-    YAMLMapper mapper();
-
-    FileLoader loader();
-
-    FileWriter writer();
-
-    Path getFilePath(Object config, Path dataPath, Path localizationsPath);
+    Path getFilePath(@NonNull Object config, @NonNull Path dataPath, @NonNull Path localizationsPath);
 }

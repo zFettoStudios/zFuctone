@@ -1,72 +1,27 @@
 package com.zfettostudios.zfuctone.module.placeholder;
 
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-
 import com.zfettostudios.zfuctone.platform.entity.PlatformPlayer;
 import org.jspecify.annotations.NonNull;
 import org.jspecify.annotations.Nullable;
 
-import java.util.LinkedHashMap;
 import java.util.Map;
 
-@Getter
-@NoArgsConstructor
-public class PlaceholderContext {
-    private final Map<String, Object> rawContext = new LinkedHashMap<>();
-    private PlatformPlayer sender;
-    private String rawText;
+public interface PlaceholderContext {
+    PlaceholderContext build(@NonNull String rawtext);
 
-    public PlaceholderContext(@NonNull String rawText) {
-        setRawText(rawText);
-    }
+    <T> T set(@NonNull String key, @NonNull T value);
 
-    public <T> T set(String key, T value) {
-        rawContext.put(key, value);
-        return value;
-    }
+    @Nullable <T> T get(@NonNull String key, @NonNull Class<T> target);
+    @Nullable Object get(@NonNull String key);
 
-    public @Nullable <T> T get(String key, Class<T> target) {
-        Object value = rawContext.get(key);
-        if (target.isInstance(value)) return target.cast(value);
+    @Nullable <T> T remove(@NonNull String key, @NonNull Class<T> target);
+    @Nullable Object remove(@NonNull String key);
 
-        return null;
-    }
+    PlatformPlayer setSender(@NonNull PlatformPlayer sender);
+    @Nullable PlatformPlayer getSender();
 
-    public @Nullable <T> T remove(String key, Class<T> target) {
-        Object value = rawContext.remove(key);
-        if (target.isInstance(value)) return target.cast(value);
+    String setRawText(@NonNull String rawText);
+    @Nullable String getRawText();
 
-        return null;
-    }
-
-    public PlatformPlayer setSender(PlatformPlayer sender) {
-        return this.sender = sender;
-    }
-
-    public @Nullable PlatformPlayer getSender() {
-        return sender;
-    }
-
-    public void removeSender() {
-        sender = null;
-    }
-
-    public String setRawText(String rawText) {
-        return this.rawText = rawText;
-    }
-
-    public @Nullable String getRawText() {
-        return rawText;
-    }
-
-    public @Nullable String removeRawText() {
-        if (rawText == null) return null;
-
-        String cachedRawText = rawText;
-
-        rawText = null;
-
-        return cachedRawText;
-    }
+    @NonNull Map<String, Object> getRawContext();
 }

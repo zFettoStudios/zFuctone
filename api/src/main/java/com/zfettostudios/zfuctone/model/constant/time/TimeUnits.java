@@ -5,5 +5,5 @@ import lombok.experimental.UtilityClass;
 
 @UtilityClass
 public class TimeUnits {
-    public static final TimeUnit TICKS = TimeUnit.create(50L, TimeUnit.MILLISECONDS, "TICKS", "ticks");
+    public final TimeUnit TICKS = TimeUnit.create(50L, TimeUnit.MILLISECONDS, "TICKS", "ticks");
 }

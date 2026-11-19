@@ -5,6 +5,7 @@ import lombok.RequiredArgsConstructor;
 import com.zfettostudios.zfuctone.exception.FileWriteException;
 import com.zfettostudios.zfuctone.model.config.localization.Localization;
 import com.zfettostudios.zfuctone.model.file.FilePack;
+import org.jspecify.annotations.NonNull;
 import tools.jackson.dataformat.yaml.YAMLMapper;
 
 import java.io.IOException;
@@ -35,17 +36,17 @@ public class FileWriterImpl implements FileWriter {
     }
 
     @Override
-    public <T> CompletableFuture<T> saveAsync(T file, Path pathToFile) {
+    public <T> CompletableFuture<T> saveAsync(@NonNull T file, @NonNull Path pathToFile) {
         return CompletableFuture.supplyAsync(() -> save(file, pathToFile), executor);
     }
 
     @Override
-    public  <T> CompletableFuture<T> saveAsync(T file) {
+    public  <T> CompletableFuture<T> saveAsync(@NonNull T file) {
         return saveAsync(file, fileFacade.getFilePath(file, dataPath, localizationsPath));
     }
 
     @Override
-    public CompletableFuture<FilePack> saveAsync(FilePack files) {
+    public CompletableFuture<FilePack> saveAsync(@NonNull FilePack files) {
         return CompletableFuture.allOf(
             saveAsync(files.config()),
             saveAsync(files.command()),
