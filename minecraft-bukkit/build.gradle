@@ -3,9 +3,9 @@ dependencies {
     implementation project(":common")
     implementation project(":minecraft-paper")
 
-    implementation libraries.cloud.bukkit
+    compileOnly libraries.cloud.bukkit
 
-    implementation libraries.packeteventsmodern.spigot
+    compileOnly libraries.packeteventsmodern.spigot
 
     compileOnly libraries.platform.spigot
 

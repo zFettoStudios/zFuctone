@@ -6,7 +6,7 @@ dependencies {
     implementation project(":api")
     implementation project(":common")
 
-    implementation libraries.cloud.paper
+    compileOnly libraries.cloud.paper
 
     paperweightDevelopmentBundle libraries.platform.paper
 

@@ -10,7 +10,8 @@ import com.zfettostudios.zfuctone.module.controller.ModuleController;
 import com.zfettostudios.zfuctone.platform.adapter.PlatformPlayerAdapter;
 import com.zfettostudios.zfuctone.platform.adapter.PlatformServerAdapter;
 import com.zfettostudios.zfuctone.platform.registry.ListenerRegistry;
-import com.zfettostudios.zfuctone.reflect.ReflectionResolver;
+import com.zfettostudios.zfuctone.resolver.LibraryResolver;
+import com.zfettostudios.zfuctone.resolver.ReflectionResolver;
 import com.zfettostudios.zfuctone.scheduler.TaskScheduler;
 import com.zfettostudios.zfuctone.service.PlatformPlayerService;
 import org.jspecify.annotations.NonNull;
@@ -41,4 +42,6 @@ public interface ZFuctone extends Module<ZFuctone> {
     ListenerRegistry listenerRegistry();
 
     ModuleController moduleController();
+
+    LibraryResolver libraryResolver();
 }

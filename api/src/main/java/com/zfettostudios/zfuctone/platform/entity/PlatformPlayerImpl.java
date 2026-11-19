@@ -199,7 +199,7 @@ public class PlatformPlayerImpl implements PlatformPlayer {
         Object receivedPlayer = ZFuctoneAPI.get().playerAdapter().getPlatformPlayer(uuid);
         if (receivedPlayer == null) return null;
 
-        User receivedUser = PacketEvents.getAPI().getPlayerManager().getUser(uuid);
+        User receivedUser = PacketEvents.getAPI().getPlayerManager().getUser(receivedPlayer);
         if (receivedUser == null) return null;
 
         return new PlatformPlayerImpl(uuid, receivedPlayer, receivedUser);
@@ -211,7 +211,7 @@ public class PlatformPlayerImpl implements PlatformPlayer {
         UUID uuid = playerAdapter.getUUID(rawPlayer);
         if (uuid == null) return null;
 
-        User receivedUser = PacketEvents.getAPI().getPlayerManager().getUser(uuid);
+        User receivedUser = PacketEvents.getAPI().getPlayerManager().getUser(rawPlayer);
         if (receivedUser == null) return null;
 
         return new PlatformPlayerImpl(uuid, rawPlayer, receivedUser);

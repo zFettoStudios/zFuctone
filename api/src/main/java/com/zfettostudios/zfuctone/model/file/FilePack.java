@@ -11,7 +11,7 @@ import com.zfettostudios.zfuctone.model.config.localization.Localization;
 import com.zfettostudios.zfuctone.model.config.MessageConfig;
 import com.zfettostudios.zfuctone.model.config.PermissionConfig;
 import com.zfettostudios.zfuctone.model.config.localization.RuRuLocalization;
-import com.zfettostudios.zfuctone.reflect.ReflectionResolver;
+import com.zfettostudios.zfuctone.resolver.ReflectionResolver;
 
 import lombok.Getter;
 import lombok.experimental.Accessors;

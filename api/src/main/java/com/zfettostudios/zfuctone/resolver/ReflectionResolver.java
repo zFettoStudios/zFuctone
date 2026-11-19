@@ -1,4 +1,4 @@
-package com.zfettostudios.zfuctone.reflect;
+package com.zfettostudios.zfuctone.resolver;
 
 import org.jspecify.annotations.NonNull;
 

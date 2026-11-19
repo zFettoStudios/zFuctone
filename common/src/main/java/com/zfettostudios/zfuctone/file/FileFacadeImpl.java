@@ -28,7 +28,7 @@ import com.zfettostudios.zfuctone.model.config.MessageConfig;
 import com.zfettostudios.zfuctone.model.config.PermissionConfig;
 import com.zfettostudios.zfuctone.model.constant.LocalizationType;
 import com.zfettostudios.zfuctone.model.file.FilePack;
-import com.zfettostudios.zfuctone.reflect.ReflectionResolver;
+import com.zfettostudios.zfuctone.resolver.ReflectionResolver;
 import com.zfettostudios.zjtime.TimeUnit;
 import org.jspecify.annotations.NonNull;
 import org.jspecify.annotations.Nullable;

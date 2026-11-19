@@ -14,6 +14,8 @@ import com.zfettostudios.zfuctone.platform.adapter.BukkitPlayerAdapter;
 import com.zfettostudios.zfuctone.platform.adapter.PaperServerAdapter;
 import com.zfettostudios.zfuctone.platform.adapter.PlatformPlayerAdapter;
 import com.zfettostudios.zfuctone.platform.adapter.PlatformServerAdapter;
+import com.zfettostudios.zfuctone.resolver.LibraryResolver;
+import com.zfettostudios.zfuctone.resolver.ReflectionResolver;
 import org.bukkit.Bukkit;
 import org.bukkit.event.HandlerList;
 import org.bukkit.event.Listener;
@@ -29,9 +31,10 @@ public class BukkitZFuctone extends ZFuctoneImpl {
     private final PluginManager pm = Bukkit.getPluginManager();
     private final Set<Listener> listeners = new CopyOnWriteArraySet<>();
 
-    public BukkitZFuctone(BukkitLoader loader) {
+    public BukkitZFuctone(BukkitLoader loader, ReflectionResolver reflectionResolver,
+                          PlatformType platformType, LibraryResolver libraryResolver) {
         this.loader = loader;
-        super();
+        super(reflectionResolver, platformType, libraryResolver);
     }
 
     @Override
@@ -98,14 +101,5 @@ public class BukkitZFuctone extends ZFuctoneImpl {
     @Override
     protected void registerTaskScheduler() {
         Bukkit.getScheduler().runTaskTimer(loader, taskScheduler::onTick, 0L, 1L);
-    }
-
-    @Override
-    protected PlatformType detectPlatformType() {
-        if (reflectionResolver.hasClass("io.papermc.paper.threadedregions.RegionizedServer")) return PlatformType.FOLIA;
-        if (reflectionResolver.hasClass("io.papermc.paper.ServerBuildInfo") ||
-            reflectionResolver.hasClass("com.destroystokyo.paper.ParticleBuilder")) return PlatformType.PAPER;
-
-        return PlatformType.BUKKIT;
     }
 }

@@ -26,6 +26,10 @@ ext.libraries = [
         spigot: "net.flectone:packeteventsmodern-spigot:$packeteventsmodern_version"
     ],
 
+    libby: [
+        core: "net.flectone:libby-core:$libby_version"
+    ],
+
     cloud: [
         core: "org.incendo:cloud-core:$cloud_core_version",
         annotations: "org.incendo:cloud-annotations:$cloud_core_version",

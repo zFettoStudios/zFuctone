@@ -48,7 +48,7 @@ subprojects {
     }
 
     dependencies {
-        compileOnly libraries.annotation.jspecify
+        implementation libraries.annotation.jspecify
 
         compileOnly libraries.annotation.lombok.core
         annotationProcessor libraries.annotation.lombok.processor
@@ -56,33 +56,35 @@ subprojects {
         compileOnly libraries.annotation.mapstruct.core
         annotationProcessor libraries.annotation.mapstruct.processor
 
-        implementation libraries.packeteventsmodern.api
+        implementation libraries.libby.core
 
-        implementation libraries.jackson.core
-        implementation libraries.jackson.databind
-        implementation libraries.jackson.annotations
-        implementation libraries.jackson.snakeyaml
-        implementation libraries.jackson.dataformat.yaml
+        compileOnly libraries.packeteventsmodern.api
 
-        implementation libraries.cloud.core
-        implementation libraries.cloud.annotations
+        compileOnly libraries.jackson.core
+        compileOnly libraries.jackson.databind
+        compileOnly libraries.jackson.annotations
+        compileOnly libraries.jackson.snakeyaml
+        compileOnly libraries.jackson.dataformat.yaml
 
-        implementation libraries.adventure.api
-        implementation libraries.adventure.key
-        implementation libraries.adventure.minimessage
-        implementation libraries.adventure.serializer.legacy
-        implementation libraries.adventure.serializer.gson
-        implementation libraries.adventure.serializer.plain
-        implementation libraries.adventure.serializer.ansi
-        implementation libraries.adventure.ansi
-        implementation libraries.adventure.logger
+        compileOnly libraries.cloud.core
+        compileOnly libraries.cloud.annotations
 
-        implementation libraries.byte_reflection.asm.core
-        implementation libraries.byte_reflection.asm.commons
-        implementation libraries.byte_reflection.byte_buddy.core
-        implementation libraries.byte_reflection.byte_buddy.agent
+        compileOnly libraries.adventure.api
+        compileOnly libraries.adventure.key
+        compileOnly libraries.adventure.minimessage
+        compileOnly libraries.adventure.serializer.legacy
+        compileOnly libraries.adventure.serializer.gson
+        compileOnly libraries.adventure.serializer.plain
+        compileOnly libraries.adventure.serializer.ansi
+        compileOnly libraries.adventure.ansi
+        compileOnly libraries.adventure.logger
 
-        implementation libraries.rest.slf4j
+        compileOnly libraries.byte_reflection.asm.core
+        compileOnly libraries.byte_reflection.asm.commons
+        compileOnly libraries.byte_reflection.byte_buddy.core
+        compileOnly libraries.byte_reflection.byte_buddy.agent
+
+        compileOnly libraries.rest.slf4j
 
         //implementation libraries.rest.zjtime
 
@@ -110,11 +112,6 @@ subprojects {
 
         if (project.name != "minecraft-bukkit") {
             relocate("net.kyori", "${project_path_libraries}")
-            relocate("org.slf4j", "${project_path_libraries}.slf4j")
-        }
-        else {
-            exclude "net/kyori/**"
-            exclude "org/slf4j/**"
         }
 
         relocate("tools.jackson", "${project_path_libraries}.jackson")
@@ -133,8 +130,10 @@ subprojects {
         relocate("com.google.gson", "${project_path_libraries}.gson")
         relocate("com.google.errorprone", "${project_path_libraries}.errorprone")
         relocate("com.github.retrooper.packetevents", "${project_path_libraries}.packetevents")
-        relocate("io.github.retrooper.packetevents", "${project_path_libraries}.packetevents")
+        relocate("io.github.retrooper.packetevents", "${project_path_libraries}.packetevents.impl")
         relocate("assets.mappings", "${project_path_libraries}.packetevents.mappings")
+        relocate("org.slf4j", "${project_path_libraries}.slf4j")
+        relocate("com.alessiodp.libby", "${project_path_libraries}.libby")
 
         duplicatesStrategy = DuplicatesStrategy.EXCLUDE
 

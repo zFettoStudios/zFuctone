@@ -25,8 +25,8 @@ import com.zfettostudios.zfuctone.platform.adapter.PlatformPlayerAdapter;
 import com.zfettostudios.zfuctone.platform.adapter.PlatformServerAdapter;
 import com.zfettostudios.zfuctone.platform.registry.ListenerRegistry;
 import com.zfettostudios.zfuctone.platform.registry.ListenerRegistryImpl;
-import com.zfettostudios.zfuctone.reflect.ReflectionResolver;
-import com.zfettostudios.zfuctone.reflect.ReflectionResolverImpl;
+import com.zfettostudios.zfuctone.resolver.LibraryResolver;
+import com.zfettostudios.zfuctone.resolver.ReflectionResolver;
 import com.zfettostudios.zfuctone.scheduler.TaskScheduler;
 import com.zfettostudios.zfuctone.scheduler.TaskSchedulerImpl;
 import com.zfettostudios.zfuctone.service.PlatformPlayerService;
@@ -49,13 +49,17 @@ public abstract class ZFuctoneImpl implements ZFuctone {
     protected final ReflectionResolver reflectionResolver;
     protected final ListenerRegistry listenerRegistry;
     protected final ModuleController moduleController;
+    protected final LibraryResolver libraryResolver;
 
-    public ZFuctoneImpl() {
+    public ZFuctoneImpl(ReflectionResolver reflectionResolver, PlatformType platformType, LibraryResolver libraryResolver) {
         ZFuctoneAPI.setInstance(this);
-        PacketEvents.getAPI().init();
 
-        reflectionResolver = new ReflectionResolverImpl();
-        platformType = detectPlatformType();
+        this.reflectionResolver = reflectionResolver;
+        this.platformType = platformType;
+        this.libraryResolver = libraryResolver;
+
+        PacketEvents.getAPI().init();
+        PacketEvents.getAPI().getSettings().checkForUpdates(false);
 
         playerAdapter = createPlayerAdapter();
         serverAdapter = createServerAdapter();
@@ -105,6 +109,8 @@ public abstract class ZFuctoneImpl implements ZFuctone {
         playerService.disable();
 
         fileFacade.disable();
+        libraryResolver.disable();
+
         taskScheduler.shutdown();
 
         logger.logDisabled();
@@ -136,8 +142,6 @@ public abstract class ZFuctoneImpl implements ZFuctone {
     }
 
     protected abstract void addedPlatformModules();
-
-    protected abstract PlatformType detectPlatformType();
 
 //     if (reflectionResolver.hasClass("com.velocitypowered.api.proxy.ProxyServer")) return PlatformType.VELOCITY;
 //     if (reflectionResolver.hasClass("net.md_5.bungee.api.ProxyServer")) return PlatformType.BUNGEECORD;
