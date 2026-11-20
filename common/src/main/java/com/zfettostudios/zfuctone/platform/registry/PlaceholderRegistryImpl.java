@@ -39,7 +39,7 @@ public class PlaceholderRegistryImpl implements PlaceholderRegistry {
 
         modulePlaceholders.put(name, context -> {
             PlatformPlayer player = context.getSender();
-            if (player == null || player.hasPermission(permission)) return null;
+            if (player == null || !player.hasPermission(permission)) return null;
 
             return handler.apply(context);
         });
@@ -60,7 +60,7 @@ public class PlaceholderRegistryImpl implements PlaceholderRegistry {
         if (modulePlaceholders == null) modulePlaceholders = new ConcurrentHashMap<>();
 
         modulePlaceholders.put(name, handler);
-        
+
         placeholders.put(moduleClass, modulePlaceholders);
 
         return this;
