@@ -44,6 +44,8 @@ public class PlaceholderRegistryImpl implements PlaceholderRegistry {
             return handler.apply(context);
         });
 
+        placeholders.put(moduleClass, modulePlaceholders);
+
         return this;
     }
 
@@ -58,6 +60,8 @@ public class PlaceholderRegistryImpl implements PlaceholderRegistry {
         if (modulePlaceholders == null) modulePlaceholders = new ConcurrentHashMap<>();
 
         modulePlaceholders.put(name, handler);
+        
+        placeholders.put(moduleClass, modulePlaceholders);
 
         return this;
     }
