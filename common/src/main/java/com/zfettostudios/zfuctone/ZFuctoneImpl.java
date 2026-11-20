@@ -25,6 +25,8 @@ import com.zfettostudios.zfuctone.platform.adapter.PlatformPlayerAdapter;
 import com.zfettostudios.zfuctone.platform.adapter.PlatformServerAdapter;
 import com.zfettostudios.zfuctone.platform.registry.PermissionRegistry;
 import com.zfettostudios.zfuctone.platform.registry.PermissionRegistryImpl;
+import com.zfettostudios.zfuctone.platform.registry.PlaceholderRegistry;
+import com.zfettostudios.zfuctone.platform.registry.PlaceholderRegistryImpl;
 import com.zfettostudios.zfuctone.resolver.LibraryResolver;
 import com.zfettostudios.zfuctone.resolver.ReflectionResolver;
 import com.zfettostudios.zfuctone.scheduler.TaskScheduler;
@@ -50,6 +52,7 @@ public abstract class ZFuctoneImpl implements ZFuctone {
     protected final ModuleController moduleController;
     protected final LibraryResolver libraryResolver;
     protected final PermissionRegistry permissionRegistry;
+    protected final PlaceholderRegistry placeholderRegistry;
 
     public ZFuctoneImpl(ReflectionResolver reflectionResolver, PlatformType platformType, LibraryResolver libraryResolver) {
         ZFuctoneAPIImpl.set(this);
@@ -59,7 +62,7 @@ public abstract class ZFuctoneImpl implements ZFuctone {
         this.libraryResolver = libraryResolver;
 
         PacketEvents.getAPI().init();
-        PacketEvents.getAPI().getSettings().checkForUpdates(false);
+        PacketEvents.getAPI().getSettings().reEncodeByDefault(false).checkForUpdates(false).debug(false);
 
         playerAdapter = createPlayerAdapter();
         serverAdapter = createServerAdapter();
@@ -69,6 +72,7 @@ public abstract class ZFuctoneImpl implements ZFuctone {
         taskScheduler = new TaskSchedulerImpl(((FileFacadeImpl) fileFacade).executor());
 
         permissionRegistry = new PermissionRegistryImpl();
+        placeholderRegistry = new PlaceholderRegistryImpl();
 
         playerService = new PlatformPlayerServiceImpl();
         messageDispatcher = new MessageDispatcherImpl();

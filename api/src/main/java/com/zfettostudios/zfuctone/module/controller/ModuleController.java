@@ -1,6 +1,5 @@
 package com.zfettostudios.zfuctone.module.controller;
 
-import com.zfettostudios.zfuctone.module.placeholder.PlaceholderModule;
 import com.zfettostudios.zfuctone.module.ReloadModule;
 import com.zfettostudios.zfuctone.module.command.CommandModule;
 import com.zfettostudios.zfuctone.module.integration.IntegrationModule;
@@ -22,7 +21,6 @@ public interface ModuleController extends ReloadModule<ModuleController> {
     <T extends CommandModule<T>> T getCommand(@NonNull Class<T> moduleClass);
     <T extends IntegrationModule<T>> T getIntegration(@NonNull Class<T> moduleClass);
 
-    PlaceholderModule placeholderModule();
     Map<Class<? extends MessageModule<?>>, MessageModule<?>> messageModules();
     Map<Class<? extends CommandModule<?>>, CommandModule<?>> commandModules();
     Map<Class<? extends IntegrationModule<?>>, IntegrationModule<?>> integrationModules();

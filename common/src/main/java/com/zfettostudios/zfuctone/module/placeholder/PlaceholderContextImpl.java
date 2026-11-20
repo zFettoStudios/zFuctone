@@ -12,7 +12,7 @@ import java.util.Map;
 
 @Getter
 @NoArgsConstructor
-public class PlaceholderContextImpl {
+public class PlaceholderContextImpl implements PlaceholderContext {
     private final Map<String, Object> rawContext = new LinkedHashMap<>();
     private PlatformPlayer sender;
     private String rawText;
@@ -21,26 +21,36 @@ public class PlaceholderContextImpl {
         setRawText(rawText);
     }
 
-    public <T> T set(String key, T value) {
+    public <T> T set(@NonNull String key, @NonNull T value) {
         rawContext.put(key, value);
         return value;
     }
 
-    public @Nullable <T> T get(String key, Class<T> target) {
+    public @Nullable <T> T get(@NonNull String key, @NonNull Class<T> target) {
         Object value = rawContext.get(key);
         if (target.isInstance(value)) return target.cast(value);
 
         return null;
     }
 
-    public @Nullable <T> T remove(String key, Class<T> target) {
+    @Override
+    public @Nullable Object get(@NonNull String key) {
+        return rawContext.get(key);
+    }
+
+    public @Nullable <T> T remove(@NonNull String key, @NonNull Class<T> target) {
         Object value = rawContext.remove(key);
         if (target.isInstance(value)) return target.cast(value);
 
         return null;
     }
 
-    public PlatformPlayer setSender(PlatformPlayer sender) {
+    @Override
+    public @Nullable Object remove(@NonNull String key) {
+        return rawContext.remove(key);
+    }
+
+    public PlatformPlayer setSender(@NonNull PlatformPlayer sender) {
         return this.sender = sender;
     }
 
@@ -48,11 +58,7 @@ public class PlaceholderContextImpl {
         return sender;
     }
 
-    public void removeSender() {
-        sender = null;
-    }
-
-    public String setRawText(String rawText) {
+    public String setRawText(@NonNull String rawText) {
         return this.rawText = rawText;
     }
 
@@ -60,13 +66,7 @@ public class PlaceholderContextImpl {
         return rawText;
     }
 
-    public @Nullable String removeRawText() {
-        if (rawText == null) return null;
-
-        String cachedRawText = rawText;
-
-        rawText = null;
-
-        return cachedRawText;
+    public static PlaceholderContext build(@NonNull String rawtext) {
+        return new PlaceholderContextImpl(rawtext);
     }
 }

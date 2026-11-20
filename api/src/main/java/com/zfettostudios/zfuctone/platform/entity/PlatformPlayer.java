@@ -2,6 +2,7 @@ package com.zfettostudios.zfuctone.platform.entity;
 
 import com.zfettostudios.zfuctone.model.constant.minecraft.player.PlayerGameMode;
 import com.zfettostudios.zfuctone.model.constant.minecraft.player.PlayerEdition;
+import com.zfettostudios.zfuctone.provider.BuilderProvider;
 import net.kyori.adventure.audience.Audience;
 import net.kyori.adventure.text.Component;
 import org.jspecify.annotations.NonNull;
@@ -14,11 +15,11 @@ public interface PlatformPlayer extends Audience {
     Object getRawPlayer();
 
     static @Nullable PlatformPlayer build(@NonNull UUID uuid) {
-        return PlatformPlayerImpl.build(uuid);
+        return BuilderProvider.buildPlatformPlayer(uuid);
     }
 
     static @Nullable PlatformPlayer build(@NonNull Object rawPlayer) {
-        return PlatformPlayerImpl.build(rawPlayer);
+        return BuilderProvider.buildPlatformPlayer(rawPlayer);
     }
 
     @NonNull UUID uuid();

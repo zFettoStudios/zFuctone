@@ -5,8 +5,6 @@ import lombok.Getter;
 import lombok.experimental.Accessors;
 
 import com.zfettostudios.zfuctone.ZFuctoneAPI;
-import com.zfettostudios.zfuctone.module.placeholder.PlaceholderModule;
-import com.zfettostudios.zfuctone.module.placeholder.PlaceholderModuleImpl;
 import com.zfettostudios.zfuctone.module.ReloadModule;
 import com.zfettostudios.zfuctone.module.command.CommandModule;
 import com.zfettostudios.zfuctone.module.integration.IntegrationModule;
@@ -21,12 +19,12 @@ import java.util.function.Consumer;
 @Getter
 @Accessors(fluent = true)
 public class ModuleControllerImpl implements ModuleController {
+    @Getter(AccessLevel.NONE)
+    private final TaskScheduler taskScheduler = ZFuctoneAPI.get().taskScheduler();
+
     private final Map<Class<? extends MessageModule<?>>, MessageModule<?>> messageModules = new ConcurrentHashMap<>();
     private final Map<Class<? extends CommandModule<?>>, CommandModule<?>> commandModules = new ConcurrentHashMap<>();
     private final Map<Class<? extends IntegrationModule<?>>, IntegrationModule<?>> integrationModules = new ConcurrentHashMap<>();
-    private final PlaceholderModule placeholderModule = new PlaceholderModuleImpl();
-    @Getter(AccessLevel.NONE)
-    private final TaskScheduler taskScheduler = ZFuctoneAPI.get().taskScheduler();
 
     @Override
     public <T extends MessageModule<T>> T add(@NonNull Class<T> moduleClass, @NonNull MessageModule<T> module) {
@@ -75,19 +73,16 @@ public class ModuleControllerImpl implements ModuleController {
 
     @Override
     public ModuleController enable() {
-        placeholderModule.enable();
         return executeAllModules(ReloadModule::enable);
     }
 
     @Override
     public ModuleController disable() {
-        placeholderModule.disable();
         return executeAllModules(ReloadModule::disable);
     }
 
     @Override
     public ModuleController reload() {
-        placeholderModule.reload();
         return executeAllModules(ReloadModule::reload);
     }
 

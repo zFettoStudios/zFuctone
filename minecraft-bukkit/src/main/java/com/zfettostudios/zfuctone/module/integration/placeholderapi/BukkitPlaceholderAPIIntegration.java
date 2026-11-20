@@ -1,13 +1,12 @@
 package com.zfettostudios.zfuctone.module.integration.placeholderapi;
 
 import com.zfettostudios.zfuctone.ZFuctoneAPI;
-import com.zfettostudios.zfuctone.file.FileFacade;
 import com.zfettostudios.zfuctone.model.config.IntegrationConfig;
 import com.zfettostudios.zfuctone.model.constant.BuildConstant;
-import com.zfettostudios.zfuctone.module.placeholder.PlaceholderContextImpl;
-import com.zfettostudios.zfuctone.module.placeholder.PlaceholderModule;
+import com.zfettostudios.zfuctone.module.placeholder.PlaceholderContext;
 import com.zfettostudios.zfuctone.module.integration.IntegrationHook;
 import com.zfettostudios.zfuctone.platform.entity.PlatformPlayer;
+import com.zfettostudios.zfuctone.platform.registry.PlaceholderRegistry;
 import com.zfettostudios.zfuctone.service.PlatformPlayerService;
 import me.clip.placeholderapi.expansion.PlaceholderExpansion;
 import org.bukkit.OfflinePlayer;
@@ -21,14 +20,11 @@ import java.util.Map;
 import java.util.function.Function;
 
 public class BukkitPlaceholderAPIIntegration extends PlaceholderExpansion implements IntegrationHook<BukkitPlaceholderAPIIntegration> {
-    private final FileFacade fileFacade = ZFuctoneAPI.get().fileFacade();
-    private final IntegrationConfig.PlaceholderAPI config = fileFacade.integration().placeholderapi();
-    private final PlaceholderModule placeholderModule = ZFuctoneAPI.get().moduleController().placeholderModule();
-    private String identifier;
+    private final PlaceholderRegistry placeholderRegistry = ZFuctoneAPI.get().placeholderRegistry();
+    private final PlatformPlayerService playerService = ZFuctoneAPI.get().playerService();
 
-    private PlatformPlayerService playerService() {
-        return ZFuctoneAPI.get().playerService();
-    }
+    private final IntegrationConfig.PlaceholderAPI config = ZFuctoneAPI.get().fileFacade().integration().placeholderapi();
+    private String identifier;
 
     @Override
     public @NotNull String getIdentifier() {
@@ -47,7 +43,7 @@ public class BukkitPlaceholderAPIIntegration extends PlaceholderExpansion implem
 
     @Override
     public @NonNull List<String> getPlaceholders() {
-        return placeholderModule.getPlaceholderAPIPlaceholders();
+        return placeholderRegistry.getPlaceholderAPIPlaceholders();
     }
 
     @Override
@@ -72,14 +68,14 @@ public class BukkitPlaceholderAPIIntegration extends PlaceholderExpansion implem
     @Override
     public @Nullable String onPlaceholderRequest(Player player, @NotNull String params) {
         params = params.toLowerCase();
-        PlaceholderContextImpl context = new PlaceholderContextImpl(params);
+        PlaceholderContext context = PlaceholderContext.build(params);
 
         if (player != null) {
-            PlatformPlayer platformPlayer = playerService().getPlatformPlayer(player.getUniqueId());
+            PlatformPlayer platformPlayer = playerService.getPlatformPlayer(player.getUniqueId());
             if (platformPlayer != null) context.setSender(platformPlayer);
         }
 
-        for (Map.Entry<String, Function<PlaceholderContextImpl, String>> entry : placeholderModule.placeholders().entrySet())
+        for (Map.Entry<String, Function<PlaceholderContext, String>> entry : placeholderRegistry.getPlaceholders().entrySet())
             if (params.equals(entry.getKey())) return entry.getValue().apply(context);
 
         return null;
