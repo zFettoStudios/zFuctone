@@ -23,6 +23,8 @@ import com.zfettostudios.zfuctone.module.integration.viaversion.ViaVersionModule
 import com.zfettostudios.zfuctone.module.integration.viaversion.ViaVersionModuleImpl;
 import com.zfettostudios.zfuctone.platform.adapter.PlatformPlayerAdapter;
 import com.zfettostudios.zfuctone.platform.adapter.PlatformServerAdapter;
+import com.zfettostudios.zfuctone.platform.registry.PermissionRegistry;
+import com.zfettostudios.zfuctone.platform.registry.PermissionRegistryImpl;
 import com.zfettostudios.zfuctone.resolver.LibraryResolver;
 import com.zfettostudios.zfuctone.resolver.ReflectionResolver;
 import com.zfettostudios.zfuctone.scheduler.TaskScheduler;
@@ -47,6 +49,7 @@ public abstract class ZFuctoneImpl implements ZFuctone {
     protected final ReflectionResolver reflectionResolver;
     protected final ModuleController moduleController;
     protected final LibraryResolver libraryResolver;
+    protected final PermissionRegistry permissionRegistry;
 
     public ZFuctoneImpl(ReflectionResolver reflectionResolver, PlatformType platformType, LibraryResolver libraryResolver) {
         ZFuctoneAPIImpl.set(this);
@@ -64,6 +67,8 @@ public abstract class ZFuctoneImpl implements ZFuctone {
         logger = new ZLoggerImpl();
         fileFacade = new FileFacadeImpl(getDataPath());
         taskScheduler = new TaskSchedulerImpl(((FileFacadeImpl) fileFacade).executor());
+
+        permissionRegistry = new PermissionRegistryImpl();
 
         playerService = new PlatformPlayerServiceImpl();
         messageDispatcher = new MessageDispatcherImpl();

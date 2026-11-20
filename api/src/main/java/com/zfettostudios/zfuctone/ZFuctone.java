@@ -9,6 +9,7 @@ import com.zfettostudios.zfuctone.module.Module;
 import com.zfettostudios.zfuctone.module.controller.ModuleController;
 import com.zfettostudios.zfuctone.platform.adapter.PlatformPlayerAdapter;
 import com.zfettostudios.zfuctone.platform.adapter.PlatformServerAdapter;
+import com.zfettostudios.zfuctone.platform.registry.PermissionRegistry;
 import com.zfettostudios.zfuctone.resolver.LibraryResolver;
 import com.zfettostudios.zfuctone.resolver.ReflectionResolver;
 import com.zfettostudios.zfuctone.scheduler.TaskScheduler;
@@ -41,4 +42,6 @@ public interface ZFuctone extends Module<ZFuctone> {
     ModuleController moduleController();
 
     LibraryResolver libraryResolver();
+
+    PermissionRegistry permissionRegistry();
 }
