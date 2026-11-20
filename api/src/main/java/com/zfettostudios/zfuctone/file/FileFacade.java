@@ -8,7 +8,7 @@ import com.zfettostudios.zfuctone.model.config.localization.Localization;
 import com.zfettostudios.zfuctone.model.config.MessageConfig;
 import com.zfettostudios.zfuctone.model.config.PermissionConfig;
 import com.zfettostudios.zfuctone.model.constant.LocalizationType;
-import com.zfettostudios.zfuctone.module.ReloadModule;
+import com.zfettostudios.zfuctone.model.lifecycle.Reloadable;
 import org.jspecify.annotations.NonNull;
 import org.jspecify.annotations.Nullable;
 import tools.jackson.dataformat.yaml.YAMLMapper;
@@ -16,7 +16,7 @@ import tools.jackson.dataformat.yaml.YAMLMapper;
 import java.nio.file.Path;
 import java.util.Map;
 
-public interface FileFacade extends ReloadModule<FileFacade> {
+public interface FileFacade extends Reloadable<FileFacade> {
     Path dataPath();
     Path localizationsPath();
     Config config();

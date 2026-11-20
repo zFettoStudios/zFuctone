@@ -55,6 +55,11 @@ public class FloodgateModuleImpl extends IntegrationModuleImpl implements Floodg
     }
 
     @Override
+    public FloodgateModule reload() {
+        return disable().enable();
+    }
+
+    @Override
     public @NonNull PlayerEdition getEdition(@NonNull UUID uuid) {
         if (isEnable()) {
             if (isBedrockEdition(uuid)) return PlayerEdition.BEDROCK;
@@ -96,10 +101,5 @@ public class FloodgateModuleImpl extends IntegrationModuleImpl implements Floodg
 
     private boolean isBedrockEdition(UUID uuid) {
         return FloodgateApi.getInstance().getPlayer(uuid) != null;
-    }
-
-    @Override
-    public FloodgateModule reload() {
-        return this;
     }
 }

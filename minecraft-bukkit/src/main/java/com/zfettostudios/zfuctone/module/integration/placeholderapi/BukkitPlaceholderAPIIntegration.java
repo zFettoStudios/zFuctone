@@ -3,7 +3,7 @@ package com.zfettostudios.zfuctone.module.integration.placeholderapi;
 import com.zfettostudios.zfuctone.ZFuctoneAPI;
 import com.zfettostudios.zfuctone.model.config.IntegrationConfig;
 import com.zfettostudios.zfuctone.model.constant.BuildConstant;
-import com.zfettostudios.zfuctone.module.placeholder.PlaceholderContext;
+import com.zfettostudios.zfuctone.placeholder.PlaceholderContext;
 import com.zfettostudios.zfuctone.module.integration.IntegrationHook;
 import com.zfettostudios.zfuctone.platform.entity.PlatformPlayer;
 import com.zfettostudios.zfuctone.platform.registry.PlaceholderRegistry;
@@ -75,8 +75,10 @@ public class BukkitPlaceholderAPIIntegration extends PlaceholderExpansion implem
             if (platformPlayer != null) context.setSender(platformPlayer);
         }
 
-        for (Map.Entry<String, Function<PlaceholderContext, String>> entry : placeholderRegistry.getPlaceholders().entrySet())
-            if (params.equals(entry.getKey())) return entry.getValue().apply(context);
+        for (Map<String, Function<PlaceholderContext, String>> modulePlaceholders : placeholderRegistry.getPlaceholders().values()) {
+            for (Map.Entry<String, Function<PlaceholderContext, String>> entry : modulePlaceholders.entrySet())
+                if (params.equals(entry.getKey())) return entry.getValue().apply(context);
+        }
 
         return null;
     }

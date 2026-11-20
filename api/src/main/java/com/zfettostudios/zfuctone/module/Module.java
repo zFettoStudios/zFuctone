@@ -1,6 +1,7 @@
 package com.zfettostudios.zfuctone.module;
 
-public interface Module<T> {
-    T enable();
-    T disable();
+import com.zfettostudios.zfuctone.model.lifecycle.Reloadable;
+
+public interface Module<T> extends Reloadable<T> {
+    T get();
 }

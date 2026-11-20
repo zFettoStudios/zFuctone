@@ -1,7 +1,7 @@
 package com.zfettostudios.zfuctone.provider;
 
 import com.zfettostudios.zfuctone.exception.NotInitializedException;
-import com.zfettostudios.zfuctone.module.placeholder.PlaceholderContext;
+import com.zfettostudios.zfuctone.placeholder.PlaceholderContext;
 import com.zfettostudios.zfuctone.platform.entity.PlatformPlayer;
 import org.jspecify.annotations.NonNull;
 import org.jspecify.annotations.Nullable;

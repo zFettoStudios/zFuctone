@@ -51,8 +51,8 @@ public class BukkitZFuctone extends ZFuctoneImpl {
 
     @Override
     protected void addedPlatformModules() {
-        moduleController.add(PlaceholderAPIModule.class, new BukkitPlaceholderAPIModule());
-        moduleController.add(MiniPlaceholdersModule.class, new PaperMiniPlaceholdersModule());
+        moduleController.register(PlaceholderAPIModule.class, new BukkitPlaceholderAPIModule());
+        moduleController.register(MiniPlaceholdersModule.class, new PaperMiniPlaceholdersModule());
     }
 
     @Override

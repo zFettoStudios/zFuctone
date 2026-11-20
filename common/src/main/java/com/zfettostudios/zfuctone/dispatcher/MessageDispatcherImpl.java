@@ -23,11 +23,11 @@ public class MessageDispatcherImpl implements MessageDispatcher {
     private final PlatformPlayerService playerService = ZFuctoneAPI.get().playerService();
 
     private MiniPlaceholdersModule miniPlaceholders() {
-        return ZFuctoneAPI.get().moduleController().getIntegration(MiniPlaceholdersModule.class);
+        return ZFuctoneAPI.get().moduleController().get(MiniPlaceholdersModule.class);
     }
 
     private PlaceholderAPIModule placeholderAPI() {
-        return ZFuctoneAPI.get().moduleController().getIntegration(PlaceholderAPIModule.class);
+        return ZFuctoneAPI.get().moduleController().get(PlaceholderAPIModule.class);
     }
 
     @Override

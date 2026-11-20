@@ -5,7 +5,7 @@ import com.zfettostudios.zfuctone.exception.ReloadException;
 import com.zfettostudios.zfuctone.file.FileFacade;
 import com.zfettostudios.zfuctone.logging.ZLogger;
 import com.zfettostudios.zfuctone.model.constant.PlatformType;
-import com.zfettostudios.zfuctone.module.Module;
+import com.zfettostudios.zfuctone.model.lifecycle.Toggleable;
 import com.zfettostudios.zfuctone.module.controller.ModuleController;
 import com.zfettostudios.zfuctone.platform.adapter.PlatformPlayerAdapter;
 import com.zfettostudios.zfuctone.platform.adapter.PlatformServerAdapter;
@@ -17,7 +17,7 @@ import com.zfettostudios.zfuctone.scheduler.TaskScheduler;
 import com.zfettostudios.zfuctone.service.PlatformPlayerService;
 import org.jspecify.annotations.NonNull;
 
-public interface ZFuctone extends Module<ZFuctone> {
+public interface ZFuctone extends Toggleable<ZFuctone> {
     @NonNull <L> L getLoader(Class<L> loader);
     @NonNull Object getLoader();
 

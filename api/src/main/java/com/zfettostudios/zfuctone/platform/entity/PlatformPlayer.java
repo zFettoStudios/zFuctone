@@ -26,7 +26,7 @@ public interface PlatformPlayer extends Audience {
     @NonNull String getNickname();
     @NonNull String getDisplayNickname();
     @NonNull String getLocale();
-    @NonNull String getIp();
+    @NonNull String getIP();
     int getProtocolVersion();
     @NonNull String getVersion();
     @NonNull String getDisplayVersion();

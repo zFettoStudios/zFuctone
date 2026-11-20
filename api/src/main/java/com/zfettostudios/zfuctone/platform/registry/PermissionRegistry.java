@@ -8,17 +8,17 @@ import java.util.Map;
 import java.util.Set;
 
 public interface PermissionRegistry {
-    PermissionRegistry register(@NonNull String moduleName, @NonNull String permission, @NonNull PermissionType type);
+    PermissionRegistry register(@NonNull Class<?> moduleClass, @NonNull String permission, @NonNull PermissionType type);
 
     PermissionRegistry unregister(@NonNull String permission);
-    PermissionRegistry unregister(@NonNull String moduleName, @NonNull String permission);
+    PermissionRegistry unregister(@NonNull Class<?> moduleClass, @NonNull String permission);
 
-    PermissionRegistry unregisterAll(@NonNull String moduleName);
+    PermissionRegistry unregisterAll(@NonNull Class<?> moduleClass);
     PermissionRegistry unregisterAll();
 
-    @Nullable Set<String> getPermissions(@NonNull String moduleName);
-    @NonNull Map<String, Set<String>> getPermissions();
+    @Nullable Set<String> getPermissions(@NonNull Class<?> moduleClass);
+    @NonNull Map<Class<?>, Set<String>> getPermissions();
 
-    boolean contains(@NonNull String moduleName, @NonNull String permission);
+    boolean contains(@NonNull Class<?> moduleClass, @NonNull String permission);
     boolean contains(@NonNull String permission);
 }

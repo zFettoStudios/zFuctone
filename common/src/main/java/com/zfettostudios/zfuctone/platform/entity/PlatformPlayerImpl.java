@@ -31,10 +31,10 @@ public class PlatformPlayerImpl implements PlatformPlayer {
     private static final PlatformPlayerAdapter playerAdapter = ZFuctoneAPI.get().playerAdapter();
     private static final FileFacade fileFacade = ZFuctoneAPI.get().fileFacade();
     private static final ModuleController moduleController = ZFuctoneAPI.get().moduleController();
-    private static final FloodgateModule floodgateModule = moduleController.getIntegration(FloodgateModule.class);
-    private static final ViaVersionModule viaVersionModule = moduleController.getIntegration(ViaVersionModule.class);
-    private static final LuckPermsModule luckPermsModule = moduleController.getIntegration(LuckPermsModule.class);
-    private static final GeyserModule geyserModule = moduleController.getIntegration(GeyserModule.class);
+    private static final FloodgateModule floodgateModule = moduleController.get(FloodgateModule.class);
+    private static final ViaVersionModule viaVersionModule = moduleController.get(ViaVersionModule.class);
+    private static final LuckPermsModule luckPermsModule = moduleController.get(LuckPermsModule.class);
+    private static final GeyserModule geyserModule = moduleController.get(GeyserModule.class);
 
     @Getter
     @Accessors(fluent = true)
@@ -61,7 +61,7 @@ public class PlatformPlayerImpl implements PlatformPlayer {
     }
 
     @Override
-    public @NonNull String getIp() {
+    public @NonNull String getIP() {
         return user.getAddress().getHostString();
     }
 

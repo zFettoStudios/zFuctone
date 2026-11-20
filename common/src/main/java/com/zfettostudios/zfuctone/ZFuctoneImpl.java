@@ -21,12 +21,21 @@ import com.zfettostudios.zfuctone.module.integration.luckperms.LuckPermsModule;
 import com.zfettostudios.zfuctone.module.integration.luckperms.LuckPermsModuleImpl;
 import com.zfettostudios.zfuctone.module.integration.viaversion.ViaVersionModule;
 import com.zfettostudios.zfuctone.module.integration.viaversion.ViaVersionModuleImpl;
+import com.zfettostudios.zfuctone.module.placeholder.CustomPlaceholderModule;
+import com.zfettostudios.zfuctone.module.placeholder.CustomPlaceholderModuleImpl;
+import com.zfettostudios.zfuctone.module.placeholder.PlayerPlaceholderModule;
+import com.zfettostudios.zfuctone.module.placeholder.PlayerPlaceholderModuleImpl;
+import com.zfettostudios.zfuctone.module.placeholder.ProjectPlaceholderModule;
+import com.zfettostudios.zfuctone.module.placeholder.ProjectPlaceholderModuleImpl;
+import com.zfettostudios.zfuctone.module.placeholder.ServerPlaceholderModule;
+import com.zfettostudios.zfuctone.module.placeholder.ServerPlaceholderModuleImpl;
 import com.zfettostudios.zfuctone.platform.adapter.PlatformPlayerAdapter;
 import com.zfettostudios.zfuctone.platform.adapter.PlatformServerAdapter;
 import com.zfettostudios.zfuctone.platform.registry.PermissionRegistry;
 import com.zfettostudios.zfuctone.platform.registry.PermissionRegistryImpl;
 import com.zfettostudios.zfuctone.platform.registry.PlaceholderRegistry;
 import com.zfettostudios.zfuctone.platform.registry.PlaceholderRegistryImpl;
+import com.zfettostudios.zfuctone.provider.BuilderProviderImpl;
 import com.zfettostudios.zfuctone.resolver.LibraryResolver;
 import com.zfettostudios.zfuctone.resolver.ReflectionResolver;
 import com.zfettostudios.zfuctone.scheduler.TaskScheduler;
@@ -96,6 +105,8 @@ public abstract class ZFuctoneImpl implements ZFuctone {
         addedPlatformModules();
         moduleController.enable();
 
+        BuilderProviderImpl.init();
+
         registerListeners();
 
         logger.logEnabled();
@@ -139,10 +150,15 @@ public abstract class ZFuctoneImpl implements ZFuctone {
     private void addedModules() {
         GeyserModule geyserModule = new GeyserModuleImpl();
 
-        moduleController.add(ViaVersionModule.class, new ViaVersionModuleImpl());
-        moduleController.add(GeyserModule.class, geyserModule);
-        moduleController.add(FloodgateModule.class, new FloodgateModuleImpl(geyserModule));
-        moduleController.add(LuckPermsModule.class, new LuckPermsModuleImpl());
+        moduleController.register(ViaVersionModule.class, new ViaVersionModuleImpl());
+        moduleController.register(GeyserModule.class, geyserModule);
+        moduleController.register(FloodgateModule.class, new FloodgateModuleImpl(geyserModule));
+        moduleController.register(LuckPermsModule.class, new LuckPermsModuleImpl());
+
+        moduleController.register(ProjectPlaceholderModule.class, new ProjectPlaceholderModuleImpl());
+        moduleController.register(PlayerPlaceholderModule.class, new PlayerPlaceholderModuleImpl());
+        moduleController.register(ServerPlaceholderModule.class, new ServerPlaceholderModuleImpl());
+        moduleController.register(CustomPlaceholderModule.class, new CustomPlaceholderModuleImpl());
     }
 
     protected abstract void addedPlatformModules();

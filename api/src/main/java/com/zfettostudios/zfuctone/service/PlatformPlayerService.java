@@ -1,6 +1,6 @@
 package com.zfettostudios.zfuctone.service;
 
-import com.zfettostudios.zfuctone.module.ReloadModule;
+import com.zfettostudios.zfuctone.model.lifecycle.Reloadable;
 import com.zfettostudios.zfuctone.platform.entity.PlatformPlayer;
 import org.jspecify.annotations.NonNull;
 import org.jspecify.annotations.Nullable;
@@ -8,7 +8,7 @@ import org.jspecify.annotations.Nullable;
 import java.util.List;
 import java.util.UUID;
 
-public interface PlatformPlayerService extends ReloadModule<PlatformPlayerService> {
+public interface PlatformPlayerService extends Reloadable<PlatformPlayerService> {
     @Nullable PlatformPlayer getPlatformPlayer(@NonNull UUID uuid);
     @Nullable PlatformPlayer getPlatformPlayer(@NonNull String nickname);
     @NonNull List<PlatformPlayer> getPlatformPlayers();

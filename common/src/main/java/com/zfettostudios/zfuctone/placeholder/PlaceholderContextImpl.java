@@ -1,4 +1,4 @@
-package com.zfettostudios.zfuctone.module.placeholder;
+package com.zfettostudios.zfuctone.placeholder;
 
 import lombok.Getter;
 import lombok.NoArgsConstructor;
