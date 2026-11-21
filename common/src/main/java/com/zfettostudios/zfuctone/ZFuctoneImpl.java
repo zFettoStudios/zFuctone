@@ -100,9 +100,9 @@ public abstract class ZFuctoneImpl implements ZFuctone {
         logger.logDescription();
 
         playerService.enable();
-
-        addedModules();
+        
         addedPlatformModules();
+        addedModules();
         moduleController.enable();
 
         BuilderProviderImpl.init();
