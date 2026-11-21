@@ -1,12 +1,14 @@
 package com.zfettostudios.zfuctone.provider;
 
 import com.zfettostudios.zfuctone.exception.NotInitializedException;
+import com.zfettostudios.zfuctone.model.value.PlaceholderContext;
+import com.zfettostudios.zfuctone.model.value.ValueString;
 import com.zfettostudios.zfuctone.module.integration.IntegrationHook;
-import com.zfettostudios.zfuctone.placeholder.PlaceholderContext;
 import com.zfettostudios.zfuctone.platform.entity.PlatformPlayer;
 import org.jspecify.annotations.NonNull;
 import org.jspecify.annotations.Nullable;
 
+import java.util.List;
 import java.util.UUID;
 import java.util.function.Function;
 import java.util.function.Supplier;
@@ -17,7 +19,6 @@ import java.util.function.Supplier;
  * @since 0.1
  * @author RandomShel
  */
-
 public abstract class BuilderProvider {
 
     /**
@@ -43,7 +44,22 @@ public abstract class BuilderProvider {
     /**
      * Получение пустого {@link IntegrationHook}.
      */
-    protected static volatile Supplier<IntegrationHook<?>> getEmptyIntegrationHook;
+    protected static volatile Supplier<@NonNull IntegrationHook<?>> getEmptyIntegrationHook;
+
+    /**
+     * Фабрика создания пустого {@link ValueString}.
+     */
+    protected static volatile Supplier<@NonNull ValueString> buildValueString;
+
+    /**
+     * Фабрика создания {@link ValueString} из строки.
+     */
+    protected static volatile Function<@NonNull String, @NonNull ValueString> buildValueStringFromString;
+
+    /**
+     * Фабрика создания {@link ValueString} из списка строк.
+     */
+    protected static volatile Function<@NonNull List<String>, @NonNull ValueString> buildValueStringFromList;
 
     /**
      * Получает экземпляр IntegrationHook. Вместо этого метода используйте {@link IntegrationHook#empty()}.
@@ -106,5 +122,43 @@ public abstract class BuilderProvider {
             throw new NotInitializedException("PlaceholderContext builder has not been initialized");
 
         return buildPlaceholderContextFromRawText.apply(rawText);
+    }
+
+    /**
+     * Создаёт пустой {@link ValueString}. Вместо этого метода используйте {@link ValueString#build()}.
+     *
+     * @return новый {@link ValueString}.
+     */
+    public static @NonNull ValueString buildValueString() {
+        if (buildValueString == null)
+            throw new NotInitializedException("ValueString builder has not been initialized");
+
+        return buildValueString.get();
+    }
+
+    /**
+     * Создаёт {@link ValueString} из строки. Вместо этого метода используйте {@link ValueString#build(String string)}.
+     *
+     * @param string исходная строка.
+     * @return новый {@link ValueString}.
+     */
+    public static @NonNull ValueString buildValueStringFromString(@NonNull String string) {
+        if (buildValueStringFromString == null)
+            throw new NotInitializedException("ValueString builder has not been initialized");
+
+        return buildValueStringFromString.apply(string);
+    }
+
+    /**
+     * Создаёт {@link ValueString} из списка строк. Вместо этого метода используйте {@link ValueString#build(List<String> list)}.
+     *
+     * @param list список строк.
+     * @return новый {@link ValueString}.
+     */
+    public static @NonNull ValueString buildValueStringFromList(@NonNull List<String> list) {
+        if (buildValueStringFromList == null)
+            throw new NotInitializedException("ValueString builder has not been initialized");
+
+        return buildValueStringFromList.apply(list);
     }
 }

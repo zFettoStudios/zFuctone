@@ -1,4 +1,4 @@
-package com.zfettostudios.zfuctone.placeholder;
+package com.zfettostudios.zfuctone.model.value;
 
 import com.zfettostudios.zfuctone.platform.entity.PlatformPlayer;
 import com.zfettostudios.zfuctone.provider.BuilderProvider;
@@ -20,7 +20,7 @@ public interface PlaceholderContext {
      *
      * @return новый контекст плейсхолдеров.
      */
-    static PlaceholderContext build() {
+    static @NonNull PlaceholderContext build() {
         return BuilderProvider.buildPlaceholderContext();
     }
 
@@ -30,7 +30,7 @@ public interface PlaceholderContext {
      * @param rawtext сырой текст с плейсхолдерами.
      * @return новый контекст плейсхолдеров.
      */
-    static PlaceholderContext build(@NonNull String rawtext) {
+    static @NonNull PlaceholderContext build(@NonNull String rawtext) {
         return BuilderProvider.buildPlaceholderContextFromRawText(rawtext);
     }
 

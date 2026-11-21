@@ -4,7 +4,7 @@ import com.zfettostudios.zfuctone.ZFuctoneAPI;
 import com.zfettostudios.zfuctone.model.config.IntegrationConfig;
 import com.zfettostudios.zfuctone.model.constant.BuildConstant;
 import com.zfettostudios.zfuctone.module.integration.IntegrationHook;
-import com.zfettostudios.zfuctone.placeholder.PlaceholderContext;
+import com.zfettostudios.zfuctone.model.value.PlaceholderContext;
 import com.zfettostudios.zfuctone.platform.entity.PlatformPlayer;
 import com.zfettostudios.zfuctone.platform.registry.PlaceholderRegistry;
 import com.zfettostudios.zfuctone.service.PlatformPlayerService;
@@ -14,7 +14,6 @@ import net.kyori.adventure.identity.Identity;
 import net.kyori.adventure.text.minimessage.Context;
 import net.kyori.adventure.text.minimessage.tag.Tag;
 import net.kyori.adventure.text.minimessage.tag.resolver.ArgumentQueue;
-import net.kyori.adventure.text.minimessage.tag.resolver.TagResolver;
 
 import java.util.Map;
 import java.util.Optional;

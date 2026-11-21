@@ -9,8 +9,8 @@ import com.zfettostudios.zfuctone.model.config.setting.CooldownSetting;
 import com.zfettostudios.zfuctone.model.config.setting.DestinationSetting;
 import com.zfettostudios.zfuctone.model.config.setting.SoundSetting;
 
-import java.util.LinkedList;
 import java.util.List;
+import java.util.concurrent.CopyOnWriteArrayList;
 
 @Getter
 @Setter
@@ -24,7 +24,7 @@ public class CommandConfig {
     @Setter
     public static class ZFuctone {
         private Boolean enable = true;
-        private final List<String> aliases = new LinkedList<>();
+        private final List<String> aliases = new CopyOnWriteArrayList<>();
         private final DestinationSetting destination = DestinationSetting.builder().type(DestinationSetting.Type.CHAT).build();
         private final CooldownSetting cooldown = new CooldownSetting();
         private final SoundSetting sound = new SoundSetting();
@@ -38,7 +38,7 @@ public class CommandConfig {
         @Setter
         public static class Reload {
             private Boolean enable = true;
-            private final List<String> aliases = new LinkedList<>();
+            private final List<String> aliases = new CopyOnWriteArrayList<>();
             private final DestinationSetting destination = DestinationSetting.builder().type(DestinationSetting.Type.CHAT).build();
             private final CooldownSetting cooldown = new CooldownSetting();
             private final SoundSetting sound = new SoundSetting();

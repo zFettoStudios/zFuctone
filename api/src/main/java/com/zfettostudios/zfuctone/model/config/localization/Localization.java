@@ -4,8 +4,10 @@ import lombok.Getter;
 import lombok.Setter;
 import lombok.experimental.Accessors;
 
-import java.util.LinkedHashMap;
+import com.zfettostudios.zfuctone.model.value.ValueString;
+
 import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
 
 @Getter
 @Setter
@@ -32,28 +34,28 @@ public class Localization {
             @Getter
             @Setter
             public static class Edition {
-                private String java = "Java";
-                private String bedrock = "Bedrock";
+                private ValueString java = ValueString.build("Java");
+                private ValueString bedrock = ValueString.build("Bedrock");
             }
 
             @Getter
             @Setter
             public static class Version {
-                private final Map<Integer, String> java = new LinkedHashMap<>();
-                private final Map<Integer, String> bedrock = new LinkedHashMap<>();
+                private final Map<Integer, ValueString> java = new ConcurrentHashMap<>();
+                private final Map<Integer, ValueString> bedrock = new ConcurrentHashMap<>();
             }
         }
 
         @Getter
         @Setter
         public static class Join {
-            private String format;
+            private ValueString format;
         }
 
         @Getter
         @Setter
         public static class Quit {
-            private String format;
+            private ValueString format;
         }
     }
 
@@ -65,7 +67,7 @@ public class Localization {
         @Getter
         @Setter
         public static class ZFuctone {
-            private String reload;
+            private ValueString reload;
         }
     }
 
@@ -77,6 +79,6 @@ public class Localization {
     @Getter
     @Setter
     public static class Placeholder {
-        private final Map<String, String> values = new LinkedHashMap<>();
+        private final Map<String, ValueString> values = new ConcurrentHashMap<>();
     }
 }

@@ -8,7 +8,7 @@ import com.zfettostudios.zfuctone.model.config.PlaceholderConfig;
 import com.zfettostudios.zfuctone.model.config.setting.PermissionSetting;
 import com.zfettostudios.zfuctone.model.config.setting.PlaceholderSetting;
 import com.zfettostudios.zfuctone.model.constant.BuildConstant;
-import com.zfettostudios.zfuctone.placeholder.PlaceholderContext;
+import com.zfettostudios.zfuctone.model.value.PlaceholderContext;
 import com.zfettostudios.zfuctone.platform.registry.PermissionRegistry;
 import com.zfettostudios.zfuctone.platform.registry.PlaceholderRegistry;
 

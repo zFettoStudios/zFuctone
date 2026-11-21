@@ -10,11 +10,11 @@ import com.zfettostudios.zfuctone.model.constant.BuildConstant;
 import com.zfettostudios.zfuctone.model.constant.DatabaseType;
 import com.zfettostudios.zjtime.TimeUnit;
 
-import java.util.LinkedHashSet;
-import java.util.LinkedList;
 import java.util.List;
 import java.util.Set;
 import java.util.UUID;
+import java.util.concurrent.CopyOnWriteArrayList;
+import java.util.concurrent.CopyOnWriteArraySet;
 
 @Getter
 @Setter
@@ -94,7 +94,7 @@ public class Config {
     @Getter
     @Setter
     public static class Proxy {
-        private final Set<String> clusters = new LinkedHashSet<>();
+        private final Set<String> clusters = new CopyOnWriteArraySet<>();
         private Boolean bungeecord = false;
         private Boolean velocity = false;
         private final Redis redis = new Redis();
@@ -116,17 +116,17 @@ public class Config {
     public static class Internal {
         private Boolean enable = true;
         private Boolean unregisterCommandOnReload = false;
-        private final Set<String> vanillaCommandsToRemove = new LinkedHashSet<>();
+        private final Set<String> vanillaCommandsToRemove = new CopyOnWriteArraySet<>();
     }
 
     @Getter
     @Setter
     public static class Logger {
         private String prefix = "<dark_green>(" + BuildConstant.PROJECT_NAME + ") ";
-        private final List<String> description = new LinkedList<>();
+        private final List<String> description = new CopyOnWriteArrayList<>();
         private String warn = "<yellow>";
         private String info = "<green>";
-        private final Set<String> filter = new LinkedHashSet<>();
+        private final Set<String> filter = new CopyOnWriteArraySet<>();
 
         public Logger() {
             description.add("");

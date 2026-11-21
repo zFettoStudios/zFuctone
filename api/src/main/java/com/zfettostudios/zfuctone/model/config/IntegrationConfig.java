@@ -7,8 +7,8 @@ import lombok.experimental.Accessors;
 import com.zfettostudios.zfuctone.annotation.config.FilePath;
 import com.zfettostudios.zfuctone.model.constant.BuildConstant;
 
-import java.util.LinkedList;
 import java.util.List;
+import java.util.concurrent.CopyOnWriteArrayList;
 
 @Getter
 @Setter
@@ -70,8 +70,8 @@ public class IntegrationConfig {
     public static class LuckPerms {
         private Boolean enable = true;
         private Boolean useWeightForTabSort = true;
-        private final List<String> tabGroupOrder = new LinkedList<>();
-        private final List<String> groupOrder = new LinkedList<>();
+        private final List<String> tabGroupOrder = new CopyOnWriteArrayList<>();
+        private final List<String> groupOrder = new CopyOnWriteArrayList<>();
     }
 
     @Getter

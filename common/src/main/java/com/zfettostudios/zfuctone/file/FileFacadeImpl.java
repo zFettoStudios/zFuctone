@@ -17,8 +17,10 @@ import com.zfettostudios.zfuctone.file.deserializer.MapDeserializer;
 import com.zfettostudios.zfuctone.file.deserializer.SetDeserializer;
 import com.zfettostudios.zfuctone.file.deserializer.StringDeserializer;
 import com.zfettostudios.zfuctone.file.deserializer.TimeUnitDeserializer;
+import com.zfettostudios.zfuctone.file.deserializer.ValueStringDeserializer;
 import com.zfettostudios.zfuctone.file.handler.LoggingProblemHandler;
 import com.zfettostudios.zfuctone.file.serializer.TimeUnitSerializer;
+import com.zfettostudios.zfuctone.file.serializer.ValueStringSerializer;
 import com.zfettostudios.zfuctone.model.config.CommandConfig;
 import com.zfettostudios.zfuctone.model.config.Config;
 import com.zfettostudios.zfuctone.model.config.IntegrationConfig;
@@ -28,6 +30,7 @@ import com.zfettostudios.zfuctone.model.config.MessageConfig;
 import com.zfettostudios.zfuctone.model.config.PermissionConfig;
 import com.zfettostudios.zfuctone.model.constant.LocalizationType;
 import com.zfettostudios.zfuctone.model.file.FilePack;
+import com.zfettostudios.zfuctone.model.value.ValueString;
 import com.zfettostudios.zfuctone.resolver.ReflectionResolver;
 import com.zfettostudios.zjtime.TimeUnit;
 import org.jspecify.annotations.NonNull;
@@ -233,8 +236,10 @@ public class FileFacadeImpl implements FileFacade {
                 .addDeserializer(List.class, new ListDeserializer())
                 .addDeserializer(Set.class, new SetDeserializer())
                 .addDeserializer(Map.class, new MapDeserializer())
+                .addDeserializer(ValueString.class, new ValueStringDeserializer())
 
                 .addSerializer(TimeUnit.class, new TimeUnitSerializer())
+                .addSerializer(ValueString.class, new ValueStringSerializer())
             );
 
         Set<Class<?>> visited = new HashSet<>();

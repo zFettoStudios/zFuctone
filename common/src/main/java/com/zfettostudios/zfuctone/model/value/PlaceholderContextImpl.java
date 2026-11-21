@@ -1,4 +1,4 @@
-package com.zfettostudios.zfuctone.placeholder;
+package com.zfettostudios.zfuctone.model.value;
 
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -17,7 +17,7 @@ public class PlaceholderContextImpl implements PlaceholderContext {
     private PlatformPlayer sender;
     private String rawText;
 
-    public PlaceholderContextImpl(@NonNull String rawText) {
+    public PlaceholderContextImpl(String rawText) {
         setRawText(rawText);
     }
 

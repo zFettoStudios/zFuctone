@@ -5,15 +5,17 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.experimental.Accessors;
 
+import com.zfettostudios.zfuctone.model.value.ValueString;
+
 @Getter
 @Setter
 @NoArgsConstructor
 @Accessors(fluent = true)
 public class PlaceholderValueSetting {
     private Boolean enable;
-    private String value;
+    private ValueString value;
 
-    public PlaceholderValueSetting(String value) {
+    public PlaceholderValueSetting(ValueString value) {
         this.enable = true;
         this.value = value;
     }

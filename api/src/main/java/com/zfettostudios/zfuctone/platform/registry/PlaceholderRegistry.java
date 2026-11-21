@@ -1,6 +1,6 @@
 package com.zfettostudios.zfuctone.platform.registry;
 
-import com.zfettostudios.zfuctone.placeholder.PlaceholderContext;
+import com.zfettostudios.zfuctone.model.value.PlaceholderContext;
 import org.jspecify.annotations.NonNull;
 import org.jspecify.annotations.Nullable;
 
