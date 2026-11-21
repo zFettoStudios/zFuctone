@@ -1,14 +1,19 @@
 package com.zfettostudios.zfuctone.module.integration.placeholderapi;
 
+import com.zfettostudios.zfuctone.module.integration.IntegrationHook;
 import com.zfettostudios.zfuctone.platform.entity.PlatformPlayer;
 import me.clip.placeholderapi.PlaceholderAPI;
-import org.bukkit.OfflinePlayer;
 import org.bukkit.entity.Player;
 import org.jspecify.annotations.NonNull;
 import org.jspecify.annotations.Nullable;
 
 public class BukkitPlaceholderAPIModule extends PlaceholderAPIModuleImpl {
-    private final BukkitPlaceholderAPIIntegration integration = new BukkitPlaceholderAPIIntegration();
+    private final IntegrationHook<?> integration;
+
+    public BukkitPlaceholderAPIModule() {
+        if (isEnable()) integration = new BukkitPlaceholderAPIIntegration();
+        else integration = IntegrationHook.empty();
+    }
 
     @Override
     public PlaceholderAPIModule enable() {

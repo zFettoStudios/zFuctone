@@ -122,11 +122,28 @@ public class Config {
     @Getter
     @Setter
     public static class Logger {
-        private String prefix = "(" + BuildConstant.PROJECT_NAME + ") ";
+        private String prefix = "<dark_green>(" + BuildConstant.PROJECT_NAME + ") ";
         private final List<String> description = new LinkedList<>();
         private String warn = "<yellow>";
-        private String info = "<white>";
+        private String info = "<green>";
         private final Set<String> filter = new LinkedHashSet<>();
+
+        public Logger() {
+            description.add("");
+            description.add("         ######                #                     ");
+            description.add("         #                     #                     ");
+            description.add("  #####  #####  #    #  ####  ###   ###   ####   ### ");
+            description.add("    #    #      #    # #       #   #   #  #   # #   #");
+            description.add("   #     #      #    # #       #   #   #  #   # #####");
+            description.add("  #      #      #    # #       #   #   #  #   # #    ");
+            description.add("  #####  #       ####   ####    ##  ###   #   #  ### ");
+            description.add("");
+            description.add("                          /\\");
+            description.add("                         /  \\ v<version>");
+            description.add("__/\\___  ____/\\_____  __/    \\_______  ____/\\__");
+            description.add("       \\/           \\/               \\/        \\/");
+            description.add("");
+        }
     }
 
     @Getter

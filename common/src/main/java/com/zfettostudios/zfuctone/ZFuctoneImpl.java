@@ -96,9 +96,10 @@ public abstract class ZFuctoneImpl implements ZFuctone {
 
     @Override
     public ZFuctone enable() {
+        fileFacade.enable();
+
         logger.logEnabling();
 
-        fileFacade.enable();
         taskScheduler.start();
         registerTaskScheduler();
 

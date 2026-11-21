@@ -1,6 +1,7 @@
 package com.zfettostudios.zfuctone.provider;
 
 import com.zfettostudios.zfuctone.exception.NotInitializedException;
+import com.zfettostudios.zfuctone.module.integration.IntegrationHook;
 import com.zfettostudios.zfuctone.placeholder.PlaceholderContext;
 import com.zfettostudios.zfuctone.platform.entity.PlatformPlayer;
 import org.jspecify.annotations.NonNull;
@@ -38,6 +39,23 @@ public abstract class BuilderProvider {
      * Фабрика создания контекста плейсхолдеров из исходного текста.
      */
     protected static volatile Function<@NonNull String, @NonNull PlaceholderContext> buildPlaceholderContextFromRawText;
+
+    /**
+     * Получение пустого {@link IntegrationHook}.
+     */
+    protected static volatile Supplier<IntegrationHook<?>> getEmptyIntegrationHook;
+
+    /**
+     * Получает экземпляр IntegrationHook. Вместо этого метода используйте {@link IntegrationHook#empty()}.
+     *
+     * @return экземпляр {@link IntegrationHook}.
+     */
+    public static @NonNull IntegrationHook<?> getEmptyIntegrationHook() {
+        if (getEmptyIntegrationHook == null)
+            throw new NotInitializedException("IntegrationHook builder has not been initialized");
+
+        return getEmptyIntegrationHook.get();
+    }
 
     /**
      * Создаёт экземпляр игрока платформы по UUID. Вместо этого метода используйте {@link PlatformPlayer#build(UUID)}.
