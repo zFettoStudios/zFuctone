@@ -1,10 +1,9 @@
 package com.zfettostudios.zfuctone.file;
 
-import lombok.RequiredArgsConstructor;
-
 import com.zfettostudios.zfuctone.exception.FileLoadException;
 import com.zfettostudios.zfuctone.model.config.localization.Localization;
 import com.zfettostudios.zfuctone.model.file.FilePack;
+import lombok.RequiredArgsConstructor;
 import org.jspecify.annotations.NonNull;
 import tools.jackson.dataformat.yaml.YAMLMapper;
 
@@ -17,6 +16,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import java.util.concurrent.CompletableFuture;
+import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ExecutorService;
 
 @RequiredArgsConstructor
@@ -66,6 +66,9 @@ public class FileLoaderImpl implements FileLoader {
     }
 
     private CompletableFuture<Void> loadAsyncLocalizations(Map<String, Localization> localizations) {
+        Map<String, Localization> concurrentLocalizations = new ConcurrentHashMap<>();
+        localizations.forEach((key, value) -> concurrentLocalizations.put(key.toLowerCase(), value));
+
         return CompletableFuture.runAsync(() -> {
             if (!Files.exists(localizationsPath)) {
                 try {
@@ -76,19 +79,20 @@ public class FileLoaderImpl implements FileLoader {
             }
         }, executor).thenComposeAsync(_ -> {
             List<CompletableFuture<Void>> futures = new ArrayList<>(
-                localizations.entrySet().stream()
+                concurrentLocalizations.entrySet().stream()
                     .map(entry -> {
-                        String langKey = entry.getKey().toLowerCase();
+                        String langKey = entry.getKey();
 
                         return loadAsync(entry.getValue(), findExistingFile(langKey)
                             .orElseGet(() -> localizationsPath.resolve(langKey + ".yml")))
-                                .thenAccept(loaded -> localizations.put(langKey, loaded));
+                            .thenAccept(loaded -> concurrentLocalizations.put(langKey, loaded));
                     })
                     .toList()
             );
 
             File[] files = localizationsPath.toFile().listFiles(file -> {
                 if (!file.isFile()) return false;
+
                 String name = file.getName().toLowerCase();
                 return name.endsWith(".yml") || name.endsWith(".yaml");
             });
@@ -96,14 +100,18 @@ public class FileLoaderImpl implements FileLoader {
             if (files != null) {
                 for (File file : files) {
                     String langKey = removeExtension(file.getName()).toLowerCase();
-                    if (!localizations.containsKey(langKey)) {
+                    if (!concurrentLocalizations.containsKey(langKey)) {
                         futures.add(loadAsync(new Localization(), file.toPath())
-                            .thenAccept(loaded -> localizations.put(langKey, loaded)));
+                            .thenAccept(loaded -> concurrentLocalizations.put(langKey, loaded)));
                     }
                 }
             }
 
-            return CompletableFuture.allOf(futures.toArray(new CompletableFuture[0]));
+            return CompletableFuture.allOf(futures.toArray(new CompletableFuture[0]))
+                .thenRun(() -> {
+                    localizations.clear();
+                    localizations.putAll(concurrentLocalizations);
+                });
         }, executor);
     }
 
@@ -118,6 +126,7 @@ public class FileLoaderImpl implements FileLoader {
     }
 
     private String removeExtension(String fileName) {
-        return fileName.substring(0, fileName.lastIndexOf("."));
+        int dotIndex = fileName.lastIndexOf('.');
+        return dotIndex > 0 ? fileName.substring(0, dotIndex) : fileName;
     }
 }
