@@ -4,6 +4,7 @@ import lombok.Getter;
 import lombok.experimental.Accessors;
 
 import com.github.retrooper.packetevents.PacketEvents;
+import com.zfettostudios.zfuctone.def.DefaultRegisterModules;
 import com.zfettostudios.zfuctone.dispatcher.MessageDispatcher;
 import com.zfettostudios.zfuctone.dispatcher.MessageDispatcherImpl;
 import com.zfettostudios.zfuctone.file.FileFacade;
@@ -63,6 +64,8 @@ public abstract class ZFuctoneImpl implements ZFuctone {
     protected final PermissionRegistry permissionRegistry;
     protected final PlaceholderRegistry placeholderRegistry;
 
+    protected final DefaultRegisterModules defaultRegisterModules;
+
     public ZFuctoneImpl(ReflectionResolver reflectionResolver, PlatformType platformType, LibraryResolver libraryResolver) {
         ZFuctoneAPIImpl.set(this);
 
@@ -87,6 +90,8 @@ public abstract class ZFuctoneImpl implements ZFuctone {
         messageDispatcher = new MessageDispatcherImpl();
 
         moduleController = new ModuleControllerImpl();
+
+        defaultRegisterModules = createDefaultRegisterModules();
     }
 
     @Override
@@ -100,9 +105,8 @@ public abstract class ZFuctoneImpl implements ZFuctone {
         logger.logDescription();
 
         playerService.enable();
-        
-        addedPlatformModules();
-        addedModules();
+
+        defaultRegisterModules.registerModules();
         moduleController.enable();
 
         BuilderProviderImpl.init();
@@ -147,22 +151,6 @@ public abstract class ZFuctoneImpl implements ZFuctone {
         return this;
     }
 
-    private void addedModules() {
-        GeyserModule geyserModule = new GeyserModuleImpl();
-
-        moduleController.register(ViaVersionModule.class, new ViaVersionModuleImpl());
-        moduleController.register(GeyserModule.class, geyserModule);
-        moduleController.register(FloodgateModule.class, new FloodgateModuleImpl(geyserModule));
-        moduleController.register(LuckPermsModule.class, new LuckPermsModuleImpl());
-
-        moduleController.register(ProjectPlaceholderModule.class, new ProjectPlaceholderModuleImpl());
-        moduleController.register(PlayerPlaceholderModule.class, new PlayerPlaceholderModuleImpl());
-        moduleController.register(ServerPlaceholderModule.class, new ServerPlaceholderModuleImpl());
-        moduleController.register(CustomPlaceholderModule.class, new CustomPlaceholderModuleImpl());
-    }
-
-    protected abstract void addedPlatformModules();
-
 //     if (reflectionResolver.hasClass("com.velocitypowered.api.proxy.ProxyServer")) return PlatformType.VELOCITY;
 //     if (reflectionResolver.hasClass("net.md_5.bungee.api.ProxyServer")) return PlatformType.BUNGEECORD;
 //     if (reflectionResolver.hasClass("org.spongepowered.api.Sponge")) return PlatformType.SPONGE;
@@ -179,4 +167,6 @@ public abstract class ZFuctoneImpl implements ZFuctone {
     protected abstract void unregisterListeners();
 
     protected abstract void registerTaskScheduler();
+
+    protected abstract DefaultRegisterModules createDefaultRegisterModules();
 }

@@ -1,5 +1,7 @@
 package com.zfettostudios.zfuctone;
 
+import com.zfettostudios.zfuctone.def.BukkitDefaultRegisterModules;
+import com.zfettostudios.zfuctone.def.DefaultRegisterModules;
 import com.zfettostudios.zfuctone.exception.InvalidTypeException;
 import com.zfettostudios.zfuctone.listener.BukkitPlayerJoinListener;
 import com.zfettostudios.zfuctone.listener.BukkitPlayerQuitListener;
@@ -50,12 +52,6 @@ public class BukkitZFuctone extends ZFuctoneImpl {
     }
 
     @Override
-    protected void addedPlatformModules() {
-        moduleController.register(PlaceholderAPIModule.class, new BukkitPlaceholderAPIModule());
-        moduleController.register(MiniPlaceholdersModule.class, new PaperMiniPlaceholdersModule());
-    }
-
-    @Override
     protected Path getDataPath() {
         return loader.getDataFolder().toPath();
     }
@@ -101,5 +97,10 @@ public class BukkitZFuctone extends ZFuctoneImpl {
     @Override
     protected void registerTaskScheduler() {
         Bukkit.getScheduler().runTaskTimer(loader, taskScheduler::onTick, 0L, 1L);
+    }
+
+    @Override
+    protected DefaultRegisterModules createDefaultRegisterModules() {
+        return new BukkitDefaultRegisterModules();
     }
 }
