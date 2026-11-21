@@ -63,6 +63,8 @@ public abstract class ZFuctoneImpl implements ZFuctone {
         playerAdapter = createPlayerAdapter();
         serverAdapter = createServerAdapter();
 
+        BuilderProviderImpl.init();
+
         logger = new ZLoggerImpl();
         fileFacade = new FileFacadeImpl(getDataPath());
         taskScheduler = new TaskSchedulerImpl(((FileFacadeImpl) fileFacade).executor());
@@ -80,8 +82,6 @@ public abstract class ZFuctoneImpl implements ZFuctone {
 
     @Override
     public ZFuctone enable() {
-        BuilderProviderImpl.init();
-
         fileFacade.enable();
 
         logger.logEnabling();

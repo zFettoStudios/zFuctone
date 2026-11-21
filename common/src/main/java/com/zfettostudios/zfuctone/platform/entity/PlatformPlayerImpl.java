@@ -28,10 +28,6 @@ import java.util.UUID;
 
 @RequiredArgsConstructor
 public class PlatformPlayerImpl implements PlatformPlayer {
-    private static final PlatformPlayerAdapter playerAdapter = ZFuctoneAPI.get().playerAdapter();
-    private static final FileFacade fileFacade = ZFuctoneAPI.get().fileFacade();
-    private static final ModuleController moduleController = ZFuctoneAPI.get().moduleController();
-
     @Getter
     @Accessors(fluent = true)
     private final UUID uuid;
@@ -39,20 +35,26 @@ public class PlatformPlayerImpl implements PlatformPlayer {
     @Getter private final Object rawPlayer;
     private final User user;
 
-    public static FloodgateModule floodgateModule() {
-        return moduleController.get(FloodgateModule.class);
+    private static PlatformPlayerAdapter playerAdapter() {
+        return ZFuctoneAPI.get().playerAdapter();
     }
-
-    public static ViaVersionModule viaVersionModule() {
-        return moduleController.get(ViaVersionModule.class);
+    private static FileFacade fileFacade() {
+        return ZFuctoneAPI.get().fileFacade();
     }
-
-    public static LuckPermsModule luckPermsModule() {
-        return moduleController.get(LuckPermsModule.class);
+    private static ModuleController moduleController() {
+        return ZFuctoneAPI.get().moduleController();
     }
-
-    public static GeyserModule geyserModule() {
-        return moduleController.get(GeyserModule.class);
+    private static FloodgateModule floodgateModule() {
+        return moduleController().get(FloodgateModule.class);
+    }
+    private static ViaVersionModule viaVersionModule() {
+        return moduleController().get(ViaVersionModule.class);
+    }
+    private static LuckPermsModule luckPermsModule() {
+        return moduleController().get(LuckPermsModule.class);
+    }
+    private static GeyserModule geyserModule() {
+        return moduleController().get(GeyserModule.class);
     }
 
     @Override
@@ -64,12 +66,12 @@ public class PlatformPlayerImpl implements PlatformPlayer {
 
     @Override
     public @NonNull String getNickname() {
-        return playerAdapter.getNickname(rawPlayer);
+        return playerAdapter().getNickname(rawPlayer);
     }
 
     @Override
     public @NonNull String getLocale() {
-        return playerAdapter.getLocale(rawPlayer);
+        return playerAdapter().getLocale(rawPlayer);
     }
 
     @Override
@@ -117,7 +119,7 @@ public class PlatformPlayerImpl implements PlatformPlayer {
         if (version == null) {
             int protocolVersion = getProtocolVersion();
 
-            version = fileFacade.localizationOrDefault(getLocale(), LocalizationType.PLAYER)
+            version = fileFacade().localizationOrDefault(getLocale(), LocalizationType.PLAYER)
                 .message().player().version().java().get(protocolVersion).asString();
         }
 
@@ -135,54 +137,54 @@ public class PlatformPlayerImpl implements PlatformPlayer {
         String edition = floodgateModule().getDisplayEdition(this);
         if (edition != null) return edition;
 
-        return fileFacade.localizationOrDefault(getLocale(), LocalizationType.PLAYER).message().player().edition().java().asString();
+        return fileFacade().localizationOrDefault(getLocale(), LocalizationType.PLAYER).message().player().edition().java().asString();
     }
 
     @Override
     public boolean isOperator() {
-        return playerAdapter.isOperator(rawPlayer);
+        return playerAdapter().isOperator(rawPlayer);
     }
 
     @Override
     public boolean isSneaking() {
-        return playerAdapter.isSneaking(rawPlayer);
+        return playerAdapter().isSneaking(rawPlayer);
     }
 
     @Override
     public boolean isDead() {
-        return playerAdapter.isDead(rawPlayer);
+        return playerAdapter().isDead(rawPlayer);
     }
 
     @Override
     public boolean isOnline() {
-        return playerAdapter.isOnline(rawPlayer);
+        return playerAdapter().isOnline(rawPlayer);
     }
 
     @Override
     public int getPing() {
-        return playerAdapter.getPing(rawPlayer);
+        return playerAdapter().getPing(rawPlayer);
     }
 
     @Override
     public boolean hasPermission(@NonNull String permission) {
         if (luckPermsModule().isEnable()) return luckPermsModule().hasPermission(uuid, permission);
 
-        return playerAdapter.hasPermission(rawPlayer, permission);
+        return playerAdapter().hasPermission(rawPlayer, permission);
     }
 
     @Override
     public @NonNull PlayerGameMode getGamemode() {
-        return playerAdapter.getGamemode(rawPlayer);
+        return playerAdapter().getGamemode(rawPlayer);
     }
 
     @Override
     public @NonNull String getWorldName() {
-        return playerAdapter.getWorldName(rawPlayer);
+        return playerAdapter().getWorldName(rawPlayer);
     }
 
     @Override
     public @NonNull String getWorldEnvironment() {
-        return playerAdapter.getWorldEnvironment(rawPlayer);
+        return playerAdapter().getWorldEnvironment(rawPlayer);
     }
 
     @Override
@@ -193,7 +195,7 @@ public class PlatformPlayerImpl implements PlatformPlayer {
 
     @Override
     public PlatformPlayer executeCommand(@NonNull String command) {
-        playerAdapter.executeCommand(rawPlayer, command);
+        playerAdapter().executeCommand(rawPlayer, command);
         return this;
     }
 
@@ -218,7 +220,7 @@ public class PlatformPlayerImpl implements PlatformPlayer {
     public static @Nullable PlatformPlayer build(@NonNull Object rawPlayer) {
         if (!ZFuctoneAPI.get().playerAdapter().isPlatformPlayer(rawPlayer)) return null;
 
-        UUID uuid = playerAdapter.getUUID(rawPlayer);
+        UUID uuid = playerAdapter().getUUID(rawPlayer);
         if (uuid == null) return null;
 
         User receivedUser = PacketEvents.getAPI().getPlayerManager().getUser(rawPlayer);
