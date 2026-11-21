@@ -106,9 +106,7 @@ public class PlatformPlayerImpl implements PlatformPlayer {
             int protocolVersion = getProtocolVersion();
 
             version = fileFacade.localizationOrDefault(getLocale(), LocalizationType.PLAYER)
-                .message().player().version().java().get(protocolVersion);
-
-            if (version == null) version = user.getClientVersion().getReleaseName();
+                .message().player().version().java().get(protocolVersion).asString();
         }
 
         return version;
@@ -125,7 +123,7 @@ public class PlatformPlayerImpl implements PlatformPlayer {
         String edition = floodgateModule.getDisplayEdition(this);
         if (edition != null) return edition;
 
-        return fileFacade.localizationOrDefault(getLocale(), LocalizationType.PLAYER).message().player().edition().java();
+        return fileFacade.localizationOrDefault(getLocale(), LocalizationType.PLAYER).message().player().edition().java().asString();
     }
 
     @Override

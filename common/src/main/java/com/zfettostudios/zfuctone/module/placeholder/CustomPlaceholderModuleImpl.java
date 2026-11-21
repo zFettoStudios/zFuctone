@@ -85,8 +85,8 @@ public class CustomPlaceholderModuleImpl implements CustomPlaceholderModule {
             try {
                 Localization localization = fileFacade.localizationOrDefault(sender.getLocale(), LocalizationType.PLAYER);
                 String rawValue = localization != null && localization.placeholder().values().containsKey(placeholderKey)
-                    ? localization.placeholder().values().get(placeholderKey)
-                    : valueSetting.value();
+                    ? localization.placeholder().values().get(placeholderKey).asString()
+                    : valueSetting.value().asString();
 
                 return placeholderAPIModule.setPlaceholders(sender, rawValue);
             } finally {

@@ -24,7 +24,7 @@ public abstract class PlatformPlayerQuitListener {
 
         if (!config.quit().enable()) return;
 
-        messageDispatcher.dispatchEveryone(player, localization -> localization.message().quit().format());
+        messageDispatcher.dispatchEveryone(player, localization -> localization.message().quit().format().asString());
 
         playerService.removePlatformPlayer(uuid);
     }

@@ -77,8 +77,8 @@ public class FloodgateModuleImpl extends IntegrationModuleImpl implements Floodg
             LocalizationType.PLAYER).message().player().edition();
 
         return switch (getEdition(player.uuid())) {
-            case JAVA -> localization.java();
-            case BEDROCK -> localization.bedrock();
+            case JAVA -> localization.java().asString();
+            case BEDROCK -> localization.bedrock().asString();
         };
     }
 
@@ -96,7 +96,7 @@ public class FloodgateModuleImpl extends IntegrationModuleImpl implements Floodg
         if (protocol == -1) return null;
 
         return fileFacade().localizationOrDefault(player.getLocale(), LocalizationType.PLAYER)
-            .message().player().version().bedrock().get(protocol);
+            .message().player().version().bedrock().get(protocol).asString();
     }
 
     private boolean isBedrockEdition(UUID uuid) {

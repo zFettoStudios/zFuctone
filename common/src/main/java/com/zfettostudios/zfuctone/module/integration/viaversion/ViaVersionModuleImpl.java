@@ -51,7 +51,7 @@ public class ViaVersionModuleImpl extends IntegrationModuleImpl implements ViaVe
         if (!isEnable()) return null;
 
         return fileFacade().localizationOrDefault(player.getLocale(), LocalizationType.PLAYER)
-            .message().player().version().java().get(getProtocolVersion(player.uuid()));
+            .message().player().version().java().get(getProtocolVersion(player.uuid())).asString();
     }
 
     @Override

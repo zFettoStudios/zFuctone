@@ -19,6 +19,6 @@ public abstract class PlatformPlayerJoinListener {
 
         if (!config.join().enable()) return;
 
-        messageDispatcher.dispatchEveryone(player, localization -> localization.message().join().format());
+        messageDispatcher.dispatchEveryone(player, localization -> localization.message().join().format().asString());
     }
 }
