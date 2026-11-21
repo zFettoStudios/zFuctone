@@ -8,7 +8,7 @@ public abstract class IntegrationModuleImpl {
     }
 
     public boolean isPluginExits() {
-        return ZFuctoneAPI.get().serverAdapter().isProjectExits(getName());
+        return ZFuctoneAPI.get().serverAdapter().isProjectExists(getName());
     }
 
     public abstract String getName();

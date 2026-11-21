@@ -91,7 +91,7 @@ public interface FileFacade extends Reloadable<FileFacade> {
     FileFacade saveFiles();
 
     /**
-     * Обновляет кэш-файлов с диска.
+     * Обновляет кэш файлов с диска.
      *
      * @return текущий экземпляр фасада.
      */
@@ -101,8 +101,8 @@ public interface FileFacade extends Reloadable<FileFacade> {
      * Определяет путь к файлу конфигурации на основе {@link FilePath}.
      *
      * @param config объект конфигурации.
-     * @param dataPath путь папке данных проекта.
-     * @param localizationsPath путь папке локализаций.
+     * @param dataPath путь к папке данных проекта.
+     * @param localizationsPath путь к папке локализаций.
      * @return путь к файлу.
      */
     Path getFilePath(@NonNull Object config, @NonNull Path dataPath, @NonNull Path localizationsPath);

@@ -17,7 +17,7 @@ public interface PlatformServerAdapter {
      * @param name название проекта.
      * @return {@code true}, если проект существует.
      */
-    boolean isProjectExits(@NonNull String name);
+    boolean isProjectExists(@NonNull String name);
 
     /**
      * Запускает задачу на сервере платформы.

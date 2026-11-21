@@ -274,9 +274,8 @@ public class LibraryResolverImpl extends LibraryManager implements LibraryResolv
             .artifactId("zjtime")
             .version(BuildConstant.ZJTIME_VERSION)
             .repository(BuildConstant.JITPACK_REPOSITORY)
-            .resolveTransitiveDependencies(true)
             .relocate(Relocation.builder()
-                .pattern("com{}github{}zfettostudios{}zjtime")
+                .pattern("com{}zfettostudios{}zjtime")
                 .relocatedPattern(BuildConstant.PROJECT_PATH_LIBRARIES + ".zjtime")
                 .build()
             )
@@ -285,6 +284,7 @@ public class LibraryResolverImpl extends LibraryManager implements LibraryResolv
     }
 
     private void resolveRepositories() {
+        addJitPack();
         addRepository(BuildConstant.MAVEN_REPOSITORY);
         addRepository(BuildConstant.CODEMC_REPOSITORY);
         addRepository(BuildConstant.JITPACK_REPOSITORY);

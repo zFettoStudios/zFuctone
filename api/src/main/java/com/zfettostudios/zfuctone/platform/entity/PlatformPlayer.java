@@ -92,7 +92,7 @@ public interface PlatformPlayer extends Audience {
     /**
      * Получает протокол версии игрока, с учетом интеграции с ViaVersion, Floodgate и Geyser.
      *
-     * @return протокол версию игрока.
+     * @return протокол версии игрока.
      */
     int getProtocolVersion();
 

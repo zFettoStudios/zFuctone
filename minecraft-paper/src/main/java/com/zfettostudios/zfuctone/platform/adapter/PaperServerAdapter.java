@@ -16,7 +16,7 @@ public class PaperServerAdapter implements PlatformServerAdapter {
     private final PluginManager pm = Bukkit.getPluginManager();
 
     @Override
-    public boolean isProjectExits(@NonNull String name) {
+    public boolean isProjectExists(@NonNull String name) {
         return Bukkit.getPluginManager().getPlugin(name) != null;
     }
 
