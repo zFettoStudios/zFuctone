@@ -4,11 +4,28 @@ import com.zfettostudios.zfuctone.ZFuctoneAPI;
 import com.zfettostudios.zfuctone.model.config.IntegrationConfig;
 import com.zfettostudios.zfuctone.model.constant.BuildConstant;
 import com.zfettostudios.zfuctone.module.integration.IntegrationHook;
+import com.zfettostudios.zfuctone.placeholder.PlaceholderContext;
+import com.zfettostudios.zfuctone.platform.entity.PlatformPlayer;
+import com.zfettostudios.zfuctone.platform.registry.PlaceholderRegistry;
+import com.zfettostudios.zfuctone.service.PlatformPlayerService;
 import io.github.miniplaceholders.api.Expansion;
+import net.kyori.adventure.audience.Audience;
+import net.kyori.adventure.identity.Identity;
+import net.kyori.adventure.text.minimessage.Context;
+import net.kyori.adventure.text.minimessage.tag.Tag;
+import net.kyori.adventure.text.minimessage.tag.resolver.ArgumentQueue;
+import net.kyori.adventure.text.minimessage.tag.resolver.TagResolver;
+
+import java.util.Map;
+import java.util.Optional;
+import java.util.UUID;
+import java.util.function.Function;
 
 public class PaperMiniPlaceholdersIntegration implements IntegrationHook<PaperMiniPlaceholdersIntegration> {
-    private final IntegrationConfig.MiniPlaceholders config = ZFuctoneAPI.get().fileFacade().integration().miniplaceholders();
+    private final PlaceholderRegistry placeholderRegistry = ZFuctoneAPI.get().placeholderRegistry();
+    private final PlatformPlayerService playerService = ZFuctoneAPI.get().playerService();
 
+    private final IntegrationConfig.MiniPlaceholders config = ZFuctoneAPI.get().fileFacade().integration().miniplaceholders();
     private final Expansion expansion = createExpansion();
 
     @Override
@@ -24,9 +41,28 @@ public class PaperMiniPlaceholdersIntegration implements IntegrationHook<PaperMi
     }
 
     private Expansion createExpansion() {
-        return Expansion.builder(config.identifier())
+        Expansion.Builder builder = Expansion.builder(config.identifier())
             .author(BuildConstant.PROJECT_NAME)
-            .version(BuildConstant.PROJECT_VERSION)
-            .build();
+            .version(BuildConstant.PROJECT_VERSION);
+
+        for (Map<String, Function<PlaceholderContext, String>> modulePlaceholders
+            : placeholderRegistry.getPlaceholders().values()) {
+            for (Map.Entry<String, Function<PlaceholderContext, String>> placeholder : modulePlaceholders.entrySet()) {
+                builder.audiencePlaceholder(placeholder.getKey(), (Audience audience, ArgumentQueue argument, Context context) -> {
+                    Optional<UUID> uuid = audience.get(Identity.UUID);
+                    if (uuid.isEmpty()) return Tag.preProcessParsed("");
+
+                    PlatformPlayer sender = playerService.getPlatformPlayer(uuid.get());
+                    if (sender == null) return Tag.preProcessParsed("");
+
+                    PlaceholderContext placeholderContext = PlaceholderContext.build();
+                    placeholderContext.setSender(sender);
+
+                    return Tag.preProcessParsed(placeholder.getValue().apply(placeholderContext));
+                });
+            }
+        }
+
+        return builder.build();
     }
 }
