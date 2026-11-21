@@ -31,10 +31,6 @@ public class PlatformPlayerImpl implements PlatformPlayer {
     private static final PlatformPlayerAdapter playerAdapter = ZFuctoneAPI.get().playerAdapter();
     private static final FileFacade fileFacade = ZFuctoneAPI.get().fileFacade();
     private static final ModuleController moduleController = ZFuctoneAPI.get().moduleController();
-    private static final FloodgateModule floodgateModule = moduleController.get(FloodgateModule.class);
-    private static final ViaVersionModule viaVersionModule = moduleController.get(ViaVersionModule.class);
-    private static final LuckPermsModule luckPermsModule = moduleController.get(LuckPermsModule.class);
-    private static final GeyserModule geyserModule = moduleController.get(GeyserModule.class);
 
     @Getter
     @Accessors(fluent = true)
@@ -42,6 +38,22 @@ public class PlatformPlayerImpl implements PlatformPlayer {
     @Getter @Setter private String displayNickname;
     @Getter private final Object rawPlayer;
     private final User user;
+
+    public static FloodgateModule floodgateModule() {
+        return moduleController.get(FloodgateModule.class);
+    }
+
+    public static ViaVersionModule viaVersionModule() {
+        return moduleController.get(ViaVersionModule.class);
+    }
+
+    public static LuckPermsModule luckPermsModule() {
+        return moduleController.get(LuckPermsModule.class);
+    }
+
+    public static GeyserModule geyserModule() {
+        return moduleController.get(GeyserModule.class);
+    }
 
     @Override
     public <T> T getRawPlayer(@NonNull Class<T> type) {
@@ -70,8 +82,8 @@ public class PlatformPlayerImpl implements PlatformPlayer {
         int protocol = -1;
 
         switch (getEdition()) {
-            case JAVA -> protocol = viaVersionModule.getProtocolVersion(uuid);
-            case BEDROCK -> protocol = geyserModule.getProtocolVersion(uuid);
+            case JAVA -> protocol = viaVersionModule().getProtocolVersion(uuid);
+            case BEDROCK -> protocol = geyserModule().getProtocolVersion(uuid);
         }
 
         if (protocol == -1) protocol = user.getClientVersion().getProtocolVersion();
@@ -84,8 +96,8 @@ public class PlatformPlayerImpl implements PlatformPlayer {
         String version = null;
 
         switch (getEdition()) {
-            case JAVA -> version = viaVersionModule.getVersion(uuid);
-            case BEDROCK -> version = floodgateModule.getVersion(uuid);
+            case JAVA -> version = viaVersionModule().getVersion(uuid);
+            case BEDROCK -> version = floodgateModule().getVersion(uuid);
         }
 
         if (version == null) version = user.getClientVersion().getReleaseName();
@@ -98,8 +110,8 @@ public class PlatformPlayerImpl implements PlatformPlayer {
         String version = null;
 
         switch (getEdition()) {
-            case JAVA -> version = viaVersionModule.getDisplayVersion(this);
-            case BEDROCK -> version = floodgateModule.getDisplayVersion(this);
+            case JAVA -> version = viaVersionModule().getDisplayVersion(this);
+            case BEDROCK -> version = floodgateModule().getDisplayVersion(this);
         }
 
         if (version == null) {
@@ -114,13 +126,13 @@ public class PlatformPlayerImpl implements PlatformPlayer {
 
     @Override
     public @NonNull PlayerEdition getEdition() {
-        return floodgateModule.getEdition(uuid);
+        return floodgateModule().getEdition(uuid);
 
     }
 
     @Override
     public @NonNull String getDisplayEdition() {
-        String edition = floodgateModule.getDisplayEdition(this);
+        String edition = floodgateModule().getDisplayEdition(this);
         if (edition != null) return edition;
 
         return fileFacade.localizationOrDefault(getLocale(), LocalizationType.PLAYER).message().player().edition().java().asString();
@@ -153,7 +165,7 @@ public class PlatformPlayerImpl implements PlatformPlayer {
 
     @Override
     public boolean hasPermission(@NonNull String permission) {
-        if (luckPermsModule.isEnable()) return luckPermsModule.hasPermission(uuid, permission);
+        if (luckPermsModule().isEnable()) return luckPermsModule().hasPermission(uuid, permission);
 
         return playerAdapter.hasPermission(rawPlayer, permission);
     }

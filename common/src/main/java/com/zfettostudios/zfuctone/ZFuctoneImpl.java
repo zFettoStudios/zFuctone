@@ -80,6 +80,8 @@ public abstract class ZFuctoneImpl implements ZFuctone {
 
     @Override
     public ZFuctone enable() {
+        BuilderProviderImpl.init();
+
         fileFacade.enable();
 
         logger.logEnabling();
@@ -93,8 +95,6 @@ public abstract class ZFuctoneImpl implements ZFuctone {
 
         defaultRegisterModules.registerModules();
         moduleController.enable();
-
-        BuilderProviderImpl.init();
 
         registerListeners();
 
