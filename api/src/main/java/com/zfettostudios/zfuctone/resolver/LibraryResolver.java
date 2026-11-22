@@ -1,5 +1,6 @@
 package com.zfettostudios.zfuctone.resolver;
 
+import com.alessiodp.libby.Library;
 import com.zfettostudios.zfuctone.model.lifecycle.Toggleable;
 
 /**
@@ -9,4 +10,5 @@ import com.zfettostudios.zfuctone.model.lifecycle.Toggleable;
  * @author RandomShel
  */
 public interface LibraryResolver extends Toggleable<LibraryResolver> {
+    LibraryResolver load(Library library);
 }

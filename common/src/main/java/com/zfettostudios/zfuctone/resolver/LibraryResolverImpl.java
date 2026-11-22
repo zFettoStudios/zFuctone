@@ -310,4 +310,9 @@ public class LibraryResolverImpl extends LibraryManager implements LibraryResolv
             "packeteventsmodern-spigot"
         );
     }
+
+    @Override
+    public LibraryResolver load(Library library) {
+        return this;
+    }
 }
