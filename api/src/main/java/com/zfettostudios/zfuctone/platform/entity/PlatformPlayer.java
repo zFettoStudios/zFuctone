@@ -2,9 +2,11 @@ package com.zfettostudios.zfuctone.platform.entity;
 
 import com.zfettostudios.zfuctone.model.constant.minecraft.player.PlayerGameMode;
 import com.zfettostudios.zfuctone.model.constant.minecraft.player.PlayerEdition;
+import com.zfettostudios.zfuctone.provider.FactoryProvider;
 import net.kyori.adventure.audience.Audience;
 import net.kyori.adventure.text.Component;
 import org.jspecify.annotations.NonNull;
+import org.jspecify.annotations.Nullable;
 
 import java.util.UUID;
 
@@ -15,6 +17,26 @@ import java.util.UUID;
  * @author RandomShel
  */
 public interface PlatformPlayer extends Audience {
+
+    /**
+     * Создаёт экземпляр игрока по UUID.
+     *
+     * @param uuid уникальный идентификатор игрока.
+     * @return экземпляр {@link PlatformPlayer} или {@code null}, если игрок не найден.
+     */
+    static @Nullable PlatformPlayer build(@NonNull UUID uuid) {
+        return FactoryProvider.playerFactory().build(uuid);
+    }
+
+    /**
+     * Создаёт экземпляр игрока по объекту платформенного игрока.
+     *
+     * @param rawPlayer объект игрока платформы.
+     * @return экземпляр {@link PlatformPlayer} или {@code null}, если объект не является игроком платформы.
+     */
+    static @Nullable PlatformPlayer build(@NonNull Object rawPlayer) {
+        return FactoryProvider.playerFactory().build(rawPlayer);
+    }
 
     /**
      * Получает объект игрока платформы, приведённый к указанному типу.

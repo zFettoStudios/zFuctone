@@ -1,6 +1,7 @@
 package com.zfettostudios.zfuctone.model.value;
 
 import com.zfettostudios.zfuctone.platform.entity.PlatformPlayer;
+import com.zfettostudios.zfuctone.provider.FactoryProvider;
 import org.jspecify.annotations.NonNull;
 import org.jspecify.annotations.Nullable;
 
@@ -13,6 +14,13 @@ import java.util.Map;
  * @author RandomShel
  */
 public interface PlaceholderContext {
+
+    static @NonNull PlaceholderContext build() {
+        return FactoryProvider.modelFactory().buildPlaceholderContext();
+    }
+    static @NonNull PlaceholderContext build(@NonNull String rawtext) {
+        return FactoryProvider.modelFactory().buildPlaceholderContext(rawtext);
+    }
 
     /**
      * Сохраняет значение по ключу в контексте.

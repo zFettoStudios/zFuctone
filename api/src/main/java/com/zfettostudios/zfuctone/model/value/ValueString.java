@@ -1,5 +1,6 @@
 package com.zfettostudios.zfuctone.model.value;
 
+import com.zfettostudios.zfuctone.provider.FactoryProvider;
 import org.jspecify.annotations.NonNull;
 import org.jspecify.annotations.Nullable;
 
@@ -12,6 +13,16 @@ import java.util.List;
  * @author RandomShel
  */
 public interface ValueString {
+
+    static @NonNull ValueString build() {
+        return FactoryProvider.modelFactory().buildValueString();
+    }
+    static @NonNull ValueString build(@NonNull String string) {
+        return FactoryProvider.modelFactory().buildValueString(string);
+    }
+    static @NonNull ValueString build(@NonNull List<String> list) {
+        return FactoryProvider.modelFactory().buildValueString(list);
+    }
 
     /**
      * Проверяет, представлено ли значение списком строк.

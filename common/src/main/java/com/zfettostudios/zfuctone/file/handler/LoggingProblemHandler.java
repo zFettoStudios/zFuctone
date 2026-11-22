@@ -11,7 +11,7 @@ import tools.jackson.databind.ValueDeserializer;
 import tools.jackson.databind.deser.DeserializationProblemHandler;
 
 public class LoggingProblemHandler extends DeserializationProblemHandler {
-    private final LazyInstance<ZLogger> logger = ZFuctoneProvider.get().utilFactory().buildLazyInstance(() -> ZFuctoneProvider.get().logger());
+    private final LazyInstance<ZLogger> logger =LazyInstance.build(() -> ZFuctoneProvider.get().logger());
 
     @Override
     public Object handleWeirdStringValue(DeserializationContext context, Class<?> type, String value, String failureMessage) {

@@ -1,7 +1,6 @@
 package com.zfettostudios.zfuctone.module.integration.miniplaceholders;
 
 import com.zfettostudios.zfuctone.module.integration.IntegrationHook;
-import com.zfettostudios.zfuctone.provider.FactoryProvider;
 import io.github.miniplaceholders.api.MiniPlaceholders;
 import net.kyori.adventure.text.minimessage.tag.resolver.TagResolver;
 import org.jspecify.annotations.NonNull;
@@ -11,7 +10,7 @@ public class PaperMiniPlaceholdersModule extends MiniPlaceholdersModuleImpl {
 
     public PaperMiniPlaceholdersModule() {
         if (isEnable()) integration = new PaperMiniPlaceholdersIntegration();
-        else integration = FactoryProvider.modelFactory().emptyIntegrationHook();
+        else integration = IntegrationHook.empty();
     }
 
     @Override

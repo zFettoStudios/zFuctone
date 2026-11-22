@@ -1,8 +1,6 @@
 package com.zfettostudios.zfuctone.dispatcher;
 
-import com.zfettostudios.zfuctone.provider.FactoryProvider;
 import com.zfettostudios.zfuctone.provider.ZFuctoneProvider;
-import com.zfettostudios.zfuctone.factory.UtilFactory;
 import com.zfettostudios.zfuctone.file.FileFacade;
 import com.zfettostudios.zfuctone.logging.ZLogger;
 import com.zfettostudios.zfuctone.model.config.localization.Localization;
@@ -21,14 +19,13 @@ import java.util.List;
 import java.util.function.Function;
 
 public class MessageDispatcherImpl implements MessageDispatcher {
-    private final UtilFactory utilFactory = FactoryProvider.utilFactory();
     private final TaskScheduler taskScheduler = ZFuctoneProvider.get().taskScheduler();
     private final ZLogger logger = ZFuctoneProvider.get().logger();
     private final FileFacade fileFacade = ZFuctoneProvider.get().fileFacade();
     private final PlatformPlayerService playerService = ZFuctoneProvider.get().playerService();
-    private final LazyInstance<ModuleController> moduleController = utilFactory.buildLazyInstance(() -> ZFuctoneProvider.get().moduleController());
-    private final LazyInstance<MiniPlaceholdersModule> miniPlaceholders = utilFactory.buildLazyInstance(() -> moduleController.get().get(MiniPlaceholdersModule.class));
-    private final LazyInstance<PlaceholderAPIModule> placeholderAPI = utilFactory.buildLazyInstance(() -> moduleController.get().get(PlaceholderAPIModule.class));
+    private final LazyInstance<ModuleController> moduleController = LazyInstance.build(() -> ZFuctoneProvider.get().moduleController());
+    private final LazyInstance<MiniPlaceholdersModule> miniPlaceholders = LazyInstance.build(() -> moduleController.get().get(MiniPlaceholdersModule.class));
+    private final LazyInstance<PlaceholderAPIModule> placeholderAPI = LazyInstance.build(() -> moduleController.get().get(PlaceholderAPIModule.class));
 
     @Override
     public MessageDispatcher dispatch(@NonNull PlatformPlayer sender,

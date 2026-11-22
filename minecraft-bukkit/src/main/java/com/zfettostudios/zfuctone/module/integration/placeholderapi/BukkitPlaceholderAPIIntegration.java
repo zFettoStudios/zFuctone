@@ -1,6 +1,5 @@
 package com.zfettostudios.zfuctone.module.integration.placeholderapi;
 
-import com.zfettostudios.zfuctone.provider.FactoryProvider;
 import com.zfettostudios.zfuctone.provider.ZFuctoneProvider;
 import com.zfettostudios.zfuctone.model.config.IntegrationConfig;
 import com.zfettostudios.zfuctone.model.constant.BuildConstant;
@@ -69,7 +68,7 @@ public class BukkitPlaceholderAPIIntegration extends PlaceholderExpansion implem
     @Override
     public @Nullable String onPlaceholderRequest(Player player, @NotNull String params) {
         params = params.toLowerCase();
-        PlaceholderContext context = FactoryProvider.modelFactory().buildPlaceholderContext(params);
+        PlaceholderContext context = PlaceholderContext.build(params);
 
         if (player == null) return null;
 

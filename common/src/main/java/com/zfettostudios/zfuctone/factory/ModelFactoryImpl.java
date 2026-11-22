@@ -1,6 +1,5 @@
 package com.zfettostudios.zfuctone.factory;
 
-import com.zfettostudios.zfuctone.provider.ZFuctoneProvider;
 import com.zfettostudios.zfuctone.model.value.PlaceholderContext;
 import com.zfettostudios.zfuctone.model.value.PlaceholderContextImpl;
 import com.zfettostudios.zfuctone.model.value.ValueString;
@@ -13,7 +12,7 @@ import org.jspecify.annotations.NonNull;
 import java.util.List;
 
 public class ModelFactoryImpl implements ModelFactory {
-    private final LazyInstance<IntegrationHook<?>> emptyIntegrationHook = ZFuctoneProvider.get().utilFactory().buildLazyInstance(IntegrationHookEmpty::new);
+    private final LazyInstance<IntegrationHook<?>> emptyIntegrationHook = LazyInstance.build(IntegrationHookEmpty::new);
 
     @Override
     public @NonNull PlaceholderContext buildPlaceholderContext() {

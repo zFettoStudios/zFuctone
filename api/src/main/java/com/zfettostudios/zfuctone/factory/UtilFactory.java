@@ -6,5 +6,5 @@ import org.jspecify.annotations.NonNull;
 import java.util.function.Supplier;
 
 public interface UtilFactory {
-    @NonNull <T> LazyInstance<T> buildLazyInstance(@NonNull Supplier<T> supplier);
+    @NonNull <T> LazyInstance<T> buildLazyInstance(@NonNull Supplier<@NonNull T> supplier);
 }

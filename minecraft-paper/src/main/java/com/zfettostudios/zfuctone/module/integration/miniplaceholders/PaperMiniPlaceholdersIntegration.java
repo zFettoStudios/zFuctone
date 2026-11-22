@@ -1,6 +1,5 @@
 package com.zfettostudios.zfuctone.module.integration.miniplaceholders;
 
-import com.zfettostudios.zfuctone.provider.FactoryProvider;
 import com.zfettostudios.zfuctone.provider.ZFuctoneProvider;
 import com.zfettostudios.zfuctone.model.config.IntegrationConfig;
 import com.zfettostudios.zfuctone.model.constant.BuildConstant;
@@ -55,7 +54,7 @@ public class PaperMiniPlaceholdersIntegration implements IntegrationHook<PaperMi
                     PlatformPlayer sender = playerService.getPlatformPlayer(uuid.get());
                     if (sender == null) return Tag.preProcessParsed("");
 
-                    PlaceholderContext placeholderContext = FactoryProvider.modelFactory().buildPlaceholderContext();
+                    PlaceholderContext placeholderContext = PlaceholderContext.build();
                     placeholderContext.setSender(sender);
 
                     return Tag.preProcessParsed(placeholder.getValue().apply(placeholderContext));

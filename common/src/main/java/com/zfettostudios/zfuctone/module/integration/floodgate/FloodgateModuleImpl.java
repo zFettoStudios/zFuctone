@@ -1,7 +1,6 @@
 package com.zfettostudios.zfuctone.module.integration.floodgate;
 
 import com.zfettostudios.zfuctone.model.config.setting.PermissionSetting;
-import com.zfettostudios.zfuctone.provider.FactoryProvider;
 import com.zfettostudios.zfuctone.provider.ZFuctoneProvider;
 import com.zfettostudios.zfuctone.file.FileFacade;
 import com.zfettostudios.zfuctone.model.config.IntegrationConfig;
@@ -19,7 +18,7 @@ import org.jspecify.annotations.Nullable;
 import java.util.UUID;
 
 public class FloodgateModuleImpl extends IntegrationModuleImpl<FloodgateModule> implements FloodgateModule {
-    private final LazyInstance<GeyserModule> geyser = FactoryProvider.utilFactory().buildLazyInstance(() -> ZFuctoneProvider.get().moduleController().get(GeyserModule.class));
+    private final LazyInstance<GeyserModule> geyser = LazyInstance.build(() -> ZFuctoneProvider.get().moduleController().get(GeyserModule.class));
     private final FileFacade fileFacade = ZFuctoneProvider.get().fileFacade();
 
     @Override
