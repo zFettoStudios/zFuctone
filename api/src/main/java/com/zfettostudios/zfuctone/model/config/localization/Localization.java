@@ -5,7 +5,6 @@ import lombok.Setter;
 import lombok.experimental.Accessors;
 
 import com.zfettostudios.zfuctone.model.value.ValueString;
-import com.zfettostudios.zfuctone.provider.FactoryProvider;
 
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
@@ -35,8 +34,8 @@ public class Localization {
             @Getter
             @Setter
             public static class Edition {
-                private ValueString java = FactoryProvider.modelFactory().buildValueString("Java");
-                private ValueString bedrock = FactoryProvider.modelFactory().buildValueString("Bedrock");
+                private ValueString java = ValueString.build("Java");
+                private ValueString bedrock = ValueString.build("Bedrock");
             }
 
             @Getter
