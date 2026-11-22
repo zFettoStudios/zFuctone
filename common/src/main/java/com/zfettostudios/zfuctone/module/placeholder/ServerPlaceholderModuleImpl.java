@@ -1,27 +1,21 @@
 package com.zfettostudios.zfuctone.module.placeholder;
 
 import com.github.retrooper.packetevents.PacketEvents;
-import com.zfettostudios.zfuctone.ZFuctoneAPI;
-import com.zfettostudios.zfuctone.file.FileFacade;
-import com.zfettostudios.zfuctone.model.config.PermissionConfig;
-import com.zfettostudios.zfuctone.model.config.PlaceholderConfig;
+import com.zfettostudios.zfuctone.provider.ZFuctoneProvider;
 import com.zfettostudios.zfuctone.model.config.setting.PermissionSetting;
 import com.zfettostudios.zfuctone.model.config.setting.PlaceholderSetting;
 import com.zfettostudios.zfuctone.model.value.PlaceholderContext;
 import com.zfettostudios.zfuctone.platform.adapter.PlatformServerAdapter;
 import com.zfettostudios.zfuctone.platform.registry.PermissionRegistry;
 import com.zfettostudios.zfuctone.platform.registry.PlaceholderRegistry;
+import org.jspecify.annotations.NonNull;
 
 import java.util.function.Function;
 
-public class ServerPlaceholderModuleImpl implements ServerPlaceholderModule {
-    private final PlaceholderRegistry placeholderRegistry = ZFuctoneAPI.get().placeholderRegistry();
-    private final PermissionRegistry permissionRegistry = ZFuctoneAPI.get().permissionRegistry();
-    private final FileFacade fileFacade = ZFuctoneAPI.get().fileFacade();
-    private final PlatformServerAdapter serverAdapter = ZFuctoneAPI.get().serverAdapter();
-
-    private final PlaceholderConfig.Standard config = fileFacade.placeholder().standard();
-    private final PermissionConfig.Placeholder.Standard permissionConfig = fileFacade.permission().placeholder().standard();
+public class ServerPlaceholderModuleImpl extends StandardPlaceholderModule<ServerPlaceholderModule> implements ServerPlaceholderModule {
+    private final PlaceholderRegistry placeholderRegistry = ZFuctoneProvider.get().placeholderRegistry();
+    private final PermissionRegistry permissionRegistry = ZFuctoneProvider.get().permissionRegistry();
+    private final PlatformServerAdapter serverAdapter = ZFuctoneProvider.get().serverAdapter();
 
     @Override
     public ServerPlaceholderModule reload() {
@@ -30,15 +24,15 @@ public class ServerPlaceholderModuleImpl implements ServerPlaceholderModule {
 
     @Override
     public ServerPlaceholderModule enable() {
-        if (!config.enable()) return this;
+        if (!config().enable()) return this;
 
-        register(config.serverType(), permissionConfig.serverTypeUse(), _ -> ZFuctoneAPI.get().getPlatformType().name());
-        register(config.serverVersion(), permissionConfig.serverVersionUse(), _ -> PacketEvents.getAPI().getServerManager().getVersion().getReleaseName());
-        register(config.serverPlayersOnline(), permissionConfig.serverPlayersOnlineUse(), _ -> String.valueOf(serverAdapter.getPlayersOnline()));
-        register(config.serverPlayersMax(), permissionConfig.serverPlayersMaxUse(), _ -> String.valueOf(serverAdapter.getPlayersMax()));
-        register(config.serverTps1(), permissionConfig.serverTps1Use(), _ -> String.valueOf(serverAdapter.getTPS()[0]));
-        register(config.serverTps5(), permissionConfig.serverTps5Use(), _ -> String.valueOf(serverAdapter.getTPS()[1]));
-        register(config.serverTps15(), permissionConfig.serverTps15Use(), _ -> String.valueOf(serverAdapter.getTPS()[2]));
+        register(config().serverType(), permission().serverTypeUse(), _ -> ZFuctoneProvider.get().getPlatformType().name());
+        register(config().serverVersion(), permission().serverVersionUse(), _ -> PacketEvents.getAPI().getServerManager().getVersion().getReleaseName());
+        register(config().serverPlayersOnline(), permission().serverPlayersOnlineUse(), _ -> String.valueOf(serverAdapter.getPlayersOnline()));
+        register(config().serverPlayersMax(), permission().serverPlayersMaxUse(), _ -> String.valueOf(serverAdapter.getPlayersMax()));
+        register(config().serverTps1(), permission().serverTps1Use(), _ -> String.valueOf(serverAdapter.getTPS()[0]));
+        register(config().serverTps5(), permission().serverTps5Use(), _ -> String.valueOf(serverAdapter.getTPS()[1]));
+        register(config().serverTps15(), permission().serverTps15Use(), _ -> String.valueOf(serverAdapter.getTPS()[2]));
 
         return this;
     }
@@ -52,7 +46,7 @@ public class ServerPlaceholderModuleImpl implements ServerPlaceholderModule {
     }
 
     @Override
-    public ServerPlaceholderModule get() {
+    public @NonNull ServerPlaceholderModule get() {
         return this;
     }
 

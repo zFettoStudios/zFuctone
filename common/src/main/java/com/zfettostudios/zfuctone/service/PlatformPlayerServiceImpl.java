@@ -1,6 +1,6 @@
 package com.zfettostudios.zfuctone.service;
 
-import com.zfettostudios.zfuctone.ZFuctoneAPI;
+import com.zfettostudios.zfuctone.provider.ZFuctoneProvider;
 import com.zfettostudios.zfuctone.platform.adapter.PlatformPlayerAdapter;
 import com.zfettostudios.zfuctone.platform.entity.PlatformPlayer;
 import org.jspecify.annotations.NonNull;
@@ -14,7 +14,7 @@ import java.util.concurrent.ConcurrentHashMap;
 
 public class PlatformPlayerServiceImpl implements PlatformPlayerService {
     private final Map<UUID, PlatformPlayer> platformPlayers = new ConcurrentHashMap<>();
-    private final PlatformPlayerAdapter playerAdapter = ZFuctoneAPI.get().playerAdapter();
+    private final PlatformPlayerAdapter playerAdapter = ZFuctoneProvider.get().playerAdapter();
 
     @Override
     public PlatformPlayerService enable() {

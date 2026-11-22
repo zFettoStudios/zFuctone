@@ -13,7 +13,7 @@ import com.zfettostudios.zfuctone.model.constant.minecraft.world.SoundCategory;
 @NoArgsConstructor
 @AllArgsConstructor
 @Accessors(fluent = true)
-public class SoundSetting {
+public class SoundSetting implements EnableSetting {
     private Boolean enable = false;
     private Float volume;
     private Float pitch;

@@ -1,7 +1,6 @@
 package com.zfettostudios.zfuctone.model.value;
 
 import com.zfettostudios.zfuctone.platform.entity.PlatformPlayer;
-import com.zfettostudios.zfuctone.provider.BuilderProvider;
 import org.jspecify.annotations.NonNull;
 import org.jspecify.annotations.Nullable;
 
@@ -14,25 +13,6 @@ import java.util.Map;
  * @author RandomShel
  */
 public interface PlaceholderContext {
-
-    /**
-     * Создаёт пустой контекст плейсхолдеров.
-     *
-     * @return новый контекст плейсхолдеров.
-     */
-    static @NonNull PlaceholderContext build() {
-        return BuilderProvider.buildPlaceholderContext();
-    }
-
-    /**
-     * Создаёт контекст плейсхолдеров на основе сырого текста.
-     *
-     * @param rawtext сырой текст с плейсхолдерами.
-     * @return новый контекст плейсхолдеров.
-     */
-    static @NonNull PlaceholderContext build(@NonNull String rawtext) {
-        return BuilderProvider.buildPlaceholderContextFromRawText(rawtext);
-    }
 
     /**
      * Сохраняет значение по ключу в контексте.

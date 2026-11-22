@@ -1,6 +1,7 @@
 package com.zfettostudios.zfuctone.module.integration.miniplaceholders;
 
-import com.zfettostudios.zfuctone.ZFuctoneAPI;
+import com.zfettostudios.zfuctone.provider.FactoryProvider;
+import com.zfettostudios.zfuctone.provider.ZFuctoneProvider;
 import com.zfettostudios.zfuctone.model.config.IntegrationConfig;
 import com.zfettostudios.zfuctone.model.constant.BuildConstant;
 import com.zfettostudios.zfuctone.module.integration.IntegrationHook;
@@ -21,10 +22,10 @@ import java.util.UUID;
 import java.util.function.Function;
 
 public class PaperMiniPlaceholdersIntegration implements IntegrationHook<PaperMiniPlaceholdersIntegration> {
-    private final PlaceholderRegistry placeholderRegistry = ZFuctoneAPI.get().placeholderRegistry();
-    private final PlatformPlayerService playerService = ZFuctoneAPI.get().playerService();
+    private final PlaceholderRegistry placeholderRegistry = ZFuctoneProvider.get().placeholderRegistry();
+    private final PlatformPlayerService playerService = ZFuctoneProvider.get().playerService();
 
-    private final IntegrationConfig.MiniPlaceholders config = ZFuctoneAPI.get().fileFacade().integration().miniplaceholders();
+    private final IntegrationConfig.MiniPlaceholders config = ZFuctoneProvider.get().fileFacade().integration().miniplaceholders();
     private final Expansion expansion = createExpansion();
 
     @Override
@@ -54,7 +55,7 @@ public class PaperMiniPlaceholdersIntegration implements IntegrationHook<PaperMi
                     PlatformPlayer sender = playerService.getPlatformPlayer(uuid.get());
                     if (sender == null) return Tag.preProcessParsed("");
 
-                    PlaceholderContext placeholderContext = PlaceholderContext.build();
+                    PlaceholderContext placeholderContext = FactoryProvider.modelFactory().buildPlaceholderContext();
                     placeholderContext.setSender(sender);
 
                     return Tag.preProcessParsed(placeholder.getValue().apply(placeholderContext));

@@ -1,6 +1,6 @@
 package com.zfettostudios.zfuctone.file.deserializer;
 
-import com.zfettostudios.zfuctone.ZFuctoneAPI;
+import com.zfettostudios.zfuctone.provider.ZFuctoneProvider;
 import com.zfettostudios.zfuctone.logging.ZLogger;
 import tools.jackson.core.JsonParser;
 import tools.jackson.core.JsonToken;
@@ -9,7 +9,7 @@ import tools.jackson.databind.ValueDeserializer;
 
 public class BooleanDeserializer extends ValueDeserializer<Boolean> {
     private ZLogger logger() {
-        return ZFuctoneAPI.get().logger();
+        return ZFuctoneProvider.get().logger();
     }
 
     @Override

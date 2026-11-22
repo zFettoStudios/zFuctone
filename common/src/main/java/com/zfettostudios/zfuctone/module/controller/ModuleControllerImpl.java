@@ -4,7 +4,7 @@ import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.experimental.Accessors;
 
-import com.zfettostudios.zfuctone.ZFuctoneAPI;
+import com.zfettostudios.zfuctone.provider.ZFuctoneProvider;
 import com.zfettostudios.zfuctone.model.lifecycle.Reloadable;
 import com.zfettostudios.zfuctone.module.Module;
 import com.zfettostudios.zfuctone.scheduler.TaskScheduler;
@@ -19,7 +19,7 @@ import java.util.function.Consumer;
 @Accessors(fluent = true)
 public class ModuleControllerImpl implements ModuleController {
     @Getter(AccessLevel.NONE)
-    private final TaskScheduler taskScheduler = ZFuctoneAPI.get().taskScheduler();
+    private final TaskScheduler taskScheduler = ZFuctoneProvider.get().taskScheduler();
 
     private final Map<Class<? extends Module<?>>, Module<?>> modules = new ConcurrentHashMap<>();
 

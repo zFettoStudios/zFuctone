@@ -1,7 +1,7 @@
 package com.zfettostudios.zfuctone;
 
-import com.zfettostudios.zfuctone.def.BukkitDefaultRegisterModules;
-import com.zfettostudios.zfuctone.def.DefaultRegisterModules;
+import lombok.RequiredArgsConstructor;
+
 import com.zfettostudios.zfuctone.exception.InvalidTypeException;
 import com.zfettostudios.zfuctone.listener.BukkitPlayerJoinListener;
 import com.zfettostudios.zfuctone.listener.BukkitPlayerQuitListener;
@@ -16,12 +16,15 @@ import com.zfettostudios.zfuctone.platform.adapter.BukkitPlayerAdapter;
 import com.zfettostudios.zfuctone.platform.adapter.PaperServerAdapter;
 import com.zfettostudios.zfuctone.platform.adapter.PlatformPlayerAdapter;
 import com.zfettostudios.zfuctone.platform.adapter.PlatformServerAdapter;
+import com.zfettostudios.zfuctone.platform.registry.BukkitPermissionRegistry;
+import com.zfettostudios.zfuctone.platform.registry.PermissionRegistry;
 import com.zfettostudios.zfuctone.resolver.LibraryResolver;
 import com.zfettostudios.zfuctone.resolver.ReflectionResolver;
 import org.bukkit.Bukkit;
 import org.bukkit.event.HandlerList;
 import org.bukkit.event.Listener;
 import org.bukkit.plugin.PluginManager;
+import org.bukkit.plugin.java.JavaPlugin;
 import org.jspecify.annotations.NonNull;
 
 import java.nio.file.Path;
@@ -54,16 +57,6 @@ public class BukkitZFuctone extends ZFuctoneImpl {
     @Override
     protected Path getDataPath() {
         return loader.getDataFolder().toPath();
-    }
-
-    @Override
-    protected PlatformPlayerAdapter createPlayerAdapter() {
-        return new BukkitPlayerAdapter();
-    }
-
-    @Override
-    protected PlatformServerAdapter createServerAdapter() {
-        return new PaperServerAdapter(loader);
     }
 
     @Override
@@ -100,7 +93,37 @@ public class BukkitZFuctone extends ZFuctoneImpl {
     }
 
     @Override
-    protected DefaultRegisterModules createDefaultRegisterModules() {
-        return new BukkitDefaultRegisterModules();
+    protected Builder builder() {
+        return new BuilderImpl(loader);
+    }
+
+    @RequiredArgsConstructor
+    private static class BuilderImpl extends Builder {
+        private final JavaPlugin loader;
+
+        @Override
+        protected PermissionRegistry buildPermissionRegistry() {
+            return new BukkitPermissionRegistry();
+        }
+
+        @Override
+        protected PlatformPlayerAdapter buildPlayerAdapter() {
+            return new BukkitPlayerAdapter();
+        }
+
+        @Override
+        protected PlatformServerAdapter buildServerAdapter() {
+            return new PaperServerAdapter(loader);
+        }
+
+        @Override
+        protected MiniPlaceholdersModule buildMiniPlaceholdersModule() {
+            return new PaperMiniPlaceholdersModule();
+        }
+
+        @Override
+        protected PlaceholderAPIModule buildPlaceholderAPIModule() {
+            return new BukkitPlaceholderAPIModule();
+        }
     }
 }

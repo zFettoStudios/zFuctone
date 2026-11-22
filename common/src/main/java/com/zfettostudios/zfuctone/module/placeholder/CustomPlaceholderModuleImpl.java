@@ -1,6 +1,7 @@
 package com.zfettostudios.zfuctone.module.placeholder;
 
-import com.zfettostudios.zfuctone.ZFuctoneAPI;
+import com.zfettostudios.zfuctone.module.SimpleModule;
+import com.zfettostudios.zfuctone.provider.ZFuctoneProvider;
 import com.zfettostudios.zfuctone.file.FileFacade;
 import com.zfettostudios.zfuctone.logging.ZLogger;
 import com.zfettostudios.zfuctone.model.config.PermissionConfig;
@@ -14,6 +15,7 @@ import com.zfettostudios.zfuctone.model.value.PlaceholderContext;
 import com.zfettostudios.zfuctone.platform.entity.PlatformPlayer;
 import com.zfettostudios.zfuctone.platform.registry.PermissionRegistry;
 import com.zfettostudios.zfuctone.platform.registry.PlaceholderRegistry;
+import org.jspecify.annotations.NonNull;
 import org.jspecify.annotations.Nullable;
 
 import java.util.LinkedHashSet;
@@ -22,18 +24,15 @@ import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.function.Function;
 
-public class CustomPlaceholderModuleImpl implements CustomPlaceholderModule {
+public class CustomPlaceholderModuleImpl extends SimpleModule<CustomPlaceholderModule> implements CustomPlaceholderModule {
     private static final ThreadLocal<Set<String>> RESOLVING = ThreadLocal.withInitial(LinkedHashSet::new);
     private static final Set<String> REPORTED_CYCLES = ConcurrentHashMap.newKeySet();
 
-    private final PlaceholderRegistry placeholderRegistry = ZFuctoneAPI.get().placeholderRegistry();
-    private final PermissionRegistry permissionRegistry = ZFuctoneAPI.get().permissionRegistry();
-    private final FileFacade fileFacade = ZFuctoneAPI.get().fileFacade();
-    private final ZLogger logger = ZFuctoneAPI.get().logger();
-    private final PlaceholderAPIModule placeholderAPIModule = ZFuctoneAPI.get().moduleController().get(PlaceholderAPIModule.class);
-
-    private final PlaceholderConfig config = fileFacade.placeholder();
-    private final PermissionConfig.Placeholder permissionConfig = fileFacade.permission().placeholder();
+    private final PlaceholderRegistry placeholderRegistry = ZFuctoneProvider.get().placeholderRegistry();
+    private final PermissionRegistry permissionRegistry = ZFuctoneProvider.get().permissionRegistry();
+    private final FileFacade fileFacade = ZFuctoneProvider.get().fileFacade();
+    private final ZLogger logger = ZFuctoneProvider.get().logger();
+    private final PlaceholderAPIModule placeholderAPIModule = ZFuctoneProvider.get().moduleController().get(PlaceholderAPIModule.class);
 
     @Override
     public CustomPlaceholderModule reload() {
@@ -42,14 +41,14 @@ public class CustomPlaceholderModuleImpl implements CustomPlaceholderModule {
 
     @Override
     public CustomPlaceholderModule enable() {
-        if (!config.enable()) return this;
+        if (!config().enable()) return this;
 
-        for (Map.Entry<String, PlaceholderValueSetting> entry : config.values().entrySet()) {
+        for (Map.Entry<String, PlaceholderValueSetting> entry : config().values().entrySet()) {
             String placeholderKey = entry.getKey();
             PlaceholderValueSetting valueSetting = entry.getValue();
             if (!valueSetting.enable()) continue;
 
-            PermissionSetting permission = permissionConfig.values().get(placeholderKey);
+            PermissionSetting permission = permission().values().get(placeholderKey);
             register(placeholderKey, permission, createHandler(placeholderKey, valueSetting));
         }
 
@@ -65,8 +64,18 @@ public class CustomPlaceholderModuleImpl implements CustomPlaceholderModule {
     }
 
     @Override
-    public CustomPlaceholderModule get() {
+    public @NonNull CustomPlaceholderModule get() {
         return this;
+    }
+
+    @Override
+    public @NonNull PlaceholderConfig config() {
+        return fileFacade.placeholder();
+    }
+
+    @Override
+    public PermissionConfig.@NonNull Placeholder permission() {
+        return fileFacade.permission().placeholder();
     }
 
     private Function<PlaceholderContext, String> createHandler(String placeholderKey, PlaceholderValueSetting valueSetting) {

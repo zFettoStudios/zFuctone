@@ -5,6 +5,7 @@ import lombok.Setter;
 import lombok.experimental.Accessors;
 
 import com.zfettostudios.zfuctone.annotation.config.FilePath;
+import com.zfettostudios.zfuctone.model.config.setting.EnableSetting;
 import com.zfettostudios.zfuctone.model.config.setting.TimeSetting;
 import com.zfettostudios.zfuctone.model.constant.BuildConstant;
 import com.zfettostudios.zfuctone.model.constant.DatabaseType;
@@ -101,7 +102,7 @@ public class Config {
 
         @Getter
         @Setter
-        public static class Redis {
+        public static class Redis implements EnableSetting {
             private Boolean enable = false;
             private String host = "127.0.0.1";
             private Integer port = 6379;
@@ -113,7 +114,7 @@ public class Config {
 
     @Getter
     @Setter
-    public static class Internal {
+    public static class Internal implements EnableSetting {
         private Boolean enable = true;
         private Boolean unregisterCommandOnReload = false;
         private final Set<String> vanillaCommandsToRemove = new CopyOnWriteArraySet<>();
@@ -148,7 +149,7 @@ public class Config {
 
     @Getter
     @Setter
-    public static class Metrics {
+    public static class Metrics implements EnableSetting {
         private Boolean enable = true;
     }
 }

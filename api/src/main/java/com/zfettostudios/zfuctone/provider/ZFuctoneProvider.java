@@ -1,12 +1,15 @@
-package com.zfettostudios.zfuctone;
+package com.zfettostudios.zfuctone.provider;
+
+import com.zfettostudios.zfuctone.ZFuctone;
+import org.jspecify.annotations.NonNull;
 
 /**
- * Точка доступа к активному экземпляру {@link ZFuctone}.
+ * Поставщик экземпляра {@link ZFuctone}.
  *
  * @since 0.1
  * @author RandomShel
  */
-public abstract class ZFuctoneAPI {
+public abstract class ZFuctoneProvider {
 
     /**
      * Текущий инициализированный экземпляр проекта.
@@ -18,7 +21,7 @@ public abstract class ZFuctoneAPI {
      *
      * @return экземпляр проекта или {@code null}, если он ещё не инициализирован.
      */
-    public static ZFuctone get() {
+    public static @NonNull ZFuctone get() {
         return instance;
     }
 

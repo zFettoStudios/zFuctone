@@ -5,6 +5,7 @@ import lombok.Setter;
 import lombok.experimental.Accessors;
 
 import com.zfettostudios.zfuctone.annotation.config.FilePath;
+import com.zfettostudios.zfuctone.model.config.setting.EnableSetting;
 import com.zfettostudios.zfuctone.model.config.setting.PlaceholderSetting;
 import com.zfettostudios.zfuctone.model.config.setting.PlaceholderValueSetting;
 
@@ -15,14 +16,14 @@ import java.util.concurrent.ConcurrentHashMap;
 @Setter
 @Accessors(fluent = true)
 @FilePath(path = "placeholder.yml")
-public class PlaceholderConfig {
+public class PlaceholderConfig implements EnableSetting {
     private Boolean enable = true;
     private final Map<String, PlaceholderValueSetting> values = new ConcurrentHashMap<>();
     private final Standard standard = new Standard();
 
     @Getter
     @Setter
-    public static class Standard {
+    public static class Standard implements EnableSetting {
         private Boolean enable = true;
 
         private final PlaceholderSetting projectAuthors = new PlaceholderSetting("project_authors");

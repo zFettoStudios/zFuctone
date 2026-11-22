@@ -1,6 +1,5 @@
 package com.zfettostudios.zfuctone.model.value;
 
-import com.zfettostudios.zfuctone.provider.BuilderProvider;
 import org.jspecify.annotations.NonNull;
 import org.jspecify.annotations.Nullable;
 
@@ -13,35 +12,6 @@ import java.util.List;
  * @author RandomShel
  */
 public interface ValueString {
-
-    /**
-     * Создаёт пустой экземпляр {@link ValueString}.
-     *
-     * @return новый экземпляр {@link ValueString}
-     */
-    static @NonNull ValueString build() {
-        return BuilderProvider.buildValueString();
-    }
-
-    /**
-     * Создаёт {@link ValueString} на основе одиночной строки.
-     *
-     * @param string исходная строка
-     * @return новый экземпляр {@link ValueString}
-     */
-    static @NonNull ValueString build(@NonNull String string) {
-        return BuilderProvider.buildValueStringFromString(string);
-    }
-
-    /**
-     * Создаёт {@link ValueString} на основе списка строк.
-     *
-     * @param list исходный список строк
-     * @return новый экземпляр {@link ValueString}
-     */
-    static @NonNull ValueString build(@NonNull List<String> list) {
-        return BuilderProvider.buildValueStringFromList(list);
-    }
 
     /**
      * Проверяет, представлено ли значение списком строк.

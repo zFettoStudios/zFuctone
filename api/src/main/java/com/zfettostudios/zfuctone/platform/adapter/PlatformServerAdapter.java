@@ -54,21 +54,4 @@ public interface PlatformServerAdapter {
      * @return {@code true}, если текущий поток основной.
      */
     boolean isPrimaryThread();
-
-    /**
-     * Регистрирует право на сервере платформы.
-     *
-     * @param permission регистрируемое право.
-     * @param type тип права.
-     * @return текущий экземпляр адаптера.
-     */
-    PlatformServerAdapter registerPermission(@NonNull String permission, @NonNull PermissionType type);
-
-    /**
-     * Снимает регистрацию права с сервера платформы.
-     *
-     * @param permission удаляемое право.
-     * @return текущий экземпляр адаптера.
-     */
-    PlatformServerAdapter unregisterPermission(@NonNull String permission);
 }

@@ -1,7 +1,8 @@
 package com.zfettostudios.zfuctone.module.integration.viaversion;
 
 import com.viaversion.viaversion.api.Via;
-import com.zfettostudios.zfuctone.ZFuctoneAPI;
+import com.zfettostudios.zfuctone.model.config.setting.PermissionSetting;
+import com.zfettostudios.zfuctone.provider.ZFuctoneProvider;
 import com.zfettostudios.zfuctone.file.FileFacade;
 import com.zfettostudios.zfuctone.model.config.IntegrationConfig;
 import com.zfettostudios.zfuctone.model.constant.LocalizationType;
@@ -12,21 +13,25 @@ import org.jspecify.annotations.Nullable;
 
 import java.util.UUID;
 
-public class ViaVersionModuleImpl extends IntegrationModuleImpl implements ViaVersionModule {
-    private IntegrationConfig.ViaVersion config() {
-        return ZFuctoneAPI.get().fileFacade().integration().viaversion();
-    }
-
-    private FileFacade fileFacade() {
-        return ZFuctoneAPI.get().fileFacade();
-    }
+public class ViaVersionModuleImpl extends IntegrationModuleImpl<ViaVersionModule> implements ViaVersionModule {
+    private final FileFacade fileFacade = ZFuctoneProvider.get().fileFacade();
 
     public boolean isEnable() {
         return isEnable(config().enable());
     }
 
     @Override
-    public ViaVersionModule get() {
+    public IntegrationConfig.@NonNull ViaVersion config() {
+        return fileFacade.integration().viaversion();
+    }
+
+    @Override
+    public @NonNull PermissionSetting permission() {
+        return fileFacade.permission().integration().viaversion();
+    }
+
+    @Override
+    public @NonNull ViaVersionModule get() {
         return this;
     }
 
@@ -50,7 +55,7 @@ public class ViaVersionModuleImpl extends IntegrationModuleImpl implements ViaVe
     public @Nullable String getDisplayVersion(@NonNull PlatformPlayer player) {
         if (!isEnable()) return null;
 
-        return fileFacade().localizationOrDefault(player.getLocale(), LocalizationType.PLAYER)
+        return fileFacade.localizationOrDefault(player.getLocale(), LocalizationType.PLAYER)
             .message().player().version().java().get(getProtocolVersion(player.uuid())).asString();
     }
 

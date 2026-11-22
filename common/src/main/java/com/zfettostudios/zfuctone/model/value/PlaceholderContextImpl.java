@@ -7,13 +7,13 @@ import com.zfettostudios.zfuctone.platform.entity.PlatformPlayer;
 import org.jspecify.annotations.NonNull;
 import org.jspecify.annotations.Nullable;
 
-import java.util.LinkedHashMap;
 import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
 
 @Getter
 @NoArgsConstructor
 public class PlaceholderContextImpl implements PlaceholderContext {
-    private final Map<String, Object> rawContext = new LinkedHashMap<>();
+    private final Map<String, Object> rawContext = new ConcurrentHashMap<>();
     private PlatformPlayer sender;
     private String rawText;
 

@@ -1,6 +1,7 @@
 package com.zfettostudios.zfuctone.module.integration.placeholderapi;
 
-import com.zfettostudios.zfuctone.ZFuctoneAPI;
+import com.zfettostudios.zfuctone.provider.FactoryProvider;
+import com.zfettostudios.zfuctone.provider.ZFuctoneProvider;
 import com.zfettostudios.zfuctone.model.config.IntegrationConfig;
 import com.zfettostudios.zfuctone.model.constant.BuildConstant;
 import com.zfettostudios.zfuctone.model.value.PlaceholderContext;
@@ -20,10 +21,10 @@ import java.util.Map;
 import java.util.function.Function;
 
 public class BukkitPlaceholderAPIIntegration extends PlaceholderExpansion implements IntegrationHook<BukkitPlaceholderAPIIntegration> {
-    private final PlaceholderRegistry placeholderRegistry = ZFuctoneAPI.get().placeholderRegistry();
-    private final PlatformPlayerService playerService = ZFuctoneAPI.get().playerService();
+    private final PlaceholderRegistry placeholderRegistry = ZFuctoneProvider.get().placeholderRegistry();
+    private final PlatformPlayerService playerService = ZFuctoneProvider.get().playerService();
 
-    private final IntegrationConfig.PlaceholderAPI config = ZFuctoneAPI.get().fileFacade().integration().placeholderapi();
+    private final IntegrationConfig.PlaceholderAPI config = ZFuctoneProvider.get().fileFacade().integration().placeholderapi();
     private String identifier;
 
     @Override
@@ -68,12 +69,14 @@ public class BukkitPlaceholderAPIIntegration extends PlaceholderExpansion implem
     @Override
     public @Nullable String onPlaceholderRequest(Player player, @NotNull String params) {
         params = params.toLowerCase();
-        PlaceholderContext context = PlaceholderContext.build(params);
+        PlaceholderContext context = FactoryProvider.modelFactory().buildPlaceholderContext(params);
 
-        if (player != null) {
-            PlatformPlayer platformPlayer = playerService.getPlatformPlayer(player.getUniqueId());
-            if (platformPlayer != null) context.setSender(platformPlayer);
-        }
+        if (player == null) return null;
+
+        PlatformPlayer platformPlayer = playerService.getPlatformPlayer(player.getUniqueId());
+        if (platformPlayer == null) return null;
+
+        context.setSender(platformPlayer);
 
         for (Map<String, Function<PlaceholderContext, String>> modulePlaceholders : placeholderRegistry.getPlaceholders().values()) {
             for (Map.Entry<String, Function<PlaceholderContext, String>> entry : modulePlaceholders.entrySet())

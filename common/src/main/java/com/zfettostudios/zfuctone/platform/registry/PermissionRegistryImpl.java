@@ -2,9 +2,7 @@ package com.zfettostudios.zfuctone.platform.registry;
 
 import lombok.Getter;
 
-import com.zfettostudios.zfuctone.ZFuctoneAPI;
 import com.zfettostudios.zfuctone.model.constant.minecraft.world.PermissionType;
-import com.zfettostudios.zfuctone.platform.adapter.PlatformServerAdapter;
 import org.jspecify.annotations.NonNull;
 import org.jspecify.annotations.Nullable;
 
@@ -13,17 +11,16 @@ import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.CopyOnWriteArraySet;
 
-public class PermissionRegistryImpl implements PermissionRegistry {
-    private final PlatformServerAdapter serverAdapter = ZFuctoneAPI.get().serverAdapter();
-    @Getter
-    private final Map<Class<?>, Set<String>> permissions = new ConcurrentHashMap<>();
+@Getter
+public abstract class PermissionRegistryImpl implements PermissionRegistry {
+    protected final Map<Class<?>, Set<String>> permissions = new ConcurrentHashMap<>();
 
     @Override
     public PermissionRegistry register(@NonNull Class<?> moduleClass, @NonNull String permission, @NonNull PermissionType type) {
         Set<String> modulePermissions = permissions.get(moduleClass);
         if (modulePermissions == null) modulePermissions = new CopyOnWriteArraySet<>();
 
-        serverAdapter.registerPermission(permission, type);
+        registerPermission(permission, type);
         modulePermissions.add(permission);
 
         return this;
@@ -33,7 +30,7 @@ public class PermissionRegistryImpl implements PermissionRegistry {
     public PermissionRegistry unregister(@NonNull String permission) {
         if (permissions.isEmpty()) return this;
 
-        serverAdapter.unregisterPermission(permission);
+        unregisterPermission(permission);
 
         permissions.values().forEach(modulePermissions -> modulePermissions.remove(permission));
 
@@ -45,7 +42,7 @@ public class PermissionRegistryImpl implements PermissionRegistry {
         Set<String> modulePermissions = permissions.get(moduleClass);
         if (modulePermissions == null) return this;
 
-        serverAdapter.unregisterPermission(permission);
+        unregisterPermission(permission);
         modulePermissions.remove(permission);
 
         return this;
@@ -56,7 +53,7 @@ public class PermissionRegistryImpl implements PermissionRegistry {
         Set<String> modulePermissions = permissions.remove(moduleClass);
         if (modulePermissions == null) return this;
 
-        modulePermissions.forEach(serverAdapter::unregisterPermission);
+        modulePermissions.forEach(this::unregisterPermission);
 
         return this;
     }
@@ -66,7 +63,7 @@ public class PermissionRegistryImpl implements PermissionRegistry {
         if (permissions.isEmpty()) return this;
 
         permissions.values().forEach(modulePermissions ->
-            modulePermissions.forEach(serverAdapter::unregisterPermission));
+            modulePermissions.forEach(this::unregisterPermission));
 
         permissions.clear();
 
@@ -92,4 +89,7 @@ public class PermissionRegistryImpl implements PermissionRegistry {
 
         return permissions.values().stream().anyMatch(modulePermissions -> modulePermissions.contains(permission));
     }
+
+    protected abstract void registerPermission(String permission, PermissionType type);
+    protected abstract void unregisterPermission(String permission);
 }

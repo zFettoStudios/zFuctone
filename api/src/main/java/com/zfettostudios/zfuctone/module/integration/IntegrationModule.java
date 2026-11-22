@@ -7,5 +7,4 @@ public interface IntegrationModule<T> extends Module<T> {
     boolean isPluginExits();
 
     @NonNull String getName();
-    boolean isEnable();
 }

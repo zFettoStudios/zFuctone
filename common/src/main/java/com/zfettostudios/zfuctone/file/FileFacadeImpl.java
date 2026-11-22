@@ -9,7 +9,7 @@ import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonSetter;
 import com.fasterxml.jackson.annotation.Nulls;
 import com.fasterxml.jackson.annotation.PropertyAccessor;
-import com.zfettostudios.zfuctone.ZFuctoneAPI;
+import com.zfettostudios.zfuctone.provider.ZFuctoneProvider;
 import com.zfettostudios.zfuctone.annotation.config.FilePath;
 import com.zfettostudios.zfuctone.file.deserializer.BooleanDeserializer;
 import com.zfettostudios.zfuctone.file.deserializer.ListDeserializer;
@@ -69,7 +69,7 @@ public class FileFacadeImpl implements FileFacade {
     private final FileWriter writer;
     private final YAMLMapper mapper = createMapper();
     private final ExecutorService executor = Executors.newVirtualThreadPerTaskExecutor();
-    private final ReflectionResolver reflectionResolver = ZFuctoneAPI.get().reflectionResolver();
+    private final ReflectionResolver reflectionResolver = ZFuctoneProvider.get().reflectionResolver();
 
     @Getter(AccessLevel.NONE)
     private final FilePack files = new FilePack();

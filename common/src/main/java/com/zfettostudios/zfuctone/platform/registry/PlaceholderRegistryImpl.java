@@ -2,7 +2,7 @@ package com.zfettostudios.zfuctone.platform.registry;
 
 import lombok.Getter;
 
-import com.zfettostudios.zfuctone.ZFuctoneAPI;
+import com.zfettostudios.zfuctone.provider.ZFuctoneProvider;
 import com.zfettostudios.zfuctone.file.FileFacade;
 import com.zfettostudios.zfuctone.model.config.IntegrationConfig;
 import com.zfettostudios.zfuctone.model.config.PlaceholderConfig;
@@ -18,7 +18,7 @@ import java.util.concurrent.CopyOnWriteArrayList;
 import java.util.function.Function;
 
 public class PlaceholderRegistryImpl implements PlaceholderRegistry {
-    private final FileFacade fileFacade = ZFuctoneAPI.get().fileFacade();
+    private final FileFacade fileFacade = ZFuctoneProvider.get().fileFacade();
 
     @Getter
     private final Map<Class<?>, Map<String, Function<PlaceholderContext, String>>> placeholders = new ConcurrentHashMap<>();

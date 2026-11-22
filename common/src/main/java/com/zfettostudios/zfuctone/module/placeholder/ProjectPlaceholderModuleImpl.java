@@ -1,26 +1,20 @@
 package com.zfettostudios.zfuctone.module.placeholder;
 
-import com.zfettostudios.zfuctone.ZFuctoneAPI;
+import com.zfettostudios.zfuctone.provider.ZFuctoneProvider;
 import com.zfettostudios.zfuctone.exception.ReloadException;
-import com.zfettostudios.zfuctone.file.FileFacade;
-import com.zfettostudios.zfuctone.model.config.PermissionConfig;
-import com.zfettostudios.zfuctone.model.config.PlaceholderConfig;
 import com.zfettostudios.zfuctone.model.config.setting.PermissionSetting;
 import com.zfettostudios.zfuctone.model.config.setting.PlaceholderSetting;
 import com.zfettostudios.zfuctone.model.constant.BuildConstant;
 import com.zfettostudios.zfuctone.model.value.PlaceholderContext;
 import com.zfettostudios.zfuctone.platform.registry.PermissionRegistry;
 import com.zfettostudios.zfuctone.platform.registry.PlaceholderRegistry;
+import org.jspecify.annotations.NonNull;
 
 import java.util.function.Function;
 
-public class ProjectPlaceholderModuleImpl implements ProjectPlaceholderModule {
-    private final PlaceholderRegistry placeholderRegistry = ZFuctoneAPI.get().placeholderRegistry();
-    private final PermissionRegistry permissionRegistry = ZFuctoneAPI.get().permissionRegistry();
-    private final FileFacade fileFacade = ZFuctoneAPI.get().fileFacade();
-
-    private final PlaceholderConfig.Standard config = fileFacade.placeholder().standard();
-    private final PermissionConfig.Placeholder.Standard permissionConfig = fileFacade.permission().placeholder().standard();
+public class ProjectPlaceholderModuleImpl extends StandardPlaceholderModule<ProjectPlaceholderModule> implements ProjectPlaceholderModule {
+    private final PlaceholderRegistry placeholderRegistry = ZFuctoneProvider.get().placeholderRegistry();
+    private final PermissionRegistry permissionRegistry = ZFuctoneProvider.get().permissionRegistry();
 
     @Override
     public ProjectPlaceholderModule reload() {
@@ -29,13 +23,13 @@ public class ProjectPlaceholderModuleImpl implements ProjectPlaceholderModule {
 
     @Override
     public ProjectPlaceholderModule enable() {
-        if (!config.enable()) return this;
+        if (!config().enable()) return this;
 
-        register(config.projectAuthors(), permissionConfig.projectAuthorsUse(), _ -> BuildConstant.PROJECT_AUTHORS);
-        register(config.projectDescription(), permissionConfig.projectDescriptionUse(), _ -> BuildConstant.PROJECT_DESCRIPTION);
-        register(config.projectWebsite(), permissionConfig.projectWebsiteUse(), _ -> BuildConstant.PROJECT_WEBSITE);
-        register(config.projectVersion(), permissionConfig.projectVersionUse(), _ -> BuildConstant.PROJECT_VERSION);
-        register(config.projectReload(), permissionConfig.projectReloadUse(), this::handlerReload);
+        register(config().projectAuthors(), permission().projectAuthorsUse(), _ -> BuildConstant.PROJECT_AUTHORS);
+        register(config().projectDescription(), permission().projectDescriptionUse(), _ -> BuildConstant.PROJECT_DESCRIPTION);
+        register(config().projectWebsite(), permission().projectWebsiteUse(), _ -> BuildConstant.PROJECT_WEBSITE);
+        register(config().projectVersion(), permission().projectVersionUse(), _ -> BuildConstant.PROJECT_VERSION);
+        register(config().projectReload(), permission().projectReloadUse(), this::handlerReload);
 
         return this;
     }
@@ -49,15 +43,15 @@ public class ProjectPlaceholderModuleImpl implements ProjectPlaceholderModule {
     }
 
     @Override
-    public ProjectPlaceholderModule get() {
+    public @NonNull ProjectPlaceholderModule get() {
         return this;
     }
 
     private String handlerReload(PlaceholderContext context) {
         try {
-            ZFuctoneAPI.get().reload();
+            ZFuctoneProvider.get().reload();
         } catch (ReloadException e) {
-            ZFuctoneAPI.get().logger().warn("Reload failed: {}", e.getMessage());
+            ZFuctoneProvider.get().logger().warn("Reload failed: {}", e.getMessage());
             return "Failed to reload, See console for details";
         }
 

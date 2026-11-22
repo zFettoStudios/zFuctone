@@ -45,25 +45,4 @@ public class PaperServerAdapter implements PlatformServerAdapter {
     public boolean isPrimaryThread() {
         return Bukkit.isPrimaryThread();
     }
-
-    @Override
-    public PlatformServerAdapter registerPermission(@NonNull String permission, @NonNull PermissionType type) {
-        pm.addPermission(buildPermission(permission, type));
-        return this;
-    }
-
-    @Override
-    public PlatformServerAdapter unregisterPermission(@NonNull String permission) {
-        pm.removePermission(permission);
-        return this;
-    }
-
-    private Permission buildPermission(String permission, PermissionType type) {
-        return new Permission(permission, switch (type) {
-            case OP -> PermissionDefault.OP;
-            case NOT_OP -> PermissionDefault.NOT_OP;
-            case TRUE -> PermissionDefault.TRUE;
-            case FALSE -> PermissionDefault.FALSE;
-        });
-    }
 }

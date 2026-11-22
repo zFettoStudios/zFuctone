@@ -1,6 +1,6 @@
 package com.zfettostudios.zfuctone.logging;
 
-import com.zfettostudios.zfuctone.ZFuctoneAPI;
+import com.zfettostudios.zfuctone.provider.ZFuctoneProvider;
 import com.zfettostudios.zfuctone.model.config.Config;
 import com.zfettostudios.zfuctone.model.constant.BuildConstant;
 import net.kyori.adventure.text.Component;
@@ -13,7 +13,7 @@ public class ZLoggerImpl implements ZLogger {
     private final MiniMessage mm = MiniMessage.miniMessage();
 
     private Config.Logger config() {
-        return ZFuctoneAPI.get().fileFacade().config().logger();
+        return ZFuctoneProvider.get().fileFacade().config().logger();
     }
 
     @Override

@@ -9,7 +9,7 @@ import lombok.experimental.Accessors;
 @Setter
 @NoArgsConstructor
 @Accessors(fluent = true)
-public class PlaceholderSetting {
+public class PlaceholderSetting implements EnableSetting {
     private Boolean enable;
     private String name;
 

@@ -1,10 +1,10 @@
 package com.zfettostudios.zfuctone;
 
+import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.experimental.Accessors;
 
 import com.github.retrooper.packetevents.PacketEvents;
-import com.zfettostudios.zfuctone.def.DefaultRegisterModules;
 import com.zfettostudios.zfuctone.dispatcher.MessageDispatcher;
 import com.zfettostudios.zfuctone.dispatcher.MessageDispatcherImpl;
 import com.zfettostudios.zfuctone.file.FileFacade;
@@ -14,13 +14,31 @@ import com.zfettostudios.zfuctone.logging.ZLoggerImpl;
 import com.zfettostudios.zfuctone.model.constant.PlatformType;
 import com.zfettostudios.zfuctone.module.controller.ModuleController;
 import com.zfettostudios.zfuctone.module.controller.ModuleControllerImpl;
+import com.zfettostudios.zfuctone.module.integration.floodgate.FloodgateModule;
+import com.zfettostudios.zfuctone.module.integration.floodgate.FloodgateModuleImpl;
+import com.zfettostudios.zfuctone.module.integration.geyser.GeyserModule;
+import com.zfettostudios.zfuctone.module.integration.geyser.GeyserModuleImpl;
+import com.zfettostudios.zfuctone.module.integration.luckperms.LuckPermsModule;
+import com.zfettostudios.zfuctone.module.integration.luckperms.LuckPermsModuleImpl;
+import com.zfettostudios.zfuctone.module.integration.miniplaceholders.MiniPlaceholdersModule;
+import com.zfettostudios.zfuctone.module.integration.placeholderapi.PlaceholderAPIModule;
+import com.zfettostudios.zfuctone.module.integration.viaversion.ViaVersionModule;
+import com.zfettostudios.zfuctone.module.integration.viaversion.ViaVersionModuleImpl;
+import com.zfettostudios.zfuctone.module.placeholder.CustomPlaceholderModule;
+import com.zfettostudios.zfuctone.module.placeholder.CustomPlaceholderModuleImpl;
+import com.zfettostudios.zfuctone.module.placeholder.PlayerPlaceholderModule;
+import com.zfettostudios.zfuctone.module.placeholder.PlayerPlaceholderModuleImpl;
+import com.zfettostudios.zfuctone.module.placeholder.ProjectPlaceholderModule;
+import com.zfettostudios.zfuctone.module.placeholder.ProjectPlaceholderModuleImpl;
+import com.zfettostudios.zfuctone.module.placeholder.ServerPlaceholderModule;
+import com.zfettostudios.zfuctone.module.placeholder.ServerPlaceholderModuleImpl;
 import com.zfettostudios.zfuctone.platform.adapter.PlatformPlayerAdapter;
 import com.zfettostudios.zfuctone.platform.adapter.PlatformServerAdapter;
 import com.zfettostudios.zfuctone.platform.registry.PermissionRegistry;
-import com.zfettostudios.zfuctone.platform.registry.PermissionRegistryImpl;
 import com.zfettostudios.zfuctone.platform.registry.PlaceholderRegistry;
 import com.zfettostudios.zfuctone.platform.registry.PlaceholderRegistryImpl;
-import com.zfettostudios.zfuctone.provider.BuilderProviderImpl;
+import com.zfettostudios.zfuctone.provider.FactoryProviderImpl;
+import com.zfettostudios.zfuctone.provider.ZFuctoneProviderImpl;
 import com.zfettostudios.zfuctone.resolver.LibraryResolver;
 import com.zfettostudios.zfuctone.resolver.ReflectionResolver;
 import com.zfettostudios.zfuctone.scheduler.TaskScheduler;
@@ -48,10 +66,12 @@ public abstract class ZFuctoneImpl implements ZFuctone {
     protected final PermissionRegistry permissionRegistry;
     protected final PlaceholderRegistry placeholderRegistry;
 
-    protected final DefaultRegisterModules defaultRegisterModules;
+    @Getter(AccessLevel.NONE)
+    protected final Builder builder;
 
     public ZFuctoneImpl(ReflectionResolver reflectionResolver, PlatformType platformType, LibraryResolver libraryResolver) {
-        ZFuctoneAPIImpl.set(this);
+        ZFuctoneProviderImpl.set(this);
+        FactoryProviderImpl.init();
 
         this.reflectionResolver = reflectionResolver;
         this.platformType = platformType;
@@ -60,24 +80,22 @@ public abstract class ZFuctoneImpl implements ZFuctone {
         PacketEvents.getAPI().init();
         PacketEvents.getAPI().getSettings().reEncodeByDefault(false).checkForUpdates(false).debug(false);
 
-        playerAdapter = createPlayerAdapter();
-        serverAdapter = createServerAdapter();
+        builder = builder();
 
-        BuilderProviderImpl.init();
+        playerAdapter = builder.buildPlayerAdapter();
+        serverAdapter = builder.buildServerAdapter();
 
         logger = new ZLoggerImpl();
         fileFacade = new FileFacadeImpl(getDataPath());
         taskScheduler = new TaskSchedulerImpl(((FileFacadeImpl) fileFacade).executor());
 
-        permissionRegistry = new PermissionRegistryImpl();
+        permissionRegistry = builder.buildPermissionRegistry();
         placeholderRegistry = new PlaceholderRegistryImpl();
 
         playerService = new PlatformPlayerServiceImpl();
         messageDispatcher = new MessageDispatcherImpl();
 
         moduleController = new ModuleControllerImpl();
-
-        defaultRegisterModules = createDefaultRegisterModules();
     }
 
     @Override
@@ -93,7 +111,7 @@ public abstract class ZFuctoneImpl implements ZFuctone {
 
         playerService.enable();
 
-        defaultRegisterModules.registerModules();
+        registerModules();
         moduleController.enable();
 
         registerListeners();
@@ -123,9 +141,10 @@ public abstract class ZFuctoneImpl implements ZFuctone {
 
     @Override
     public ZFuctone reload() {
+        fileFacade.reload();
+
         logger.logReloading();
 
-        fileFacade.reload();
         taskScheduler.reload();
 
         playerService.reload();
@@ -145,13 +164,34 @@ public abstract class ZFuctoneImpl implements ZFuctone {
 
     protected abstract Path getDataPath();
 
-    protected abstract PlatformPlayerAdapter createPlayerAdapter();
-    protected abstract PlatformServerAdapter createServerAdapter();
-
     protected abstract void registerListeners();
     protected abstract void unregisterListeners();
 
     protected abstract void registerTaskScheduler();
 
-    protected abstract DefaultRegisterModules createDefaultRegisterModules();
+    protected void registerModules() {
+        moduleController.register(ViaVersionModule.class, new ViaVersionModuleImpl());
+        moduleController.register(GeyserModule.class, new GeyserModuleImpl());
+        moduleController.register(FloodgateModule.class, new FloodgateModuleImpl());
+        moduleController.register(LuckPermsModule.class, new LuckPermsModuleImpl());
+        moduleController.register(MiniPlaceholdersModule.class, builder.buildMiniPlaceholdersModule());
+        moduleController.register(PlaceholderAPIModule.class, builder.buildPlaceholderAPIModule());
+
+        moduleController.register(ProjectPlaceholderModule.class, new ProjectPlaceholderModuleImpl());
+        moduleController.register(PlayerPlaceholderModule.class, new PlayerPlaceholderModuleImpl());
+        moduleController.register(ServerPlaceholderModule.class, new ServerPlaceholderModuleImpl());
+        moduleController.register(CustomPlaceholderModule.class, new CustomPlaceholderModuleImpl());
+    }
+
+    protected abstract Builder builder();
+
+    protected static abstract class Builder {
+        protected abstract PermissionRegistry buildPermissionRegistry();
+
+        protected abstract PlatformPlayerAdapter buildPlayerAdapter();
+        protected abstract PlatformServerAdapter buildServerAdapter();
+
+        protected abstract MiniPlaceholdersModule buildMiniPlaceholdersModule();
+        protected abstract PlaceholderAPIModule buildPlaceholderAPIModule();
+    }
 }

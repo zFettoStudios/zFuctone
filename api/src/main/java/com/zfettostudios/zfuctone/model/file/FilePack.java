@@ -1,6 +1,6 @@
 package com.zfettostudios.zfuctone.model.file;
 
-import com.zfettostudios.zfuctone.ZFuctoneAPI;
+import com.zfettostudios.zfuctone.provider.ZFuctoneProvider;
 import com.zfettostudios.zfuctone.annotation.config.LocaleName;
 import com.zfettostudios.zfuctone.model.config.CommandConfig;
 import com.zfettostudios.zfuctone.model.config.Config;
@@ -22,7 +22,7 @@ import java.util.concurrent.ConcurrentHashMap;
 @Getter
 @Accessors(fluent = true)
 public class FilePack {
-    private final static ReflectionResolver reflectionResolver = ZFuctoneAPI.get().reflectionResolver();
+    private final static ReflectionResolver reflectionResolver = ZFuctoneProvider.get().reflectionResolver();
 
     private final Config config = new Config();
     private final CommandConfig command = new CommandConfig();

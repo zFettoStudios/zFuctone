@@ -30,12 +30,9 @@ import static java.util.Objects.requireNonNull;
 
 public class LibraryResolverImpl extends LibraryManager implements LibraryResolver {
     private final ClassLoaderHelper classLoaderHelper;
-    private final PlatformType platformType;
 
-    public LibraryResolverImpl(@NonNull PlatformType platformType, @NonNull Path dataDirectory) {
+    public LibraryResolverImpl(@NonNull Path dataDirectory) {
         super(new JDKLogAdapter(Logger.getGlobal()), dataDirectory, "libraries");
-
-        this.platformType = requireNonNull(platformType, "platformType");
 
         ClassLoader classLoader = getClass().getClassLoader();
         if (classLoader instanceof URLClassLoader urlClassLoader) {

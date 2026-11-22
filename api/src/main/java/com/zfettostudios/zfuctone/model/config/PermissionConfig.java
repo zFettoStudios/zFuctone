@@ -61,10 +61,15 @@ public class PermissionConfig {
         private PermissionType type = PermissionType.TRUE;
 
         private final PlaceholderAPI placeholderapi = new PlaceholderAPI();
+        private final PermissionSetting floodgate = new PermissionSetting("zfuctone.module.integration.floodgate", PermissionType.OP);
+        private final PermissionSetting geyser = new PermissionSetting("zfuctone.module.integration.geyser", PermissionType.OP);
+        private final PermissionSetting luckperms = new PermissionSetting("zfuctone.module.integration.luckperms", PermissionType.OP);
+        private final PermissionSetting miniplaceholders = new PermissionSetting("zfuctone.module.integration.miniplaceholders", PermissionType.OP);
+        private final PermissionSetting viaversion = new PermissionSetting("zfuctone.module.integration.viaversion", PermissionType.OP);
 
         @Getter
         @Setter
-        public static class PlaceholderAPI {
+        public static class PlaceholderAPI extends PermissionSetting {
             private String name = "zfuctone.module.integration.placeholderapi";
             private PermissionType type = PermissionType.TRUE;
             private final PermissionSetting use = new PermissionSetting(
@@ -81,15 +86,18 @@ public class PermissionConfig {
 
     @Getter
     @Setter
-    public static class Placeholder {
+    public static class Placeholder extends PermissionSetting {
         private String name = "zfuctone.module.placeholder";
-        private PermissionType type = PermissionType.TRUE;
+        private PermissionType type = PermissionType.OP;
         private final Map<String, PermissionSetting> values = new ConcurrentHashMap<>();
         private final Standard standard = new Standard();
 
         @Getter
         @Setter
-        public static class Standard {
+        public static class Standard extends PermissionSetting {
+            private String name = "zfuctone.module.placeholder.standard";
+            private PermissionType type = PermissionType.OP;
+
             private final PermissionSetting projectAuthorsUse = new PermissionSetting(
                 "zfuctone.module.placeholder.standard.project_authors.use", PermissionType.OP
             );

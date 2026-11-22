@@ -11,7 +11,7 @@ import lombok.experimental.Accessors;
 @AllArgsConstructor
 @NoArgsConstructor
 @Accessors(fluent = true)
-public class CooldownSetting {
+public class CooldownSetting implements EnableSetting {
     private Boolean enable = false;
     private Long duration = 20L;
 }

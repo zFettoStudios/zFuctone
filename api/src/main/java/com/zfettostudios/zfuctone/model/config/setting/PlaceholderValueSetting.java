@@ -11,7 +11,7 @@ import com.zfettostudios.zfuctone.model.value.ValueString;
 @Setter
 @NoArgsConstructor
 @Accessors(fluent = true)
-public class PlaceholderValueSetting {
+public class PlaceholderValueSetting implements EnableSetting {
     private Boolean enable;
     private ValueString value;
 

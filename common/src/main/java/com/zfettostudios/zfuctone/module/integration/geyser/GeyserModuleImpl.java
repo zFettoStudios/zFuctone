@@ -2,7 +2,8 @@ package com.zfettostudios.zfuctone.module.integration.geyser;
 
 import lombok.RequiredArgsConstructor;
 
-import com.zfettostudios.zfuctone.ZFuctoneAPI;
+import com.zfettostudios.zfuctone.model.config.setting.PermissionSetting;
+import com.zfettostudios.zfuctone.provider.ZFuctoneProvider;
 import com.zfettostudios.zfuctone.model.config.IntegrationConfig;
 import com.zfettostudios.zfuctone.module.integration.IntegrationModuleImpl;
 import org.geysermc.geyser.api.GeyserApi;
@@ -12,11 +13,7 @@ import org.jspecify.annotations.NonNull;
 import java.util.UUID;
 
 @RequiredArgsConstructor
-public class GeyserModuleImpl extends IntegrationModuleImpl implements GeyserModule {
-    protected IntegrationConfig.Geyser config() {
-        return ZFuctoneAPI.get().fileFacade().integration().geyser();
-    }
-
+public class GeyserModuleImpl extends IntegrationModuleImpl<GeyserModule> implements GeyserModule {
     @Override
     public GeyserModule enable() {
         return this;
@@ -38,7 +35,17 @@ public class GeyserModuleImpl extends IntegrationModuleImpl implements GeyserMod
     }
 
     @Override
-    public GeyserModule get() {
+    public IntegrationConfig.@NonNull Geyser config() {
+        return ZFuctoneProvider.get().fileFacade().integration().geyser();
+    }
+
+    @Override
+    public @NonNull PermissionSetting permission() {
+        return ZFuctoneProvider.get().fileFacade().permission().integration().geyser();
+    }
+
+    @Override
+    public @NonNull GeyserModule get() {
         return this;
     }
 

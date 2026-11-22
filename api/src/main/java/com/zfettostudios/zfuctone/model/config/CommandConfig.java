@@ -7,6 +7,7 @@ import lombok.experimental.Accessors;
 import com.zfettostudios.zfuctone.annotation.config.FilePath;
 import com.zfettostudios.zfuctone.model.config.setting.CooldownSetting;
 import com.zfettostudios.zfuctone.model.config.setting.DestinationSetting;
+import com.zfettostudios.zfuctone.model.config.setting.EnableSetting;
 import com.zfettostudios.zfuctone.model.config.setting.SoundSetting;
 
 import java.util.List;
@@ -16,13 +17,13 @@ import java.util.concurrent.CopyOnWriteArrayList;
 @Setter
 @Accessors(fluent = true)
 @FilePath(path = "command.yml")
-public class CommandConfig {
+public class CommandConfig implements EnableSetting {
     private Boolean enable = true;
     private final ZFuctone zfuctone = new ZFuctone();
 
     @Getter
     @Setter
-    public static class ZFuctone {
+    public static class ZFuctone implements EnableSetting {
         private Boolean enable = true;
         private final List<String> aliases = new CopyOnWriteArrayList<>();
         private final DestinationSetting destination = DestinationSetting.builder().type(DestinationSetting.Type.CHAT).build();
@@ -36,7 +37,7 @@ public class CommandConfig {
 
         @Getter
         @Setter
-        public static class Reload {
+        public static class Reload implements EnableSetting {
             private Boolean enable = true;
             private final List<String> aliases = new CopyOnWriteArrayList<>();
             private final DestinationSetting destination = DestinationSetting.builder().type(DestinationSetting.Type.CHAT).build();

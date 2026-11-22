@@ -2,6 +2,7 @@ package com.zfettostudios.zfuctone.module.integration.placeholderapi;
 
 import com.zfettostudios.zfuctone.module.integration.IntegrationHook;
 import com.zfettostudios.zfuctone.platform.entity.PlatformPlayer;
+import com.zfettostudios.zfuctone.provider.FactoryProvider;
 import me.clip.placeholderapi.PlaceholderAPI;
 import org.bukkit.entity.Player;
 import org.jspecify.annotations.NonNull;
@@ -12,7 +13,7 @@ public class BukkitPlaceholderAPIModule extends PlaceholderAPIModuleImpl {
 
     public BukkitPlaceholderAPIModule() {
         if (isEnable()) integration = new BukkitPlaceholderAPIIntegration();
-        else integration = IntegrationHook.empty();
+        else integration = FactoryProvider.modelFactory().emptyIntegrationHook();
     }
 
     @Override
@@ -41,7 +42,7 @@ public class BukkitPlaceholderAPIModule extends PlaceholderAPIModuleImpl {
     }
 
     private String setNestedPlaceholders(Player player, String input) {
-        if (!config().processNestedPlaceholders()) return input;
+        if (!config.processNestedPlaceholders()) return input;
         return PlaceholderAPI.setBracketPlaceholders(player, input);
     }
 
@@ -50,7 +51,7 @@ public class BukkitPlaceholderAPIModule extends PlaceholderAPIModuleImpl {
     }
 
     @Override
-    public PlaceholderAPIModule get() {
+    public @NonNull PlaceholderAPIModule get() {
         return this;
     }
 

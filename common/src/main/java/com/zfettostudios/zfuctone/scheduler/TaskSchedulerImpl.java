@@ -3,7 +3,7 @@ package com.zfettostudios.zfuctone.scheduler;
 import lombok.Getter;
 import lombok.experimental.NonFinal;
 
-import com.zfettostudios.zfuctone.ZFuctoneAPI;
+import com.zfettostudios.zfuctone.provider.ZFuctoneProvider;
 import com.zfettostudios.zfuctone.file.FileFacade;
 import com.zfettostudios.zfuctone.logging.ZLogger;
 import com.zfettostudios.zfuctone.model.config.Config;
@@ -27,9 +27,9 @@ import java.util.function.Supplier;
 public class TaskSchedulerImpl implements TaskScheduler {
     private final static Duration DEFAULT_AWAIT_TIMEOUT = Duration.ofSeconds(3);
 
-    private final PlatformServerAdapter serverAdapter = ZFuctoneAPI.get().serverAdapter();
-    private final FileFacade fileFacade = ZFuctoneAPI.get().fileFacade();
-    private final ZLogger logger = ZFuctoneAPI.get().logger();
+    private final PlatformServerAdapter serverAdapter = ZFuctoneProvider.get().serverAdapter();
+    private final FileFacade fileFacade = ZFuctoneProvider.get().fileFacade();
+    private final ZLogger logger = ZFuctoneProvider.get().logger();
 
     private final AtomicLong currentTick = new AtomicLong(0L);
     private final ConcurrentNavigableMap<Long, Queue<TaskEntry>> scheduledTasks = new ConcurrentSkipListMap<>();
@@ -337,7 +337,7 @@ public class TaskSchedulerImpl implements TaskScheduler {
                 T result = supplier.get();
                 if (!isRepeating()) future.complete(result);
             } catch (Throwable throwable) {
-                ZFuctoneAPI.get().logger().warn("Error executing scheduled supplier task: {}", throwable.getMessage());
+                ZFuctoneProvider.get().logger().warn("Error executing scheduled supplier task: {}", throwable.getMessage());
 
                 if (!isRepeating()) future.complete(null);
             }

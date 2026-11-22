@@ -5,6 +5,7 @@ import lombok.Setter;
 import lombok.experimental.Accessors;
 
 import com.zfettostudios.zfuctone.annotation.config.FilePath;
+import com.zfettostudios.zfuctone.model.config.setting.EnableSetting;
 import com.zfettostudios.zfuctone.model.constant.BuildConstant;
 
 import java.util.List;
@@ -14,7 +15,7 @@ import java.util.concurrent.CopyOnWriteArrayList;
 @Setter
 @Accessors(fluent = true)
 @FilePath(path = "integration.yml")
-public class IntegrationConfig {
+public class IntegrationConfig implements EnableSetting {
     private Boolean enable = true;
     private final PlaceholderAPI placeholderapi = new PlaceholderAPI();
     private final MiniPlaceholders miniplaceholders = new MiniPlaceholders();
@@ -27,7 +28,7 @@ public class IntegrationConfig {
 
     @Getter
     @Setter
-    public static class PlaceholderAPI {
+    public static class PlaceholderAPI implements EnableSetting {
         private Boolean enable = true;
         private String identifier = BuildConstant.PROJECT_NAME.toLowerCase();
         private Boolean processNestedPlaceholders = true;
@@ -35,39 +36,39 @@ public class IntegrationConfig {
 
     @Getter
     @Setter
-    public static class MiniPlaceholders {
+    public static class MiniPlaceholders implements EnableSetting {
         private Boolean enable = true;
         private String identifier = BuildConstant.PROJECT_NAME.toLowerCase();
     }
 
     @Getter
     @Setter
-    public static class Floodgate {
+    public static class Floodgate implements EnableSetting {
         private Boolean enable = true;
     }
 
     @Getter
     @Setter
-    public static class Geyser {
+    public static class Geyser implements EnableSetting {
         private Boolean enable = true;
     }
 
     @Getter
     @Setter
-    public static class ViaVersion {
+    public static class ViaVersion implements EnableSetting {
         private Boolean enable = true;
     }
 
     @Getter
     @Setter
-    public static class SkinsRestorer {
+    public static class SkinsRestorer implements EnableSetting {
         private Boolean enable = true;
         private Boolean loadMojangSkin = true;
     }
 
     @Getter
     @Setter
-    public static class LuckPerms {
+    public static class LuckPerms implements EnableSetting {
         private Boolean enable = true;
         private Boolean useWeightForTabSort = true;
         private final List<String> tabGroupOrder = new CopyOnWriteArrayList<>();
@@ -76,13 +77,13 @@ public class IntegrationConfig {
 
     @Getter
     @Setter
-    public static class FlectonePulse {
+    public static class FlectonePulse implements EnableSetting {
         private Boolean enable = true;
         private final Message message = new Message();
 
         @Getter
         @Setter
-        public static class Message {
+        public static class Message implements EnableSetting {
             private Boolean enable = true;
             private final ModuleSetting join = new ModuleSetting();
             private final ModuleSetting quit = new ModuleSetting();
