@@ -6,7 +6,7 @@ import com.zfettostudios.zfuctone.module.SimpleModule;
 import com.zfettostudios.zfuctone.provider.ZFuctoneProvider;
 import org.jspecify.annotations.NonNull;
 
-public abstract class StandardPlaceholderModule<T> extends SimpleModule<T> {
+public abstract class StandardPlaceholderModuleImpl<T> extends SimpleModule<T> {
     @Override
     public PlaceholderConfig.@NonNull Standard config() {
         return ZFuctoneProvider.get().fileFacade().placeholder().standard();

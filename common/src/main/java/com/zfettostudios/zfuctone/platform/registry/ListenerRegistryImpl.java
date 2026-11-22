@@ -4,17 +4,28 @@ import com.zfettostudios.zfuctone.annotation.event.EventHandler;
 import com.zfettostudios.zfuctone.listener.ZFListener;
 import com.zfettostudios.zfuctone.model.event.Event;
 import lombok.Getter;
+
 import org.jspecify.annotations.NonNull;
+import org.jspecify.annotations.Nullable;
 
 import java.lang.reflect.Method;
-import java.util.Collections;
 import java.util.EnumMap;
+import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.CopyOnWriteArraySet;
 
 public class ListenerRegistryImpl implements ListenerRegistry {
+    private static final List<Event.Priority> PRIORITY_ORDER = List.of(
+        Event.Priority.LOWEST,
+        Event.Priority.LOW,
+        Event.Priority.NORMAL,
+        Event.Priority.HIGH,
+        Event.Priority.HIGHEST,
+        Event.Priority.MONITOR
+    );
+
     @Getter
     private final Map<Class<? extends Event>, Map<Event.Priority, Set<Method>>> listeners = new ConcurrentHashMap<>();
     private final Map<Class<?>, Set<ZFListener>> listenersModuleClass = new ConcurrentHashMap<>();
@@ -37,9 +48,9 @@ public class ListenerRegistryImpl implements ListenerRegistry {
             method.setAccessible(true);
 
             Map<Event.Priority, Set<Method>> byPriority = listeners.computeIfAbsent(eventClass,
-                _ -> Collections.synchronizedMap(new EnumMap<>(Event.Priority.class)));
+                _ -> new EnumMap<>(Event.Priority.class));
             Set<Method> eventMethods = byPriority.computeIfAbsent(priority,
-                _ -> ConcurrentHashMap.newKeySet());
+                _ -> new CopyOnWriteArraySet<>());
 
             eventMethods.add(method);
             methodOwners.put(method, listener);
@@ -82,31 +93,41 @@ public class ListenerRegistryImpl implements ListenerRegistry {
     }
 
     @Override
-    public @NonNull Set<@NonNull ZFListener> getListeners(@NonNull Class<?> moduleClass) {
-        Set<ZFListener> found = listenersModuleClass.get(moduleClass);
-        return found == null ? Set.of() : Set.copyOf(found);
-    }
-
-    @Override
-    public @NonNull Map<Event.@NonNull Priority, @NonNull Set<@NonNull ZFListener>> getListenersByEvent(
-        @NonNull Class<? extends Event> eventClass
-    ) {
+    public <T extends Event> ListenerRegistry run(@NonNull Class<T> eventClass, @NonNull T event) {
         Map<Event.Priority, Set<Method>> byPriority = listeners.get(eventClass);
-        if (byPriority == null || byPriority.isEmpty()) return Map.of();
+        if (byPriority == null || byPriority.isEmpty()) return this;
 
-        Map<Event.Priority, Set<ZFListener>> result = new EnumMap<>(Event.Priority.class);
-        synchronized (byPriority) {
-            for (Map.Entry<Event.Priority, Set<Method>> entry : byPriority.entrySet()) {
-                Set<ZFListener> owners = new CopyOnWriteArraySet<>();
-                for (Method method : entry.getValue()) {
-                    ZFListener owner = methodOwners.get(method);
-                    if (owner != null) owners.add(owner);
+        for (Event.Priority priority : PRIORITY_ORDER) {
+            Set<Method> methods = byPriority.get(priority);
+            if (methods == null || methods.isEmpty()) continue;
+
+            for (Method method : methods) {
+                ZFListener owner = methodOwners.get(method);
+                if (owner == null) {
+                    continue;
                 }
 
-                if (!owners.isEmpty()) result.put(entry.getKey(), Collections.unmodifiableSet(owners));
+                EventHandler handler = method.getAnnotation(EventHandler.class);
+                if (handler == null || !handler.ignoreCancelled() && event.cancelled()) continue;
+
+                try {
+                    method.invoke(owner, event);
+                } catch (ReflectiveOperationException e) {
+                    throw new IllegalStateException("Failed to invoke event handler " + method.getName() + " for " + eventClass.getSimpleName(), e);
+                }
             }
         }
 
-        return result;
+        return this;
+    }
+
+    @Override
+    public @Nullable Set<@NonNull ZFListener> getListeners(@NonNull Class<?> moduleClass) {
+        return listenersModuleClass.get(moduleClass);
+    }
+
+    @Override
+    public @Nullable Map<Event.@NonNull Priority, @NonNull Set<@NonNull Method>> getListenersByEvent(@NonNull Class<? extends Event> eventClass) {
+        return listeners.get(eventClass);
     }
 }

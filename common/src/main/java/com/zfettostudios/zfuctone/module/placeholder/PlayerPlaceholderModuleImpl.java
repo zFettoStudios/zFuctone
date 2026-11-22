@@ -10,7 +10,7 @@ import org.jspecify.annotations.NonNull;
 
 import java.util.function.Function;
 
-public class PlayerPlaceholderModuleImpl extends StandardPlaceholderModule<PlayerPlaceholderModule> implements PlayerPlaceholderModule {
+public class PlayerPlaceholderModuleImpl extends StandardPlaceholderModuleImpl<PlayerPlaceholderModule> implements PlayerPlaceholderModule {
     private final PlaceholderRegistry placeholderRegistry = ZFuctoneProvider.get().placeholderRegistry();
     private final PermissionRegistry permissionRegistry = ZFuctoneProvider.get().permissionRegistry();
 

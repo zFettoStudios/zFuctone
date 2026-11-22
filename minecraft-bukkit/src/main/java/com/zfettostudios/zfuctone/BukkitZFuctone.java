@@ -5,8 +5,6 @@ import lombok.RequiredArgsConstructor;
 import com.zfettostudios.zfuctone.exception.InvalidTypeException;
 import com.zfettostudios.zfuctone.listener.BukkitPlayerJoinListener;
 import com.zfettostudios.zfuctone.listener.BukkitPlayerQuitListener;
-import com.zfettostudios.zfuctone.listener.PaperPlayerJoinListener;
-import com.zfettostudios.zfuctone.listener.PaperPlayerQuitListener;
 import com.zfettostudios.zfuctone.model.constant.PlatformType;
 import com.zfettostudios.zfuctone.module.integration.miniplaceholders.MiniPlaceholdersModule;
 import com.zfettostudios.zfuctone.module.integration.miniplaceholders.PaperMiniPlaceholdersModule;
@@ -63,23 +61,13 @@ public class BukkitZFuctone extends ZFuctoneImpl {
     protected void registerListeners() {
         listeners.clear();
 
-        register(createPlayerJoinListener());
-        register(createPlayerQuitListener());
+        register(new BukkitPlayerJoinListener());
+        register(new BukkitPlayerQuitListener());
     }
 
     private void register(Listener listener) {
         listeners.add(listener);
         pm.registerEvents(listener, loader);
-    }
-
-    private Listener createPlayerJoinListener() {
-        if (platformType == PlatformType.BUKKIT) return new BukkitPlayerJoinListener();
-        return new PaperPlayerJoinListener();
-    }
-
-    private Listener createPlayerQuitListener() {
-        if (platformType == PlatformType.BUKKIT) return new BukkitPlayerQuitListener();
-        return new PaperPlayerQuitListener();
     }
 
     @Override

@@ -26,7 +26,7 @@ public class PermissionConfig {
 
     @Getter
     @Setter
-    public static class Command {
+    public static class Command extends PermissionSetting {
         private String name = "zfuctone.module.command";
         private PermissionType type = PermissionType.TRUE;
 
@@ -34,7 +34,7 @@ public class PermissionConfig {
 
         @Getter
         @Setter
-        public static class ZFuctone {
+        public static class ZFuctone extends PermissionSetting  {
             private String name = "zfuctone.module.command.zfuctone";
             private PermissionType type = PermissionType.OP;
             private final PermissionSetting cooldownBypass = new PermissionSetting(
@@ -45,7 +45,7 @@ public class PermissionConfig {
 
             @Getter
             @Setter
-            public static class Reload {
+            public static class Reload extends PermissionSetting  {
                 private String name = "zfuctone.module.command.zfuctone.reload";
                 private PermissionType type = PermissionType.OP;
                 private final PermissionSetting sound = new PermissionSetting(
@@ -56,7 +56,7 @@ public class PermissionConfig {
 
     @Getter
     @Setter
-    public static class Integration {
+    public static class Integration extends PermissionSetting  {
         private String name = "zfuctone.module.integration";
         private PermissionType type = PermissionType.TRUE;
 
@@ -79,9 +79,26 @@ public class PermissionConfig {
 
     @Getter
     @Setter
-    public static class Message {
+    public static class Message extends PermissionSetting  {
         private String name = "zfuctone.module.message";
         private PermissionType type = PermissionType.TRUE;
+
+        private final Join join = new Join();
+        private final Quit quit = new Quit();
+
+        @Getter
+        @Setter
+        public static class Join extends PermissionSetting  {
+            private String name = "zfuctone.module.message.join";
+            private PermissionType type = PermissionType.TRUE;
+        }
+
+        @Getter
+        @Setter
+        public static class Quit extends PermissionSetting  {
+            private String name = "zfuctone.module.message.quit";
+            private PermissionType type = PermissionType.TRUE;
+        }
     }
 
     @Getter

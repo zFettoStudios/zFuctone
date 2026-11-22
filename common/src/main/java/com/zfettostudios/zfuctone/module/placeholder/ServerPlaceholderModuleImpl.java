@@ -12,7 +12,7 @@ import org.jspecify.annotations.NonNull;
 
 import java.util.function.Function;
 
-public class ServerPlaceholderModuleImpl extends StandardPlaceholderModule<ServerPlaceholderModule> implements ServerPlaceholderModule {
+public class ServerPlaceholderModuleImpl extends StandardPlaceholderModuleImpl<ServerPlaceholderModule> implements ServerPlaceholderModule {
     private final PlaceholderRegistry placeholderRegistry = ZFuctoneProvider.get().placeholderRegistry();
     private final PermissionRegistry permissionRegistry = ZFuctoneProvider.get().permissionRegistry();
     private final PlatformServerAdapter serverAdapter = ZFuctoneProvider.get().serverAdapter();

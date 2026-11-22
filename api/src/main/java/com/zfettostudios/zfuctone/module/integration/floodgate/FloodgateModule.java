@@ -1,5 +1,6 @@
 package com.zfettostudios.zfuctone.module.integration.floodgate;
 
+import com.zfettostudios.zfuctone.model.config.IntegrationConfig;
 import com.zfettostudios.zfuctone.model.constant.minecraft.player.PlayerEdition;
 import com.zfettostudios.zfuctone.module.integration.IntegrationModule;
 import com.zfettostudios.zfuctone.platform.entity.PlatformPlayer;
@@ -13,4 +14,6 @@ public interface FloodgateModule extends IntegrationModule<FloodgateModule> {
     @Nullable String getDisplayEdition(@NonNull PlatformPlayer player);
     @Nullable String getVersion(@NonNull UUID uuid);
     @Nullable String getDisplayVersion(@NonNull PlatformPlayer player);
+
+    IntegrationConfig.@NonNull Floodgate config();
 }

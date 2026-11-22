@@ -12,6 +12,7 @@ import com.zfettostudios.zfuctone.model.lifecycle.Toggleable;
 import com.zfettostudios.zfuctone.module.controller.ModuleController;
 import com.zfettostudios.zfuctone.platform.adapter.PlatformPlayerAdapter;
 import com.zfettostudios.zfuctone.platform.adapter.PlatformServerAdapter;
+import com.zfettostudios.zfuctone.platform.registry.ListenerRegistry;
 import com.zfettostudios.zfuctone.platform.registry.PermissionRegistry;
 import com.zfettostudios.zfuctone.platform.registry.PlaceholderRegistry;
 import com.zfettostudios.zfuctone.resolver.LibraryResolver;
@@ -142,4 +143,6 @@ public interface ZFuctone extends Toggleable<ZFuctone> {
      * @return экземпляр {@link PlaceholderRegistry}.
      */
     PlaceholderRegistry placeholderRegistry();
+
+    ListenerRegistry listenerRegistry();
 }

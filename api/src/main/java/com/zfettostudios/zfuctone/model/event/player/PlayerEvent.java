@@ -7,5 +7,5 @@ import org.jspecify.annotations.NonNull;
 public interface PlayerEvent extends Event {
     PlatformPlayer player();
 
-    PlatformPlayer player(@NonNull PlatformPlayer player);
+    Event player(@NonNull PlatformPlayer player);
 }

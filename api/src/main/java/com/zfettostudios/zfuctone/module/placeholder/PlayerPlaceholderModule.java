@@ -8,5 +8,5 @@ import com.zfettostudios.zfuctone.module.Module;
  * @since 0.1
  * @author RandomShel
  */
-public interface PlayerPlaceholderModule extends Module<PlayerPlaceholderModule> {
+public interface PlayerPlaceholderModule extends Module<PlayerPlaceholderModule>, StandardPlaceholderModule {
 }

@@ -24,6 +24,10 @@ import com.zfettostudios.zfuctone.module.integration.miniplaceholders.MiniPlaceh
 import com.zfettostudios.zfuctone.module.integration.placeholderapi.PlaceholderAPIModule;
 import com.zfettostudios.zfuctone.module.integration.viaversion.ViaVersionModule;
 import com.zfettostudios.zfuctone.module.integration.viaversion.ViaVersionModuleImpl;
+import com.zfettostudios.zfuctone.module.message.join.JoinModule;
+import com.zfettostudios.zfuctone.module.message.join.JoinModuleImpl;
+import com.zfettostudios.zfuctone.module.message.quit.QuitModule;
+import com.zfettostudios.zfuctone.module.message.quit.QuitModuleImpl;
 import com.zfettostudios.zfuctone.module.placeholder.CustomPlaceholderModule;
 import com.zfettostudios.zfuctone.module.placeholder.CustomPlaceholderModuleImpl;
 import com.zfettostudios.zfuctone.module.placeholder.PlayerPlaceholderModule;
@@ -34,6 +38,8 @@ import com.zfettostudios.zfuctone.module.placeholder.ServerPlaceholderModule;
 import com.zfettostudios.zfuctone.module.placeholder.ServerPlaceholderModuleImpl;
 import com.zfettostudios.zfuctone.platform.adapter.PlatformPlayerAdapter;
 import com.zfettostudios.zfuctone.platform.adapter.PlatformServerAdapter;
+import com.zfettostudios.zfuctone.platform.registry.ListenerRegistry;
+import com.zfettostudios.zfuctone.platform.registry.ListenerRegistryImpl;
 import com.zfettostudios.zfuctone.platform.registry.PermissionRegistry;
 import com.zfettostudios.zfuctone.platform.registry.PlaceholderRegistry;
 import com.zfettostudios.zfuctone.platform.registry.PlaceholderRegistryImpl;
@@ -65,6 +71,7 @@ public abstract class ZFuctoneImpl implements ZFuctone {
     protected final LibraryResolver libraryResolver;
     protected final PermissionRegistry permissionRegistry;
     protected final PlaceholderRegistry placeholderRegistry;
+    protected final ListenerRegistry listenerRegistry;
 
     @Getter(AccessLevel.NONE)
     protected final Builder builder;
@@ -91,6 +98,7 @@ public abstract class ZFuctoneImpl implements ZFuctone {
 
         permissionRegistry = builder.buildPermissionRegistry();
         placeholderRegistry = new PlaceholderRegistryImpl();
+        listenerRegistry = new ListenerRegistryImpl();
 
         playerService = new PlatformPlayerServiceImpl();
         messageDispatcher = new MessageDispatcherImpl();
@@ -181,6 +189,9 @@ public abstract class ZFuctoneImpl implements ZFuctone {
         moduleController.register(PlayerPlaceholderModule.class, new PlayerPlaceholderModuleImpl());
         moduleController.register(ServerPlaceholderModule.class, new ServerPlaceholderModuleImpl());
         moduleController.register(CustomPlaceholderModule.class, new CustomPlaceholderModuleImpl());
+
+        moduleController.register(JoinModule.class, new JoinModuleImpl());
+        moduleController.register(QuitModule.class, new QuitModuleImpl());
     }
 
     protected abstract Builder builder();

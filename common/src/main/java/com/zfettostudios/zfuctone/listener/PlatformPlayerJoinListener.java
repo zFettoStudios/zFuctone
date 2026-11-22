@@ -1,24 +1,22 @@
 package com.zfettostudios.zfuctone.listener;
 
-import com.zfettostudios.zfuctone.provider.ZFuctoneProvider;
-import com.zfettostudios.zfuctone.dispatcher.MessageDispatcher;
-import com.zfettostudios.zfuctone.model.config.MessageConfig;
+import com.zfettostudios.zfuctone.logging.ZLogger;
+import com.zfettostudios.zfuctone.model.event.player.PlayerJoinEvent;
 import com.zfettostudios.zfuctone.platform.entity.PlatformPlayer;
-import com.zfettostudios.zfuctone.service.PlatformPlayerService;
+import com.zfettostudios.zfuctone.platform.registry.ListenerRegistry;
+import com.zfettostudios.zfuctone.provider.ZFuctoneProvider;
 
-public abstract class PlatformPlayerJoinListener {
-    private final PlatformPlayerService playerService = ZFuctoneProvider.get().playerService();
-    private final MessageDispatcher messageDispatcher = ZFuctoneProvider.get().messageDispatcher();
-    private final MessageConfig config = ZFuctoneProvider.get().fileFacade().message();
+public class PlatformPlayerJoinListener {
+    protected final ListenerRegistry listenerRegistry = ZFuctoneProvider.get().listenerRegistry();
+    protected final ZLogger logger = ZFuctoneProvider.get().logger();
 
-    protected void execute(Object platformPlayer) {
-        PlatformPlayer player = PlatformPlayer.build(platformPlayer);
-        if (player == null) return;
+    protected void execute(Object rawPlayer) {
+        PlatformPlayer player = PlatformPlayer.build(rawPlayer);
+        if (player == null) {
+            logger.warn("player is null");
+            return;
+        }
 
-        playerService.addPlatformPlayer(player);
-
-        if (!config.join().enable()) return;
-
-        messageDispatcher.dispatchEveryone(player, localization -> localization.message().join().format().asString());
+        listenerRegistry.run(PlayerJoinEvent.class, PlayerJoinEvent.build(player));
     }
 }

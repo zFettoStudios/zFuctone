@@ -1,11 +1,16 @@
 package com.zfettostudios.zfuctone.factory;
 
+import com.zfettostudios.zfuctone.model.event.player.PlayerJoinEvent;
+import com.zfettostudios.zfuctone.model.event.player.PlayerJoinEventImpl;
+import com.zfettostudios.zfuctone.model.event.player.PlayerQuitEvent;
+import com.zfettostudios.zfuctone.model.event.player.PlayerQuitEventImpl;
 import com.zfettostudios.zfuctone.model.value.PlaceholderContext;
 import com.zfettostudios.zfuctone.model.value.PlaceholderContextImpl;
 import com.zfettostudios.zfuctone.model.value.ValueString;
 import com.zfettostudios.zfuctone.model.value.ValueStringImpl;
 import com.zfettostudios.zfuctone.module.integration.IntegrationHook;
 import com.zfettostudios.zfuctone.module.integration.IntegrationHookEmpty;
+import com.zfettostudios.zfuctone.platform.entity.PlatformPlayer;
 import com.zfettostudios.zfuctone.util.LazyInstance;
 import org.jspecify.annotations.NonNull;
 
@@ -42,5 +47,15 @@ public class ModelFactoryImpl implements ModelFactory {
     @Override
     public @NonNull IntegrationHook<?> emptyIntegrationHook() {
         return emptyIntegrationHook.get();
+    }
+
+    @Override
+    public @NonNull PlayerJoinEvent buildPlayerJoinEvent(@NonNull PlatformPlayer player) {
+        return new PlayerJoinEventImpl(player);
+    }
+
+    @Override
+    public @NonNull PlayerQuitEvent buildPlayerQuitEvent(@NonNull PlatformPlayer player) {
+        return new PlayerQuitEventImpl(player);
     }
 }
