@@ -9,8 +9,8 @@ import com.zfettostudios.zfuctone.factory.UtilFactoryImpl;
 @UtilityClass
 public class FactoryProviderImpl extends FactoryProvider {
     public void init() {
-        modelFactory = new ModelFactoryImpl();
         utilFactory = new UtilFactoryImpl();
+        modelFactory = new ModelFactoryImpl();
         playerFactory = new PlatformPlayerFactoryImpl();
     }
 }
