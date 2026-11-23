@@ -5,7 +5,7 @@ import com.zfettostudios.zfuctone.model.config.setting.PermissionSetting;
 import com.zfettostudios.zfuctone.provider.ZFuctoneProvider;
 import com.zfettostudios.zfuctone.file.FileFacade;
 import com.zfettostudios.zfuctone.model.config.IntegrationConfig;
-import com.zfettostudios.zfuctone.model.constant.LocalizationType;
+import com.zfettostudios.zfuctone.model.constant.type.LocalizationType;
 import com.zfettostudios.zfuctone.module.integration.IntegrationModuleImpl;
 import com.zfettostudios.zfuctone.platform.entity.PlatformPlayer;
 import org.jspecify.annotations.NonNull;

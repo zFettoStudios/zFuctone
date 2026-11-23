@@ -27,7 +27,7 @@ public class ListenerRegistryImpl implements ListenerRegistry {
     );
 
     @Getter
-    private final Map<Class<? extends Event>, Map<Event.Priority, Set<Method>>> listeners = new ConcurrentHashMap<>();
+    private final Map<Class<? extends Event<?>>, Map<Event.Priority, Set<Method>>> listeners = new ConcurrentHashMap<>();
     private final Map<Class<?>, Set<ZFListener>> listenersModuleClass = new ConcurrentHashMap<>();
     private final Map<Method, ZFListener> methodOwners = new ConcurrentHashMap<>();
 
@@ -42,7 +42,7 @@ public class ListenerRegistryImpl implements ListenerRegistry {
             Class<?>[] params = method.getParameterTypes();
             if (params.length != 1 || !Event.class.isAssignableFrom(params[0])) continue;
 
-            Class<? extends Event> eventClass = params[0].asSubclass(Event.class);
+            Class<? extends Event<?>> eventClass = (Class<? extends Event<?>>) params[0];
             Event.Priority priority = handler.priority();
 
             method.setAccessible(true);
@@ -93,7 +93,7 @@ public class ListenerRegistryImpl implements ListenerRegistry {
     }
 
     @Override
-    public <T extends Event> ListenerRegistry run(@NonNull Class<T> eventClass, @NonNull T event) {
+    public <T extends Event<T>> ListenerRegistry run(@NonNull Class<T> eventClass, @NonNull T event) {
         Map<Event.Priority, Set<Method>> byPriority = listeners.get(eventClass);
         if (byPriority == null || byPriority.isEmpty()) return this;
 
@@ -103,9 +103,7 @@ public class ListenerRegistryImpl implements ListenerRegistry {
 
             for (Method method : methods) {
                 ZFListener owner = methodOwners.get(method);
-                if (owner == null) {
-                    continue;
-                }
+                if (owner == null) continue;
 
                 EventHandler handler = method.getAnnotation(EventHandler.class);
                 if (handler == null || !handler.ignoreCancelled() && event.cancelled()) continue;
@@ -127,7 +125,7 @@ public class ListenerRegistryImpl implements ListenerRegistry {
     }
 
     @Override
-    public @Nullable Map<Event.@NonNull Priority, @NonNull Set<@NonNull Method>> getListenersByEvent(@NonNull Class<? extends Event> eventClass) {
+    public @Nullable Map<Event.@NonNull Priority, @NonNull Set<@NonNull Method>> getListenersByEvent(@NonNull Class<? extends Event<?>> eventClass) {
         return listeners.get(eventClass);
     }
 }

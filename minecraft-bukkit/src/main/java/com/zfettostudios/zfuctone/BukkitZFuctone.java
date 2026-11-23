@@ -5,7 +5,7 @@ import lombok.RequiredArgsConstructor;
 import com.zfettostudios.zfuctone.exception.InvalidTypeException;
 import com.zfettostudios.zfuctone.listener.BukkitPlayerJoinListener;
 import com.zfettostudios.zfuctone.listener.BukkitPlayerQuitListener;
-import com.zfettostudios.zfuctone.model.constant.PlatformType;
+import com.zfettostudios.zfuctone.model.constant.type.PlatformType;
 import com.zfettostudios.zfuctone.module.integration.miniplaceholders.MiniPlaceholdersModule;
 import com.zfettostudios.zfuctone.module.integration.miniplaceholders.PaperMiniPlaceholdersModule;
 import com.zfettostudios.zfuctone.module.integration.placeholderapi.BukkitPlaceholderAPIModule;

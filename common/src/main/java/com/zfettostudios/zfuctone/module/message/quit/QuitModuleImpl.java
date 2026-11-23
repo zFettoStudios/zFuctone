@@ -2,6 +2,10 @@ package com.zfettostudios.zfuctone.module.message.quit;
 
 import com.zfettostudios.zfuctone.model.config.MessageConfig;
 import com.zfettostudios.zfuctone.model.config.PermissionConfig;
+import com.zfettostudios.zfuctone.model.constant.type.EventType;
+import com.zfettostudios.zfuctone.model.event.lifecycle.module.ModuleDisableEvent;
+import com.zfettostudios.zfuctone.model.event.lifecycle.module.ModuleEnableEvent;
+import com.zfettostudios.zfuctone.model.event.lifecycle.module.ModuleReloadEvent;
 import com.zfettostudios.zfuctone.module.SimpleModule;
 import com.zfettostudios.zfuctone.module.message.quit.listener.QuitModuleListener;
 import com.zfettostudios.zfuctone.platform.registry.ListenerRegistry;
@@ -22,29 +26,39 @@ public class QuitModuleImpl extends SimpleModule<QuitModule> implements QuitModu
 
     @Override
     public QuitModule reload() {
+        listenerRegistry.run(ModuleReloadEvent.class, ModuleReloadEvent.build(this, QuitModule.class, EventType.START));
+
         permissionRegistry.unregisterAll(QuitModule.class);
 
-        if (isDisable()) return this;
+        if (isEnable()) permissionRegistry.register(QuitModule.class, permission().name(), permission().type());
 
-        permissionRegistry.register(QuitModule.class, permission().name(), permission().type());
+        listenerRegistry.run(ModuleReloadEvent.class, ModuleReloadEvent.build(this, QuitModule.class, EventType.END));
 
         return this;
     }
 
     @Override
     public QuitModule enable() {
-        if (isDisable()) return this;
+        listenerRegistry.run(ModuleEnableEvent.class, ModuleEnableEvent.build(this, QuitModule.class, EventType.START));
 
-        listenerRegistry.register(QuitModule.class, listener);
-        permissionRegistry.register(QuitModule.class, permission().name(), permission().type());
+        if (isEnable()) {
+            listenerRegistry.register(QuitModule.class, listener);
+            permissionRegistry.register(QuitModule.class, permission().name(), permission().type());
+        }
+
+        listenerRegistry.run(ModuleEnableEvent.class, ModuleEnableEvent.build(this, QuitModule.class, EventType.END));
 
         return this;
     }
 
     @Override
     public QuitModule disable() {
+        listenerRegistry.run(ModuleDisableEvent.class, ModuleDisableEvent.build(this, QuitModule.class, EventType.START));
+
         listenerRegistry.unregisterAll(QuitModule.class);
         permissionRegistry.unregisterAll(QuitModule.class);
+
+        listenerRegistry.run(ModuleDisableEvent.class, ModuleDisableEvent.build(this, QuitModule.class, EventType.END));
 
         return this;
     }

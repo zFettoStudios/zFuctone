@@ -10,7 +10,7 @@ import com.github.retrooper.packetevents.wrapper.play.server.WrapperPlayServerDi
 import com.zfettostudios.zfuctone.provider.ZFuctoneProvider;
 import com.zfettostudios.zfuctone.exception.InvalidTypeException;
 import com.zfettostudios.zfuctone.file.FileFacade;
-import com.zfettostudios.zfuctone.model.constant.LocalizationType;
+import com.zfettostudios.zfuctone.model.constant.type.LocalizationType;
 import com.zfettostudios.zfuctone.model.constant.minecraft.player.PlayerGameMode;
 import com.zfettostudios.zfuctone.model.constant.minecraft.player.PlayerEdition;
 import com.zfettostudios.zfuctone.module.controller.ModuleController;

@@ -15,9 +15,9 @@ public interface ListenerRegistry {
     ListenerRegistry unregisterAll(@NonNull Class<?> moduleClass);
     ListenerRegistry unregisterAll();
 
-    <T extends Event> ListenerRegistry run(@NonNull Class<T> eventClass, @NonNull T event);
+    <T extends Event<T>> ListenerRegistry run(@NonNull Class<T> eventClass, @NonNull T event);
 
     @Nullable Set<@NonNull ZFListener> getListeners(@NonNull Class<?> moduleClass);
-    @Nullable Map<Event.@NonNull Priority, @NonNull Set<@NonNull Method>> getListenersByEvent(@NonNull Class<? extends Event> eventClass);
-    @NonNull Map<@NonNull Class<? extends Event> , @NonNull Map<Event.@NonNull Priority, Set<@NonNull Method>>> getListeners();
+    @Nullable Map<Event.@NonNull Priority, @NonNull Set<@NonNull Method>> getListenersByEvent(@NonNull Class<? extends Event<?>> eventClass);
+    @NonNull Map<@NonNull Class<? extends Event<?>> , @NonNull Map<Event.@NonNull Priority, Set<@NonNull Method>>> getListeners();
 }

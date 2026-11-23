@@ -1,9 +1,9 @@
 package com.zfettostudios.zfuctone.model.event;
 
-public interface Event {
+public interface Event<T> {
     boolean cancelled();
 
-    Event cancelled(boolean cancelled);
+    T cancelled(boolean cancelled);
 
     enum Priority {
         LOWEST,

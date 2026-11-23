@@ -4,7 +4,7 @@ import com.zfettostudios.zfuctone.provider.ZFuctoneProvider;
 import com.zfettostudios.zfuctone.file.FileFacade;
 import com.zfettostudios.zfuctone.logging.ZLogger;
 import com.zfettostudios.zfuctone.model.config.localization.Localization;
-import com.zfettostudios.zfuctone.model.constant.LocalizationType;
+import com.zfettostudios.zfuctone.model.constant.type.LocalizationType;
 import com.zfettostudios.zfuctone.module.controller.ModuleController;
 import com.zfettostudios.zfuctone.module.integration.miniplaceholders.MiniPlaceholdersModule;
 import com.zfettostudios.zfuctone.module.integration.placeholderapi.PlaceholderAPIModule;

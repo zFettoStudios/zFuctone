@@ -4,8 +4,8 @@ import com.zfettostudios.zfuctone.model.event.Event;
 import com.zfettostudios.zfuctone.platform.entity.PlatformPlayer;
 import org.jspecify.annotations.NonNull;
 
-public interface PlayerEvent extends Event {
+public interface PlayerEvent<T> extends Event<T> {
     PlatformPlayer player();
 
-    Event player(@NonNull PlatformPlayer player);
+    T player(@NonNull PlatformPlayer player);
 }

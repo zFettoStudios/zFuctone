@@ -28,7 +28,7 @@ import com.zfettostudios.zfuctone.model.config.PlaceholderConfig;
 import com.zfettostudios.zfuctone.model.config.localization.Localization;
 import com.zfettostudios.zfuctone.model.config.MessageConfig;
 import com.zfettostudios.zfuctone.model.config.PermissionConfig;
-import com.zfettostudios.zfuctone.model.constant.LocalizationType;
+import com.zfettostudios.zfuctone.model.constant.type.LocalizationType;
 import com.zfettostudios.zfuctone.model.file.FilePack;
 import com.zfettostudios.zfuctone.model.value.ValueString;
 import com.zfettostudios.zfuctone.resolver.ReflectionResolver;

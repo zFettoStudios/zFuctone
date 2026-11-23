@@ -2,7 +2,7 @@ package com.zfettostudios.zfuctone;
 
 import com.github.retrooper.packetevents.PacketEvents;
 import com.zfettostudios.zfuctone.model.constant.BuildConstant;
-import com.zfettostudios.zfuctone.model.constant.PlatformType;
+import com.zfettostudios.zfuctone.model.constant.type.PlatformType;
 import com.zfettostudios.zfuctone.resolver.LibraryResolver;
 import com.zfettostudios.zfuctone.resolver.LibraryResolverImpl;
 import com.zfettostudios.zfuctone.resolver.ReflectionResolver;

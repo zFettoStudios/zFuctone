@@ -1,12 +1,11 @@
 package com.zfettostudios.zfuctone.module.integration.floodgate;
 
-import com.zfettostudios.zfuctone.model.config.PermissionConfig;
 import com.zfettostudios.zfuctone.model.config.setting.PermissionSetting;
 import com.zfettostudios.zfuctone.provider.ZFuctoneProvider;
 import com.zfettostudios.zfuctone.file.FileFacade;
 import com.zfettostudios.zfuctone.model.config.IntegrationConfig;
 import com.zfettostudios.zfuctone.model.config.localization.Localization;
-import com.zfettostudios.zfuctone.model.constant.LocalizationType;
+import com.zfettostudios.zfuctone.model.constant.type.LocalizationType;
 import com.zfettostudios.zfuctone.model.constant.minecraft.player.PlayerEdition;
 import com.zfettostudios.zfuctone.module.integration.IntegrationModuleImpl;
 import com.zfettostudios.zfuctone.module.integration.geyser.GeyserModule;

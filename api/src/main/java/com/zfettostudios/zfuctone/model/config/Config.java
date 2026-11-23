@@ -8,7 +8,7 @@ import com.zfettostudios.zfuctone.annotation.config.FilePath;
 import com.zfettostudios.zfuctone.model.config.setting.EnableSetting;
 import com.zfettostudios.zfuctone.model.config.setting.TimeSetting;
 import com.zfettostudios.zfuctone.model.constant.BuildConstant;
-import com.zfettostudios.zfuctone.model.constant.DatabaseType;
+import com.zfettostudios.zfuctone.model.constant.type.DatabaseType;
 import com.zfettostudios.zjtime.TimeUnit;
 
 import java.util.List;

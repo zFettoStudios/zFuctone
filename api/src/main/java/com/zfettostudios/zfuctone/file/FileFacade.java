@@ -8,7 +8,7 @@ import com.zfettostudios.zfuctone.model.config.PlaceholderConfig;
 import com.zfettostudios.zfuctone.model.config.localization.Localization;
 import com.zfettostudios.zfuctone.model.config.MessageConfig;
 import com.zfettostudios.zfuctone.model.config.PermissionConfig;
-import com.zfettostudios.zfuctone.model.constant.LocalizationType;
+import com.zfettostudios.zfuctone.model.constant.type.LocalizationType;
 import com.zfettostudios.zfuctone.model.lifecycle.Reloadable;
 import org.jspecify.annotations.NonNull;
 import org.jspecify.annotations.Nullable;

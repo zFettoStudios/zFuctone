@@ -9,7 +9,7 @@ import com.zfettostudios.zfuctone.model.config.PlaceholderConfig;
 import com.zfettostudios.zfuctone.model.config.localization.Localization;
 import com.zfettostudios.zfuctone.model.config.setting.PermissionSetting;
 import com.zfettostudios.zfuctone.model.config.setting.PlaceholderValueSetting;
-import com.zfettostudios.zfuctone.model.constant.LocalizationType;
+import com.zfettostudios.zfuctone.model.constant.type.LocalizationType;
 import com.zfettostudios.zfuctone.module.integration.placeholderapi.PlaceholderAPIModule;
 import com.zfettostudios.zfuctone.model.value.PlaceholderContext;
 import com.zfettostudios.zfuctone.platform.entity.PlatformPlayer;

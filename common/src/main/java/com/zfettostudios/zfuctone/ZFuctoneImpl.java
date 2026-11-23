@@ -11,7 +11,11 @@ import com.zfettostudios.zfuctone.file.FileFacade;
 import com.zfettostudios.zfuctone.file.FileFacadeImpl;
 import com.zfettostudios.zfuctone.logging.ZLogger;
 import com.zfettostudios.zfuctone.logging.ZLoggerImpl;
-import com.zfettostudios.zfuctone.model.constant.PlatformType;
+import com.zfettostudios.zfuctone.model.constant.type.EventType;
+import com.zfettostudios.zfuctone.model.constant.type.PlatformType;
+import com.zfettostudios.zfuctone.model.event.lifecycle.DisableEvent;
+import com.zfettostudios.zfuctone.model.event.lifecycle.EnableEvent;
+import com.zfettostudios.zfuctone.model.event.lifecycle.ReloadEvent;
 import com.zfettostudios.zfuctone.module.controller.ModuleController;
 import com.zfettostudios.zfuctone.module.controller.ModuleControllerImpl;
 import com.zfettostudios.zfuctone.module.integration.floodgate.FloodgateModule;
@@ -125,11 +129,16 @@ public abstract class ZFuctoneImpl implements ZFuctone {
         registerListeners();
 
         logger.logEnabled();
+
+        listenerRegistry.run(EnableEvent.class, EnableEvent.build(this));
+
         return this;
     }
 
     @Override
     public ZFuctone disable() {
+        listenerRegistry.run(DisableEvent.class, DisableEvent.build(this));
+
         logger.logDisabling();
 
         unregisterListeners();
@@ -149,6 +158,8 @@ public abstract class ZFuctoneImpl implements ZFuctone {
 
     @Override
     public ZFuctone reload() {
+        listenerRegistry.run(ReloadEvent.class, ReloadEvent.build(this, EventType.START));
+
         fileFacade.reload();
 
         logger.logReloading();
@@ -160,6 +171,9 @@ public abstract class ZFuctoneImpl implements ZFuctone {
         moduleController.reload();
 
         logger.logReloaded();
+
+        listenerRegistry.run(ReloadEvent.class, ReloadEvent.build(this, EventType.END));
+
         return this;
     }
 
