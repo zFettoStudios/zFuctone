@@ -219,4 +219,6 @@ public interface PlatformPlayer extends Audience {
      * @return текущий экземпляр игрока.
      */
     PlatformPlayer kick(@NonNull Component reason);
+
+    boolean isPlayer();
 }

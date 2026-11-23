@@ -1,10 +1,7 @@
 package com.zfettostudios.zfuctone.dispatcher;
 
-import com.zfettostudios.zfuctone.model.config.localization.Localization;
 import com.zfettostudios.zfuctone.platform.entity.PlatformPlayer;
 import org.jspecify.annotations.NonNull;
-
-import java.util.function.Function;
 
 /**
  * Отправляет локализованные сообщения заданным получателям.
@@ -22,7 +19,7 @@ public interface MessageDispatcher {
      * @param recipients получатели.
      * @return текущий экземпляр диспетчера.
      */
-    MessageDispatcher dispatch(@NonNull PlatformPlayer sender, @NonNull Function<Localization, String> getMessage,
+    MessageDispatcher dispatch(@NonNull PlatformPlayer sender, @NonNull GetMessage getMessage,
                                @NonNull PlatformPlayer... recipients);
 
     /**
@@ -32,5 +29,5 @@ public interface MessageDispatcher {
      * @param getMessage функция получения сообщения из локализации получателя.
      * @return текущий экземпляр диспетчера.
      */
-    MessageDispatcher dispatchEveryone(@NonNull PlatformPlayer sender, @NonNull Function<Localization, String> getMessage);
+    MessageDispatcher dispatchEveryone(@NonNull PlatformPlayer sender, @NonNull GetMessage getMessage);
 }

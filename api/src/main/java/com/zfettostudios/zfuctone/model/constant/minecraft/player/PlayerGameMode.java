@@ -4,5 +4,6 @@ public enum PlayerGameMode {
     CREATIVE,
     ADVENTURE,
     SPECTATOR,
-    SURVIVAL
+    SURVIVAL,
+    UNKNOWN
 }

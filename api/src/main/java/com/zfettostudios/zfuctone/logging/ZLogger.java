@@ -1,5 +1,6 @@
 package com.zfettostudios.zfuctone.logging;
 
+import com.zfettostudios.zfuctone.platform.entity.PlatformPlayer;
 import net.kyori.adventure.text.Component;
 import org.jspecify.annotations.NonNull;
 
@@ -9,7 +10,7 @@ import org.jspecify.annotations.NonNull;
  * @since 0.1
  * @author RandomShel
  */
-public interface ZLogger {
+public interface ZLogger extends PlatformPlayer {
 
     /**
      * Логирует начало включения.

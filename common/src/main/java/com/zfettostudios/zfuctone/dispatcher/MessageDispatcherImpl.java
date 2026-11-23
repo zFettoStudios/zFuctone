@@ -3,8 +3,6 @@ package com.zfettostudios.zfuctone.dispatcher;
 import com.zfettostudios.zfuctone.provider.ZFuctoneProvider;
 import com.zfettostudios.zfuctone.file.FileFacade;
 import com.zfettostudios.zfuctone.logging.ZLogger;
-import com.zfettostudios.zfuctone.model.config.localization.Localization;
-import com.zfettostudios.zfuctone.model.constant.type.LocalizationType;
 import com.zfettostudios.zfuctone.module.controller.ModuleController;
 import com.zfettostudios.zfuctone.module.integration.miniplaceholders.MiniPlaceholdersModule;
 import com.zfettostudios.zfuctone.module.integration.placeholderapi.PlaceholderAPIModule;
@@ -16,7 +14,6 @@ import net.kyori.adventure.text.Component;
 import org.jspecify.annotations.NonNull;
 
 import java.util.List;
-import java.util.function.Function;
 
 public class MessageDispatcherImpl implements MessageDispatcher {
     private final TaskScheduler taskScheduler = ZFuctoneProvider.get().taskScheduler();
@@ -28,8 +25,7 @@ public class MessageDispatcherImpl implements MessageDispatcher {
     private final LazyInstance<PlaceholderAPIModule> placeholderAPI = LazyInstance.build(() -> moduleController.get().get(PlaceholderAPIModule.class));
 
     @Override
-    public MessageDispatcher dispatch(@NonNull PlatformPlayer sender,
-                                      @NonNull Function<Localization, String> getMessage,
+    public MessageDispatcher dispatch(@NonNull PlatformPlayer sender, @NonNull GetMessage getMessage,
                                       @NonNull PlatformPlayer... recipients) {
         for (PlatformPlayer recipient : recipients) dispatchAsyncToPlayer(sender, recipient, getMessage);
 
@@ -37,12 +33,11 @@ public class MessageDispatcherImpl implements MessageDispatcher {
     }
 
     @Override
-    public MessageDispatcher dispatchEveryone(@NonNull PlatformPlayer sender,
-                                              @NonNull Function<Localization, String> getMessage) {
+    public MessageDispatcher dispatchEveryone(@NonNull PlatformPlayer sender, @NonNull GetMessage getMessage) {
         List<PlatformPlayer> recipients = playerService.getOnlinePlayers();
 
         taskScheduler.runAsync(() -> {
-            Component component = formatPlaceholders(sender, getMessage.apply(fileFacade.localization(LocalizationType.CONSOLE)));
+            Component component = formatPlaceholders(sender, getMessage.apply(logger));
             if (component == null) {
                 logger.warn("The message component is null for the Console (check the localization configuration)");
                 return;
@@ -56,12 +51,9 @@ public class MessageDispatcherImpl implements MessageDispatcher {
         return this;
     }
 
-    private void dispatchAsyncToPlayer(@NonNull PlatformPlayer sender,
-                                       @NonNull PlatformPlayer recipient,
-                                       @NonNull Function<Localization, String> getMessage) {
+    private void dispatchAsyncToPlayer(PlatformPlayer sender, PlatformPlayer recipient, GetMessage getMessage) {
         taskScheduler.runAsync(() -> {
-            String message = getMessage.apply(fileFacade.localizationOrDefault(recipient.getLocale(),
-                LocalizationType.PLAYER));
+            String message = getMessage.apply(sender);
 
             taskScheduler.runSync(() -> {
                 Component component = formatPlaceholders(sender, message);
@@ -76,7 +68,7 @@ public class MessageDispatcherImpl implements MessageDispatcher {
         });
     }
 
-    private Component formatPlaceholders(@NonNull PlatformPlayer sender, String message) {
+    private Component formatPlaceholders(PlatformPlayer sender, String message) {
         if (message == null || message.isEmpty()) return null;
 
         return miniPlaceholders.get().setPlaceholders(sender, placeholderAPI.get().setPlaceholders(sender, message));

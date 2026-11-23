@@ -42,6 +42,7 @@ import com.zfettostudios.zfuctone.module.placeholder.ServerPlaceholderModule;
 import com.zfettostudios.zfuctone.module.placeholder.ServerPlaceholderModuleImpl;
 import com.zfettostudios.zfuctone.platform.adapter.PlatformPlayerAdapter;
 import com.zfettostudios.zfuctone.platform.adapter.PlatformServerAdapter;
+import com.zfettostudios.zfuctone.platform.registry.CommandRegistry;
 import com.zfettostudios.zfuctone.platform.registry.ListenerRegistry;
 import com.zfettostudios.zfuctone.platform.registry.ListenerRegistryImpl;
 import com.zfettostudios.zfuctone.platform.registry.PermissionRegistry;
@@ -76,6 +77,7 @@ public abstract class ZFuctoneImpl implements ZFuctone {
     protected final PermissionRegistry permissionRegistry;
     protected final PlaceholderRegistry placeholderRegistry;
     protected final ListenerRegistry listenerRegistry;
+    protected final CommandRegistry commandRegistry;
 
     @Getter(AccessLevel.NONE)
     protected final Builder builder;
@@ -103,6 +105,7 @@ public abstract class ZFuctoneImpl implements ZFuctone {
         permissionRegistry = builder.buildPermissionRegistry();
         placeholderRegistry = new PlaceholderRegistryImpl();
         listenerRegistry = new ListenerRegistryImpl();
+        commandRegistry = ;
 
         playerService = new PlatformPlayerServiceImpl();
         messageDispatcher = new MessageDispatcherImpl();
