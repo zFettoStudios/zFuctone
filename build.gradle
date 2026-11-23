@@ -69,6 +69,8 @@ subprojects {
         compileOnly libraries.cloud.core
         compileOnly libraries.cloud.annotations
 
+        compileOnly libraries.cloud.brigadier
+
         compileOnly libraries.adventure.api
         compileOnly libraries.adventure.key
         compileOnly libraries.adventure.minimessage

@@ -1,7 +1,5 @@
 package com.zfettostudios.zfuctone;
 
-import lombok.RequiredArgsConstructor;
-
 import com.zfettostudios.zfuctone.exception.InvalidTypeException;
 import com.zfettostudios.zfuctone.listener.BukkitPlayerJoinListener;
 import com.zfettostudios.zfuctone.listener.BukkitPlayerQuitListener;
@@ -14,7 +12,9 @@ import com.zfettostudios.zfuctone.platform.adapter.BukkitPlayerAdapter;
 import com.zfettostudios.zfuctone.platform.adapter.PaperServerAdapter;
 import com.zfettostudios.zfuctone.platform.adapter.PlatformPlayerAdapter;
 import com.zfettostudios.zfuctone.platform.adapter.PlatformServerAdapter;
+import com.zfettostudios.zfuctone.platform.registry.BukkitCommandRegistry;
 import com.zfettostudios.zfuctone.platform.registry.BukkitPermissionRegistry;
+import com.zfettostudios.zfuctone.platform.registry.CommandRegistry;
 import com.zfettostudios.zfuctone.platform.registry.PermissionRegistry;
 import com.zfettostudios.zfuctone.resolver.LibraryResolver;
 import com.zfettostudios.zfuctone.resolver.ReflectionResolver;
@@ -22,7 +22,6 @@ import org.bukkit.Bukkit;
 import org.bukkit.event.HandlerList;
 import org.bukkit.event.Listener;
 import org.bukkit.plugin.PluginManager;
-import org.bukkit.plugin.java.JavaPlugin;
 import org.jspecify.annotations.NonNull;
 
 import java.nio.file.Path;
@@ -41,10 +40,10 @@ public class BukkitZFuctone extends ZFuctoneImpl {
     }
 
     @Override
-    public @NonNull <L> L getLoader(Class<L> loader) {
-        if (loader.isInstance(loader)) return loader.cast(loader);
+    public @NonNull <L> L getLoader(Class<L> loaderClass) {
+        if (loaderClass.isInstance(loader)) return loaderClass.cast(loader);
 
-        throw new InvalidTypeException(loader);
+        throw new InvalidTypeException(loaderClass);
     }
 
     @Override
@@ -82,13 +81,10 @@ public class BukkitZFuctone extends ZFuctoneImpl {
 
     @Override
     protected Builder builder() {
-        return new BuilderImpl(loader);
+        return new BuilderImpl();
     }
 
-    @RequiredArgsConstructor
     private static class BuilderImpl extends Builder {
-        private final JavaPlugin loader;
-
         @Override
         protected PermissionRegistry buildPermissionRegistry() {
             return new BukkitPermissionRegistry();
@@ -101,7 +97,7 @@ public class BukkitZFuctone extends ZFuctoneImpl {
 
         @Override
         protected PlatformServerAdapter buildServerAdapter() {
-            return new PaperServerAdapter(loader);
+            return new PaperServerAdapter();
         }
 
         @Override
@@ -112,6 +108,11 @@ public class BukkitZFuctone extends ZFuctoneImpl {
         @Override
         protected PlaceholderAPIModule buildPlaceholderAPIModule() {
             return new BukkitPlaceholderAPIModule();
+        }
+
+        @Override
+        protected CommandRegistry buildCommandRegistry() {
+            return new BukkitCommandRegistry();
         }
     }
 }

@@ -196,4 +196,9 @@ public class PlatformPlayerImpl implements PlatformPlayer {
     public boolean isPlayer() {
         return true;
     }
+
+    @Override
+    public boolean isConsole() {
+        return false;
+    }
 }

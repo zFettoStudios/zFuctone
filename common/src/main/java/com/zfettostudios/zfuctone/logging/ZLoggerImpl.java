@@ -163,7 +163,7 @@ public class ZLoggerImpl implements ZLogger {
 
     @Override
     public boolean isOperator() {
-        return false;
+        return true;
     }
 
     @Override
@@ -188,7 +188,7 @@ public class ZLoggerImpl implements ZLogger {
 
     @Override
     public boolean hasPermission(@NonNull String permission) {
-        return false;
+        return true;
     }
 
     @Override
@@ -230,5 +230,10 @@ public class ZLoggerImpl implements ZLogger {
     @Override
     public boolean isPlayer() {
         return false;
+    }
+
+    @Override
+    public boolean isConsole() {
+        return true;
     }
 }

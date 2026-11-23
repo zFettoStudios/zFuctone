@@ -35,7 +35,8 @@ ext.libraries = [
         annotations: "org.incendo:cloud-annotations:$cloud_core_version",
         paper: "org.incendo:cloud-paper:$cloud_minecraft_version",
         bukkit: "org.incendo:cloud-bukkit:$cloud_minecraft_version",
-        velocity: "org.incendo:cloud-velocity:$cloud_minecraft_version"
+        velocity: "org.incendo:cloud-velocity:$cloud_minecraft_version",
+        brigadier: "com.mojang:brigadier:$mojang_brigadier_version"
     ],
 
     jackson: [

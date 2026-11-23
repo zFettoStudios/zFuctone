@@ -105,7 +105,7 @@ public abstract class ZFuctoneImpl implements ZFuctone {
         permissionRegistry = builder.buildPermissionRegistry();
         placeholderRegistry = new PlaceholderRegistryImpl();
         listenerRegistry = new ListenerRegistryImpl();
-        commandRegistry = ;
+        commandRegistry = builder.buildCommandRegistry();
 
         playerService = new PlatformPlayerServiceImpl();
         messageDispatcher = new MessageDispatcherImpl();
@@ -221,5 +221,7 @@ public abstract class ZFuctoneImpl implements ZFuctone {
 
         protected abstract MiniPlaceholdersModule buildMiniPlaceholdersModule();
         protected abstract PlaceholderAPIModule buildPlaceholderAPIModule();
+
+        protected abstract CommandRegistry buildCommandRegistry();
     }
 }

@@ -221,4 +221,5 @@ public interface PlatformPlayer extends Audience {
     PlatformPlayer kick(@NonNull Component reason);
 
     boolean isPlayer();
+    boolean isConsole();
 }

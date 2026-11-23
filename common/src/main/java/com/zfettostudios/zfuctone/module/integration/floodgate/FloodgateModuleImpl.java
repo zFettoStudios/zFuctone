@@ -81,6 +81,7 @@ public class FloodgateModuleImpl extends IntegrationModuleImpl<FloodgateModule> 
         return switch (getEdition(player.uuid())) {
             case JAVA -> localization.java().asString();
             case BEDROCK -> localization.bedrock().asString();
+            case UNKNOWN -> null;
         };
     }
 
