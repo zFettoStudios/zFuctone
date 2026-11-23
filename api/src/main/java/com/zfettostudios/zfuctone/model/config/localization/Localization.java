@@ -68,6 +68,7 @@ public class Localization {
         @Setter
         public static class ZFuctone {
             private ValueString reload;
+            private ValueString failedReload;
         }
     }
 

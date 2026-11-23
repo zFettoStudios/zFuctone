@@ -20,7 +20,8 @@ public class RuRuLocalization extends Localization {
     }
 
     private void commandCollect() {
-        command();
+        command().zfuctone().reload(ValueString.build("<green>Плагин успешно перезагружен!"));
+        command().zfuctone().failedReload(ValueString.build("<red>Ошибка перезагрузки плагина, проверьте консоль"));
     }
 
     private void integrationCollect() {

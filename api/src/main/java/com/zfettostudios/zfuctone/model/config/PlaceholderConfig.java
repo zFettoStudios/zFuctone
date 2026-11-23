@@ -30,7 +30,6 @@ public class PlaceholderConfig implements EnableSetting {
         private final PlaceholderSetting projectDescription = new PlaceholderSetting("project_description");
         private final PlaceholderSetting projectWebsite = new PlaceholderSetting("project_website");
         private final PlaceholderSetting projectVersion = new PlaceholderSetting("project_version");
-        private final PlaceholderSetting projectReload = new PlaceholderSetting("project_reload");
 
         private final PlaceholderSetting serverType = new PlaceholderSetting("server_type");
         private final PlaceholderSetting serverVersion = new PlaceholderSetting("server_version");

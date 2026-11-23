@@ -16,6 +16,8 @@ import com.zfettostudios.zfuctone.model.constant.type.PlatformType;
 import com.zfettostudios.zfuctone.model.event.lifecycle.DisableEvent;
 import com.zfettostudios.zfuctone.model.event.lifecycle.EnableEvent;
 import com.zfettostudios.zfuctone.model.event.lifecycle.ReloadEvent;
+import com.zfettostudios.zfuctone.module.command.zfuctone.ZFuctoneCommandModule;
+import com.zfettostudios.zfuctone.module.command.zfuctone.ZFuctoneCommandModuleImpl;
 import com.zfettostudios.zfuctone.module.controller.ModuleController;
 import com.zfettostudios.zfuctone.module.controller.ModuleControllerImpl;
 import com.zfettostudios.zfuctone.module.integration.floodgate.FloodgateModule;
@@ -209,6 +211,8 @@ public abstract class ZFuctoneImpl implements ZFuctone {
 
         moduleController.register(JoinModule.class, new JoinModuleImpl());
         moduleController.register(QuitModule.class, new QuitModuleImpl());
+
+        moduleController.register(ZFuctoneCommandModule.class, new ZFuctoneCommandModuleImpl());
     }
 
     protected abstract Builder builder();

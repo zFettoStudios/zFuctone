@@ -1,7 +1,6 @@
 package com.zfettostudios.zfuctone.module.placeholder;
 
 import com.zfettostudios.zfuctone.provider.ZFuctoneProvider;
-import com.zfettostudios.zfuctone.exception.ReloadException;
 import com.zfettostudios.zfuctone.model.config.setting.PermissionSetting;
 import com.zfettostudios.zfuctone.model.config.setting.PlaceholderSetting;
 import com.zfettostudios.zfuctone.model.constant.BuildConstant;
@@ -29,7 +28,6 @@ public class ProjectPlaceholderModuleImpl extends StandardPlaceholderModuleImpl<
         register(config().projectDescription(), permission().projectDescriptionUse(), _ -> BuildConstant.PROJECT_DESCRIPTION);
         register(config().projectWebsite(), permission().projectWebsiteUse(), _ -> BuildConstant.PROJECT_WEBSITE);
         register(config().projectVersion(), permission().projectVersionUse(), _ -> BuildConstant.PROJECT_VERSION);
-        register(config().projectReload(), permission().projectReloadUse(), this::handlerReload);
 
         return this;
     }
@@ -45,17 +43,6 @@ public class ProjectPlaceholderModuleImpl extends StandardPlaceholderModuleImpl<
     @Override
     public @NonNull ProjectPlaceholderModule get() {
         return this;
-    }
-
-    private String handlerReload(PlaceholderContext context) {
-        try {
-            ZFuctoneProvider.get().reload();
-        } catch (ReloadException e) {
-            ZFuctoneProvider.get().logger().warn("Reload failed: {}", e.getMessage());
-            return "Failed to reload, See console for details";
-        }
-
-        return "Reload complete";
     }
 
     private void register(PlaceholderSetting setting, PermissionSetting permission,

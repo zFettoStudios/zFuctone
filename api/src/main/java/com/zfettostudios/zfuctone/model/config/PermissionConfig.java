@@ -127,9 +127,6 @@ public class PermissionConfig {
             private final PermissionSetting projectVersionUse = new PermissionSetting(
                 "zfuctone.module.placeholder.standard.project_version.use", PermissionType.OP
             );
-            private final PermissionSetting projectReloadUse = new PermissionSetting(
-                "zfuctone.module.placeholder.standard.project_reload.use", PermissionType.OP
-            );
 
             private final PermissionSetting serverTypeUse = new PermissionSetting(
                 "zfuctone.module.placeholder.standard.server_type.use", PermissionType.OP

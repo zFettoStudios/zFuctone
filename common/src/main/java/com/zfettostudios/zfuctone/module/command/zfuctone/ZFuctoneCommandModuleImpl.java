@@ -1,5 +1,7 @@
 package com.zfettostudios.zfuctone.module.command.zfuctone;
 
+import com.zfettostudios.zfuctone.dispatcher.GetMessage;
+import com.zfettostudios.zfuctone.dispatcher.MessageDispatcher;
 import com.zfettostudios.zfuctone.exception.ReloadException;
 import com.zfettostudios.zfuctone.model.config.CommandConfig;
 import com.zfettostudios.zfuctone.model.config.PermissionConfig;
@@ -18,10 +20,13 @@ import org.incendo.cloud.parser.standard.StringParser;
 import org.incendo.cloud.suggestion.SuggestionProvider;
 import org.jspecify.annotations.NonNull;
 
+import java.util.Optional;
+
 public class ZFuctoneCommandModuleImpl extends SimpleModule<ZFuctoneCommandModule> implements ZFuctoneCommandModule {
     private final CommandRegistry commandRegistry = ZFuctoneProvider.get().commandRegistry();
     private final PermissionRegistry permissionRegistry = ZFuctoneProvider.get().permissionRegistry();
     private final ListenerRegistry listenerRegistry = ZFuctoneProvider.get().listenerRegistry();
+    private final MessageDispatcher messageDispatcher = ZFuctoneProvider.get().messageDispatcher();
 
     @Override
     public CommandConfig.@NonNull ZFuctone config() {
@@ -79,16 +84,21 @@ public class ZFuctoneCommandModuleImpl extends SimpleModule<ZFuctoneCommandModul
     }
 
     private void handler(CommandContext<PlatformPlayer> context) {
-        Operation operation = getOperation(context);
-        if (operation == null) return;
+        PlatformPlayer sender = context.sender();
+        Optional<String> argumentOptional = context.optional("arg1");
+        if (argumentOptional.isEmpty()) return;
 
-        switch (operation) {
-            case RELOAD -> {
-                try {
-                    ZFuctoneProvider.get().reload();
-                } catch (ReloadException e) {
-                    ZFuctoneProvider.get().logger().warn("Reload failed: {}", e.getMessage());
-                }
+        String argument = argumentOptional.get();
+
+        if (config().reload().aliases().stream().anyMatch(alias -> alias.equalsIgnoreCase(argument))) {
+            try {
+                ZFuctoneProvider.get().reload();
+
+                messageDispatcher.dispatch(sender, GetMessage.ofLocalization(localization -> localization.command().zfuctone().reload().asString()), sender);
+            } catch (ReloadException e) {
+                ZFuctoneProvider.get().logger().warn("Reload failed: {}", e.getMessage());
+
+                messageDispatcher.dispatch(sender, GetMessage.ofLocalization(localization -> localization.command().zfuctone().failedReload().asString()), sender);
             }
         }
     }
@@ -101,17 +111,5 @@ public class ZFuctoneCommandModuleImpl extends SimpleModule<ZFuctoneCommandModul
     @Override
     public @NonNull ZFuctoneCommandModule get() {
         return this;
-    }
-
-    private Operation getOperation(CommandContext<PlatformPlayer> context) {
-        String argument = context.get("arg1");
-
-        if (config().aliases().contains(argument)) return Operation.RELOAD;
-
-        return null;
-    }
-
-    private enum Operation {
-        RELOAD
     }
 }
