@@ -33,37 +33,37 @@ public class ZLoggerImpl implements ZLogger {
     }
 
     @Override
-    public ZLogger logEnabling() {
+    public @NonNull ZLogger logEnabling() {
         return info("Enabling...");
     }
 
     @Override
-    public ZLogger logEnabled() {
+    public @NonNull ZLogger logEnabled() {
         return info("{} v{} enabled", BuildConstant.PROJECT_NAME, BuildConstant.PROJECT_VERSION);
     }
 
     @Override
-    public ZLogger logDisabling() {
+    public @NonNull ZLogger logDisabling() {
         return info("Disabling...");
     }
 
     @Override
-    public ZLogger logDisabled() {
+    public @NonNull ZLogger logDisabled() {
         return info("{} v{} disabled", BuildConstant.PROJECT_NAME, BuildConstant.PROJECT_VERSION);
     }
 
     @Override
-    public ZLogger logReloading() {
+    public @NonNull ZLogger logReloading() {
         return info("Reloading...");
     }
 
     @Override
-    public ZLogger logReloaded() {
+    public @NonNull ZLogger logReloaded() {
         return info("{} v{} reloaded", BuildConstant.PROJECT_NAME, BuildConstant.PROJECT_VERSION);
     }
 
     @Override
-    public ZLogger logDescription() {
+    public @NonNull ZLogger logDescription() {
         config().description().forEach(string ->
             info(string.replace("<version>", BuildConstant.PROJECT_VERSION)));
 
@@ -71,48 +71,48 @@ public class ZLoggerImpl implements ZLogger {
     }
 
     @Override
-    public ZLogger warn(@NonNull String format, Object... arguments) {
+    public @NonNull ZLogger warn(@NonNull String format, Object... arguments) {
         logger.warn(mm.deserialize(config().prefix() + config().warn() + format), arguments);
         return this;
     }
 
     @Override
-    public ZLogger warn(@NonNull String message) {
+    public @NonNull ZLogger warn(@NonNull String message) {
         logger.warn(mm.deserialize(config().prefix() + config().warn() + message));
         return this;
     }
 
     @Override
-    public ZLogger warn(@NonNull Component message) {
+    public @NonNull ZLogger warn(@NonNull Component message) {
         logger.warn(mm.deserialize(config().prefix() + config().warn()).append(message));
         return this;
     }
 
     @Override
-    public ZLogger info(@NonNull String format, Object... arguments) {
+    public @NonNull ZLogger info(@NonNull String format, Object... arguments) {
         logger.info(mm.deserialize(config().prefix() + config().info() + format), arguments);
         return this;
     }
 
     @Override
-    public ZLogger info(@NonNull String message) {
+    public @NonNull ZLogger info(@NonNull String message) {
         logger.info(mm.deserialize(config().prefix() + config().info() + message));
         return this;
     }
 
     @Override
-    public ZLogger info(@NonNull Component message) {
+    public @NonNull ZLogger info(@NonNull Component message) {
         logger.info(mm.deserialize(config().prefix() + config().info()).append(message));
         return this;
     }
 
     @Override
-    public <T> T getRawPlayer(@NonNull Class<T> type) {
+    public <T> @NonNull T getRawPlayer(@NonNull Class<T> type) {
         return null;
     }
 
     @Override
-    public Object getRawPlayer() {
+    public @NonNull Object getRawPlayer() {
         return null;
     }
 
@@ -207,23 +207,23 @@ public class ZLoggerImpl implements ZLogger {
     }
 
     @Override
-    public PlatformPlayer setDisplayNickname(@NonNull String displayNickname) {
+    public @NonNull PlatformPlayer setDisplayNickname(@NonNull String displayNickname) {
         return this;
     }
 
     @Override
-    public PlatformPlayer dispatchMessage(@NonNull Component message) {
+    public @NonNull PlatformPlayer dispatchMessage(@NonNull Component message) {
         info(message);
         return this;
     }
 
     @Override
-    public PlatformPlayer executeCommand(@NonNull String command) {
+    public @NonNull PlatformPlayer executeCommand(@NonNull String command) {
         return this;
     }
 
     @Override
-    public PlatformPlayer kick(@NonNull Component reason) {
+    public @NonNull PlatformPlayer kick(@NonNull Component reason) {
         return this;
     }
 

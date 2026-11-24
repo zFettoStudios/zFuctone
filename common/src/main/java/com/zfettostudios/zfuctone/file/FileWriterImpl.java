@@ -36,17 +36,17 @@ public class FileWriterImpl implements FileWriter {
     }
 
     @Override
-    public <T> CompletableFuture<T> saveAsync(@NonNull T file, @NonNull Path pathToFile) {
+    public <T> @NonNull CompletableFuture<T> saveAsync(@NonNull T file, @NonNull Path pathToFile) {
         return CompletableFuture.supplyAsync(() -> save(file, pathToFile), executor);
     }
 
     @Override
-    public  <T> CompletableFuture<T> saveAsync(@NonNull T file) {
+    public  <T> @NonNull CompletableFuture<T> saveAsync(@NonNull T file) {
         return saveAsync(file, fileFacade.getFilePath(file, dataPath, localizationsPath));
     }
 
     @Override
-    public CompletableFuture<FilePack> saveAsync(@NonNull FilePack files) {
+    public @NonNull CompletableFuture<FilePack> saveAsync(@NonNull FilePack files) {
         return CompletableFuture.allOf(
             saveAsync(files.config()),
             saveAsync(files.command()),

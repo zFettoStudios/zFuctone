@@ -58,6 +58,7 @@ import com.zfettostudios.zfuctone.scheduler.TaskScheduler;
 import com.zfettostudios.zfuctone.scheduler.TaskSchedulerImpl;
 import com.zfettostudios.zfuctone.service.PlatformPlayerService;
 import com.zfettostudios.zfuctone.service.PlatformPlayerServiceImpl;
+import org.jspecify.annotations.NonNull;
 
 import java.nio.file.Path;
 
@@ -116,7 +117,7 @@ public abstract class ZFuctoneImpl implements ZFuctone {
     }
 
     @Override
-    public ZFuctone enable() {
+    public @NonNull ZFuctone enable() {
         fileFacade.enable();
 
         logger.logEnabling();
@@ -141,7 +142,7 @@ public abstract class ZFuctoneImpl implements ZFuctone {
     }
 
     @Override
-    public ZFuctone disable() {
+    public @NonNull ZFuctone disable() {
         listenerRegistry.run(DisableEvent.class, DisableEvent.build(this));
 
         logger.logDisabling();
@@ -162,7 +163,7 @@ public abstract class ZFuctoneImpl implements ZFuctone {
     }
 
     @Override
-    public ZFuctone reload() {
+    public @NonNull ZFuctone reload() {
         listenerRegistry.run(ReloadEvent.class, ReloadEvent.build(this, EventType.START));
 
         fileFacade.reload();

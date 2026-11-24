@@ -28,8 +28,8 @@ public abstract class CommandRegistryImpl implements CommandRegistry {
     }
 
     @Override
-    public CommandRegistry register(@NonNull Class<?> moduleClass,
-                                    @NonNull Function<@NonNull CommandManager<PlatformPlayer>,
+    public @NonNull CommandRegistry register(@NonNull Class<?> moduleClass,
+                                             @NonNull Function<@NonNull CommandManager<PlatformPlayer>,
                                         Command.@NonNull Builder<PlatformPlayer>> builder) {
         Command.Builder<PlatformPlayer> commandBuilder = builder.apply(commandManager);
 
@@ -55,7 +55,7 @@ public abstract class CommandRegistryImpl implements CommandRegistry {
     }
 
     @Override
-    public CommandRegistry unregister(@NonNull Class<?> moduleClass, @NonNull String commandName) {
+    public @NonNull CommandRegistry unregister(@NonNull Class<?> moduleClass, @NonNull String commandName) {
         Set<String> moduleCommands = commands.get(moduleClass);
         if (moduleCommands == null) return this;
 
@@ -66,7 +66,7 @@ public abstract class CommandRegistryImpl implements CommandRegistry {
     }
 
     @Override
-    public CommandRegistry unregister(@NonNull String commandName) {
+    public @NonNull CommandRegistry unregister(@NonNull String commandName) {
         commands.values().forEach(moduleCommands -> moduleCommands.remove(commandName));
 
         commandManager.deleteRootCommand(commandName);
@@ -75,7 +75,7 @@ public abstract class CommandRegistryImpl implements CommandRegistry {
     }
 
     @Override
-    public CommandRegistry unregisterAll(@NonNull Class<?> moduleClass) {
+    public @NonNull CommandRegistry unregisterAll(@NonNull Class<?> moduleClass) {
         Set<String> moduleCommands = commands.get(moduleClass);
         if (moduleCommands == null) return this;
 
@@ -86,7 +86,7 @@ public abstract class CommandRegistryImpl implements CommandRegistry {
     }
 
     @Override
-    public CommandRegistry unregisterAll() {
+    public @NonNull CommandRegistry unregisterAll() {
         commands.values().forEach(moduleCommands -> moduleCommands.forEach(commandManager::deleteRootCommand));
 
         commands.clear();

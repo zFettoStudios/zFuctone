@@ -1,6 +1,7 @@
 package com.zfettostudios.zfuctone.module.integration.floodgate;
 
 import com.zfettostudios.zfuctone.model.config.setting.PermissionSetting;
+import com.zfettostudios.zfuctone.module.Module;
 import com.zfettostudios.zfuctone.provider.ZFuctoneProvider;
 import com.zfettostudios.zfuctone.file.FileFacade;
 import com.zfettostudios.zfuctone.model.config.IntegrationConfig;
@@ -42,23 +43,28 @@ public class FloodgateModuleImpl extends IntegrationModuleImpl<FloodgateModule> 
     }
 
     @Override
+    public @NonNull Class<? extends Module<FloodgateModule>> moduleClass() {
+        return FloodgateModule.class;
+    }
+
+    @Override
     public @NonNull FloodgateModule get() {
         return this;
     }
 
     @Override
-    public FloodgateModule enable() {
+    protected @NonNull FloodgateModule onEnable() {
         return this;
     }
 
     @Override
-    public FloodgateModule disable() {
+    protected @NonNull FloodgateModule onDisable() {
         return this;
     }
 
     @Override
-    public FloodgateModule reload() {
-        return disable().enable();
+    protected @NonNull FloodgateModule onReload() {
+        return this;
     }
 
     @Override

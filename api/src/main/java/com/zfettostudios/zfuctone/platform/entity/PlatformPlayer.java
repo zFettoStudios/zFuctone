@@ -13,7 +13,7 @@ import java.util.UUID;
 /**
  * Обертка над игроком платформы.
  *
- * @since 0.1
+ * @since 1.0
  * @author RandomShel
  */
 public interface PlatformPlayer extends Audience {
@@ -45,14 +45,14 @@ public interface PlatformPlayer extends Audience {
      * @param <T> целевой тип.
      * @return объект игрока указанного типа.
      */
-    <T> T getRawPlayer(@NonNull Class<T> type);
+    @NonNull <T> T getRawPlayer(@NonNull Class<T> type);
 
     /**
      * Получает объект игрока платформы.
      *
      * @return объект игрока.
      */
-    Object getRawPlayer();
+    @NonNull Object getRawPlayer();
 
     /**
      * Возвращает UUID игрока.
@@ -194,7 +194,7 @@ public interface PlatformPlayer extends Audience {
      * @param displayNickname новый отображаемый ник.
      * @return текущий экземпляр игрока.
      */
-    PlatformPlayer setDisplayNickname(@NonNull String displayNickname);
+    @NonNull PlatformPlayer setDisplayNickname(@NonNull String displayNickname);
 
     /**
      * Отправляет игроку сообщение.
@@ -202,7 +202,7 @@ public interface PlatformPlayer extends Audience {
      * @param message отправляемое сообщение.
      * @return текущий экземпляр игрока.
      */
-    PlatformPlayer dispatchMessage(@NonNull Component message);
+    @NonNull PlatformPlayer dispatchMessage(@NonNull Component message);
 
     /**
      * Выполняет команду от имени игрока.
@@ -210,7 +210,7 @@ public interface PlatformPlayer extends Audience {
      * @param command выполняемая команда.
      * @return текущий экземпляр игрока.
      */
-    PlatformPlayer executeCommand(@NonNull String command);
+    @NonNull PlatformPlayer executeCommand(@NonNull String command);
 
     /**
      * Отключает игрока от сервера с указанной причиной.
@@ -218,7 +218,7 @@ public interface PlatformPlayer extends Audience {
      * @param reason причина отключения.
      * @return текущий экземпляр игрока.
      */
-    PlatformPlayer kick(@NonNull Component reason);
+    @NonNull PlatformPlayer kick(@NonNull Component reason);
 
     boolean isPlayer();
     boolean isConsole();

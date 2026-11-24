@@ -11,14 +11,14 @@ import java.util.Set;
 import java.util.function.Function;
 
 public interface CommandRegistry {
-    CommandRegistry register(@NonNull Class<?> moduleClass, @NonNull Function<@NonNull CommandManager<PlatformPlayer>,
+    @NonNull CommandRegistry register(@NonNull Class<?> moduleClass, @NonNull Function<@NonNull CommandManager<PlatformPlayer>,
         Command.@NonNull Builder<PlatformPlayer>> builder);
 
-    CommandRegistry unregister(@NonNull Class<?> moduleClass, @NonNull String commandName);
-    CommandRegistry unregister(@NonNull String commandName);
+    @NonNull CommandRegistry unregister(@NonNull Class<?> moduleClass, @NonNull String commandName);
+    @NonNull CommandRegistry unregister(@NonNull String commandName);
 
-    CommandRegistry unregisterAll(@NonNull Class<?> moduleClass);
-    CommandRegistry unregisterAll();
+    @NonNull CommandRegistry unregisterAll(@NonNull Class<?> moduleClass);
+    @NonNull CommandRegistry unregisterAll();
 
     @Nullable Set<String> getCommands(@NonNull Class<?> moduleClass);
     @NonNull Map<Class<?>, Set<String>> getCommands();

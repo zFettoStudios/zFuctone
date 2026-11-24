@@ -24,17 +24,17 @@ public class ModuleControllerImpl implements ModuleController {
     private final Map<Class<? extends Module<?>>, Module<?>> modules = new ConcurrentHashMap<>();
 
     @Override
-    public ModuleController enable() {
+    public @NonNull ModuleController enable() {
         return executeAllModules(Reloadable::enable);
     }
 
     @Override
-    public ModuleController disable() {
+    public @NonNull ModuleController disable() {
         return executeAllModules(Reloadable::disable);
     }
 
     @Override
-    public ModuleController reload() {
+    public @NonNull ModuleController reload() {
         return executeAllModules(Reloadable::reload);
     }
 
@@ -45,7 +45,7 @@ public class ModuleControllerImpl implements ModuleController {
     }
 
     @Override
-    public <T extends Module<T>> T register(@NonNull Class<T> moduleClass, Module<T> module) {
+    public <T extends Module<T>> @NonNull T register(@NonNull Class<T> moduleClass, Module<T> module) {
         return moduleClass.cast(modules.put(moduleClass, module));
     }
 

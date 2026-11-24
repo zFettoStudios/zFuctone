@@ -14,4 +14,6 @@ public interface Module<T> extends Reloadable<T> {
     @NonNull EnableSetting config();
 
     @NonNull PermissionSetting permission();
+
+    @NonNull Class<? extends Module<T>> moduleClass();
 }

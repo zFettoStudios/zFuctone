@@ -47,20 +47,20 @@ public class TaskSchedulerImpl implements TaskScheduler {
     }
 
     @Override
-    public TaskScheduler start() {
+    public @NonNull TaskScheduler start() {
         disabled = false;
         return this;
     }
 
     @Override
-    public TaskScheduler reload() {
+    public @NonNull TaskScheduler reload() {
         if (executorService.isShutdown()) executorService = Executors.newVirtualThreadPerTaskExecutor();
 
         return this;
     }
 
     @Override
-    public TaskScheduler shutdown() {
+    public @NonNull TaskScheduler shutdown() {
         disabled = true;
         executorService.shutdown();
 
@@ -79,7 +79,7 @@ public class TaskSchedulerImpl implements TaskScheduler {
     }
 
     @Override
-    public <T> T await(@NonNull CompletableFuture<T> future, @NonNull T fallback, @NonNull Duration timeout, @NonNull String description) {
+    public <T> @NonNull T await(@NonNull CompletableFuture<T> future, @NonNull T fallback, @NonNull Duration timeout, @NonNull String description) {
         try {
             return future.get(timeout.toMillis(), TimeUnit.MILLISECONDS);
         } catch (TimeoutException e) {
@@ -92,98 +92,98 @@ public class TaskSchedulerImpl implements TaskScheduler {
     }
 
     @Override
-    public <T> T await(@NonNull CompletableFuture<T> future, @NonNull T fallback, @NonNull String description) {
+    public <T> @NonNull T await(@NonNull CompletableFuture<T> future, @NonNull T fallback, @NonNull String description) {
         return await(future, fallback, DEFAULT_AWAIT_TIMEOUT, description);
     }
 
     @Override
-    public CompletableFuture<Void> runAsync(@NonNull Runnable runnable) {
+    public @NonNull CompletableFuture<Void> runAsync(@NonNull Runnable runnable) {
         return scheduleRunnable(runnable, 0, 0, true);
     }
 
     @Override
-    public CompletableFuture<Void> runAsyncLater(@NonNull Runnable runnable, long delay) {
+    public @NonNull CompletableFuture<Void> runAsyncLater(@NonNull Runnable runnable, long delay) {
         return scheduleRunnable(runnable, delay, 0, true);
     }
 
     @Override
-    public CompletableFuture<Void> runAsyncTimer(@NonNull Runnable runnable, long period) {
+    public @NonNull CompletableFuture<Void> runAsyncTimer(@NonNull Runnable runnable, long period) {
         return scheduleRunnable(runnable, 0, period, true);
     }
 
     @Override
-    public CompletableFuture<Void> runAsyncTimer(@NonNull Runnable runnable, long delay, long period) {
+    public @NonNull CompletableFuture<Void> runAsyncTimer(@NonNull Runnable runnable, long delay, long period) {
         return scheduleRunnable(runnable, delay, period, true);
     }
 
     @Override
-    public CompletableFuture<Void> runSync(@NonNull Runnable runnable) {
+    public @NonNull CompletableFuture<Void> runSync(@NonNull Runnable runnable) {
         return scheduleRunnable(runnable, 0, 0, false);
     }
 
     @Override
-    public CompletableFuture<Void> runSyncLater(@NonNull Runnable runnable, long delay) {
+    public @NonNull CompletableFuture<Void> runSyncLater(@NonNull Runnable runnable, long delay) {
         return scheduleRunnable(runnable, delay, 0, false);
     }
 
     @Override
-    public CompletableFuture<Void> runSyncTimer(@NonNull Runnable runnable, long period) {
+    public @NonNull CompletableFuture<Void> runSyncTimer(@NonNull Runnable runnable, long period) {
         return scheduleRunnable(runnable, 0, period, false);
     }
 
     @Override
-    public CompletableFuture<Void> runSyncTimer(@NonNull Runnable runnable, long delay, long period) {
+    public @NonNull CompletableFuture<Void> runSyncTimer(@NonNull Runnable runnable, long delay, long period) {
         return scheduleRunnable(runnable, delay, period, false);
     }
 
     @Override
-    public <T> CompletableFuture<T> runAsync(@NonNull Supplier<T> supplier) {
+    public <T> @NonNull CompletableFuture<T> runAsync(@NonNull Supplier<T> supplier) {
         return scheduleSupplier(supplier, 0, 0, true);
     }
 
     @Override
-    public <T> CompletableFuture<T> runAsyncLater(@NonNull Supplier<T> supplier, long delay) {
+    public <T> @NonNull CompletableFuture<T> runAsyncLater(@NonNull Supplier<T> supplier, long delay) {
         return scheduleSupplier(supplier, delay, 0, true);
     }
 
     @Override
-    public <T> CompletableFuture<T> runAsyncTimer(@NonNull Supplier<T> supplier, long period) {
+    public <T> @NonNull CompletableFuture<T> runAsyncTimer(@NonNull Supplier<T> supplier, long period) {
         return scheduleSupplier(supplier, 0, period, true);
     }
 
     @Override
-    public <T> CompletableFuture<T> runAsyncTimer(@NonNull Supplier<T> supplier, long delay, long period) {
+    public <T> @NonNull CompletableFuture<T> runAsyncTimer(@NonNull Supplier<T> supplier, long delay, long period) {
         return scheduleSupplier(supplier, delay, period, true);
     }
 
     @Override
-    public <T> CompletableFuture<T> runSync(@NonNull Supplier<T> supplier) {
+    public <T> @NonNull CompletableFuture<T> runSync(@NonNull Supplier<T> supplier) {
         return scheduleSupplier(supplier, 0, 0, false);
     }
 
     @Override
-    public <T> CompletableFuture<T> runSyncLater(@NonNull Supplier<T> supplier, long delay) {
+    public <T> @NonNull CompletableFuture<T> runSyncLater(@NonNull Supplier<T> supplier, long delay) {
         return scheduleSupplier(supplier, delay, 0, false);
     }
 
     @Override
-    public <T> CompletableFuture<T> runSyncTimer(@NonNull Supplier<T> supplier, long period) {
+    public <T> @NonNull CompletableFuture<T> runSyncTimer(@NonNull Supplier<T> supplier, long period) {
         return scheduleSupplier(supplier, 0, period, false);
     }
 
     @Override
-    public <T> CompletableFuture<T> runSyncTimer(@NonNull Supplier<T> supplier, long delay, long period) {
+    public <T> @NonNull CompletableFuture<T> runSyncTimer(@NonNull Supplier<T> supplier, long delay, long period) {
         return scheduleSupplier(supplier, delay, period, false);
     }
 
     @Override
-    public TaskScheduler runAsyncAllOf(CompletableFuture<?>... futures) {
+    public @NonNull TaskScheduler runAsyncAllOf(CompletableFuture<?>... futures) {
         CompletableFuture.allOf(futures).thenRunAsync(() -> {}, executorService);
         return this;
     }
 
     @Override
-    public TaskScheduler runSyncAllOf(CompletableFuture<?>... futures) {
+    public @NonNull TaskScheduler runSyncAllOf(CompletableFuture<?>... futures) {
         CompletableFuture.allOf(futures).join();
         return this;
     }
@@ -194,7 +194,7 @@ public class TaskSchedulerImpl implements TaskScheduler {
     }
 
     @Override
-    public TaskScheduler onTick() {
+    public @NonNull TaskScheduler onTick() {
         if (isDisabled()) return this;
 
         long tick = currentTick.getAndIncrement();

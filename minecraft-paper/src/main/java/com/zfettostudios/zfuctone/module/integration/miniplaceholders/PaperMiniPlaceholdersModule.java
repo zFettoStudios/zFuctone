@@ -18,31 +18,19 @@ public class PaperMiniPlaceholdersModule extends MiniPlaceholdersModuleImpl {
     }
 
     @Override
-    public MiniPlaceholdersModule enable() {
-        if (isEnable()) taskScheduler.runSync(integration::hook);
-        return this;
-    }
-
-    @Override
-    public MiniPlaceholdersModule disable() {
-        if (isPluginExits()) taskScheduler.runSync(integration::unhook);
-        return this;
-    }
-
-    @Override
-    public TagResolver audiencePlaceholders() {
+    public @NonNull TagResolver audiencePlaceholders() {
         if (isEnable()) return MiniPlaceholders.audiencePlaceholders();
         return TagResolver.empty();
     }
 
     @Override
-    public TagResolver globalPlaceholders() {
+    public @NonNull TagResolver globalPlaceholders() {
         if (isEnable()) return MiniPlaceholders.globalPlaceholders();
         return TagResolver.empty();
     }
 
     @Override
-    public TagResolver audienceGlobalPlaceholders() {
+    public @NonNull TagResolver audienceGlobalPlaceholders() {
         if (isEnable()) return MiniPlaceholders.audienceGlobalPlaceholders();
         return TagResolver.empty();
     }
@@ -53,9 +41,22 @@ public class PaperMiniPlaceholdersModule extends MiniPlaceholdersModuleImpl {
     }
 
     @Override
-    public MiniPlaceholdersModule reload() {
-        disable();
-        enable();
+    protected @NonNull MiniPlaceholdersModule onEnable() {
+        if (isEnable()) taskScheduler.runSync(integration::hook);
+        return this;
+    }
+
+    @Override
+    protected @NonNull MiniPlaceholdersModule onDisable() {
+        if (isPluginExits()) taskScheduler.runSync(integration::unhook);
+        return this;
+    }
+
+    @Override
+    protected @NonNull MiniPlaceholdersModule onReload() {
+        onDisable();
+        onEnable();
+
         return this;
     }
 }

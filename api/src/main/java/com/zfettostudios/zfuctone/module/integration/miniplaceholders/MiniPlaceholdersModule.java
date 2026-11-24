@@ -8,11 +8,11 @@ import net.kyori.adventure.text.minimessage.tag.resolver.TagResolver;
 import org.jspecify.annotations.NonNull;
 
 public interface MiniPlaceholdersModule extends IntegrationModule<MiniPlaceholdersModule> {
-    TagResolver audiencePlaceholders();
+    @NonNull TagResolver audiencePlaceholders();
 
-    TagResolver globalPlaceholders();
+    @NonNull TagResolver globalPlaceholders();
 
-    TagResolver audienceGlobalPlaceholders();
+    @NonNull TagResolver audienceGlobalPlaceholders();
 
     @NonNull Component setPlaceholders(@NonNull PlatformPlayer sender, @NonNull String input,
                                        @NonNull TagResolver... tagResolvers);

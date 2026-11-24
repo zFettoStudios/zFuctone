@@ -8,6 +8,6 @@ public interface IntegrationHook<R> {
         return FactoryProvider.modelFactory().emptyIntegrationHook();
     }
 
-    R hook();
-    R unhook();
+    @NonNull R hook();
+    @NonNull R unhook();
 }

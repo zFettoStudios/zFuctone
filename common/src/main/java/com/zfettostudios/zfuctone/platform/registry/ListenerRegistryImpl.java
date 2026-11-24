@@ -32,7 +32,7 @@ public class ListenerRegistryImpl implements ListenerRegistry {
     private final Map<Method, ZFListener> methodOwners = new ConcurrentHashMap<>();
 
     @Override
-    public ListenerRegistry register(@NonNull Class<?> moduleClass, @NonNull ZFListener listener) {
+    public @NonNull ListenerRegistry register(@NonNull Class<?> moduleClass, @NonNull ZFListener listener) {
         boolean registeredAny = false;
 
         for (Method method : listener.getClass().getDeclaredMethods()) {
@@ -65,7 +65,7 @@ public class ListenerRegistryImpl implements ListenerRegistry {
     }
 
     @Override
-    public ListenerRegistry unregisterAll(@NonNull Class<?> moduleClass) {
+    public @NonNull ListenerRegistry unregisterAll(@NonNull Class<?> moduleClass) {
         Set<ZFListener> moduleListeners = listenersModuleClass.remove(moduleClass);
         if (moduleListeners == null || moduleListeners.isEmpty()) return this;
 
@@ -84,7 +84,7 @@ public class ListenerRegistryImpl implements ListenerRegistry {
     }
 
     @Override
-    public ListenerRegistry unregisterAll() {
+    public @NonNull ListenerRegistry unregisterAll() {
         listeners.clear();
         listenersModuleClass.clear();
         methodOwners.clear();
@@ -93,7 +93,7 @@ public class ListenerRegistryImpl implements ListenerRegistry {
     }
 
     @Override
-    public <T extends Event<T>> ListenerRegistry run(@NonNull Class<T> eventClass, @NonNull T event) {
+    public <T extends Event<T>> @NonNull ListenerRegistry run(@NonNull Class<T> eventClass, @NonNull T event) {
         Map<Event.Priority, Set<Method>> byPriority = listeners.get(eventClass);
         if (byPriority == null || byPriority.isEmpty()) return this;
 
@@ -120,12 +120,12 @@ public class ListenerRegistryImpl implements ListenerRegistry {
     }
 
     @Override
-    public @Nullable Set<@NonNull ZFListener> getListeners(@NonNull Class<?> moduleClass) {
+    public @Nullable Set<ZFListener> getListeners(@NonNull Class<?> moduleClass) {
         return listenersModuleClass.get(moduleClass);
     }
 
     @Override
-    public @Nullable Map<Event.@NonNull Priority, @NonNull Set<@NonNull Method>> getListenersByEvent(@NonNull Class<? extends Event<?>> eventClass) {
+    public @Nullable Map<Event.Priority, Set<Method>> getListenersByEvent(@NonNull Class<? extends Event<?>> eventClass) {
         return listeners.get(eventClass);
     }
 }

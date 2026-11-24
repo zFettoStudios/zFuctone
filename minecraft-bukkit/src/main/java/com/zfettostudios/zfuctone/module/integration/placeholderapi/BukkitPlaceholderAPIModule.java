@@ -20,18 +20,6 @@ public class BukkitPlaceholderAPIModule extends PlaceholderAPIModuleImpl {
     }
 
     @Override
-    public PlaceholderAPIModule enable() {
-        if (isEnable()) taskScheduler.runSync(integration::hook);
-        return this;
-    }
-
-    @Override
-    public PlaceholderAPIModule disable() {
-        if (isPluginExits()) taskScheduler.runSync(integration::unhook);
-        return this;
-    }
-
-    @Override
     public @NonNull String setPlaceholders(@Nullable PlatformPlayer sender, @NonNull String input) {
         if (!isEnable()) return input;
         if (sender == null || !(sender.getRawPlayer() instanceof Player player))
@@ -59,7 +47,22 @@ public class BukkitPlaceholderAPIModule extends PlaceholderAPIModuleImpl {
     }
 
     @Override
-    public PlaceholderAPIModule reload() {
-        return disable().enable();
+    protected @NonNull PlaceholderAPIModule onEnable() {
+        if (isEnable()) taskScheduler.runSync(integration::hook);
+        return this;
+    }
+
+    @Override
+    protected @NonNull PlaceholderAPIModule onDisable() {
+        if (isPluginExits()) taskScheduler.runSync(integration::unhook);
+        return this;
+    }
+
+    @Override
+    protected @NonNull PlaceholderAPIModule onReload() {
+        onDisable();
+        onEnable();
+
+        return this;
     }
 }

@@ -6,7 +6,8 @@ import com.zfettostudios.zfuctone.provider.FactoryProvider;
 import org.jspecify.annotations.NonNull;
 
 public interface ModuleDisableEvent extends ModuleEvent<ModuleDisableEvent> {
-    static @NonNull ModuleDisableEvent build(@NonNull Module<?> module, @NonNull Class<? extends @NonNull Module<?>> moduleClass, @NonNull EventType type) {
+    static @NonNull ModuleDisableEvent build(@NonNull Module<?> module, @NonNull Class<? extends Module<?>> moduleClass,
+                                             @NonNull EventType type) {
         return FactoryProvider.modelFactory().buildModuleDisableEvent(module, moduleClass, type);
     }
 }

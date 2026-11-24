@@ -6,7 +6,8 @@ import com.zfettostudios.zfuctone.provider.FactoryProvider;
 import org.jspecify.annotations.NonNull;
 
 public interface ModuleReloadEvent extends ModuleEvent<ModuleReloadEvent> {
-    static @NonNull ModuleReloadEvent build(@NonNull Module<?> module, @NonNull Class<? extends @NonNull Module<?>> moduleClass, @NonNull EventType type) {
+    static @NonNull ModuleReloadEvent build(@NonNull Module<?> module, @NonNull Class<? extends Module<?>> moduleClass,
+                                            @NonNull EventType type) {
         return FactoryProvider.modelFactory().buildModuleReloadEvent(module, moduleClass, type);
     }
 }

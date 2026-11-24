@@ -16,7 +16,7 @@ public abstract class PermissionRegistryImpl implements PermissionRegistry {
     protected final Map<Class<?>, Set<String>> permissions = new ConcurrentHashMap<>();
 
     @Override
-    public PermissionRegistry register(@NonNull Class<?> moduleClass, @NonNull String permission, @NonNull PermissionType type) {
+    public @NonNull PermissionRegistry register(@NonNull Class<?> moduleClass, @NonNull String permission, @NonNull PermissionType type) {
         Set<String> modulePermissions = permissions.get(moduleClass);
         if (modulePermissions == null) modulePermissions = new CopyOnWriteArraySet<>();
 
@@ -27,7 +27,7 @@ public abstract class PermissionRegistryImpl implements PermissionRegistry {
     }
 
     @Override
-    public PermissionRegistry unregister(@NonNull String permission) {
+    public @NonNull PermissionRegistry unregister(@NonNull String permission) {
         if (permissions.isEmpty()) return this;
 
         unregisterPermission(permission);
@@ -38,7 +38,7 @@ public abstract class PermissionRegistryImpl implements PermissionRegistry {
     }
 
     @Override
-    public PermissionRegistry unregister(@NonNull Class<?> moduleClass, @NonNull String permission) {
+    public @NonNull PermissionRegistry unregister(@NonNull Class<?> moduleClass, @NonNull String permission) {
         Set<String> modulePermissions = permissions.get(moduleClass);
         if (modulePermissions == null) return this;
 
@@ -49,7 +49,7 @@ public abstract class PermissionRegistryImpl implements PermissionRegistry {
     }
 
     @Override
-    public PermissionRegistry unregisterAll(@NonNull Class<?> moduleClass) {
+    public @NonNull PermissionRegistry unregisterAll(@NonNull Class<?> moduleClass) {
         Set<String> modulePermissions = permissions.remove(moduleClass);
         if (modulePermissions == null) return this;
 
@@ -59,7 +59,7 @@ public abstract class PermissionRegistryImpl implements PermissionRegistry {
     }
 
     @Override
-    public PermissionRegistry unregisterAll() {
+    public @NonNull PermissionRegistry unregisterAll() {
         if (permissions.isEmpty()) return this;
 
         permissions.values().forEach(modulePermissions ->
@@ -73,21 +73,6 @@ public abstract class PermissionRegistryImpl implements PermissionRegistry {
     @Override
     public @Nullable Set<String> getPermissions(@NonNull Class<?> moduleClass) {
         return permissions.get(moduleClass);
-    }
-
-    @Override
-    public boolean contains(@NonNull Class<?> moduleClass, @NonNull String permission) {
-        Set<String> modulePermissions = permissions.get(moduleClass);
-        if (modulePermissions == null) return false;
-
-        return modulePermissions.contains(permission);
-    }
-
-    @Override
-    public boolean contains(@NonNull String permission) {
-        if (permissions.isEmpty()) return false;
-
-        return permissions.values().stream().anyMatch(modulePermissions -> modulePermissions.contains(permission));
     }
 
     protected abstract void registerPermission(String permission, PermissionType type);

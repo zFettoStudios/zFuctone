@@ -2,6 +2,7 @@ package com.zfettostudios.zfuctone.module.integration.viaversion;
 
 import com.viaversion.viaversion.api.Via;
 import com.zfettostudios.zfuctone.model.config.setting.PermissionSetting;
+import com.zfettostudios.zfuctone.module.Module;
 import com.zfettostudios.zfuctone.provider.ZFuctoneProvider;
 import com.zfettostudios.zfuctone.file.FileFacade;
 import com.zfettostudios.zfuctone.model.config.IntegrationConfig;
@@ -28,6 +29,11 @@ public class ViaVersionModuleImpl extends IntegrationModuleImpl<ViaVersionModule
     @Override
     public @NonNull PermissionSetting permission() {
         return fileFacade.permission().integration().viaversion();
+    }
+
+    @Override
+    public @NonNull Class<? extends Module<ViaVersionModule>> moduleClass() {
+        return ViaVersionModule.class;
     }
 
     @Override
@@ -60,17 +66,17 @@ public class ViaVersionModuleImpl extends IntegrationModuleImpl<ViaVersionModule
     }
 
     @Override
-    public ViaVersionModule enable() {
+    protected @NonNull ViaVersionModule onEnable() {
         return this;
     }
 
     @Override
-    public ViaVersionModule disable() {
+    protected @NonNull ViaVersionModule onDisable() {
         return this;
     }
 
     @Override
-    public ViaVersionModule reload() {
+    protected @NonNull ViaVersionModule onReload() {
         return this;
     }
 }

@@ -44,14 +44,14 @@ public class LibraryResolverImpl extends LibraryManager implements LibraryResolv
     }
 
     @Override
-    public LibraryResolver enable() {
+    public @NonNull LibraryResolver enable() {
         resolveRepositories();
         loadLibraries();
         return this;
     }
 
     @Override
-    public LibraryResolver disable() {
+    public @NonNull LibraryResolver disable() {
         return this;
     }
 
@@ -347,10 +347,5 @@ public class LibraryResolverImpl extends LibraryManager implements LibraryResolv
             "packeteventsmodern-netty-common",
             "packeteventsmodern-spigot"
         );
-    }
-
-    @Override
-    public LibraryResolver load(Library library) {
-        return this;
     }
 }

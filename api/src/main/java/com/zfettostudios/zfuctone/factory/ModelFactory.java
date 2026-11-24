@@ -36,7 +36,7 @@ public interface ModelFactory {
     @NonNull DisableEvent buildDisableEvent(@NonNull ZFuctone zfuctone);
     @NonNull ReloadEvent buildReloadEvent(@NonNull ZFuctone zfuctone, @NonNull EventType type);
 
-    @NonNull ModuleReloadEvent buildModuleReloadEvent(@NonNull Module<?> module, @NonNull Class<? extends @NonNull Module<?>> moduleClass, @NonNull EventType type);
-    @NonNull ModuleEnableEvent buildModuleEnableEvent(@NonNull Module<?> module, @NonNull Class<? extends @NonNull Module<?>> moduleClass, @NonNull EventType type);
-    @NonNull ModuleDisableEvent buildModuleDisableEvent(@NonNull Module<?> module, @NonNull Class<? extends @NonNull Module<?>> moduleClass, @NonNull EventType type);
+    @NonNull ModuleReloadEvent buildModuleReloadEvent(@NonNull Module<?> module, @NonNull Class<? extends Module<?>> moduleClass, @NonNull EventType type);
+    @NonNull ModuleEnableEvent buildModuleEnableEvent(@NonNull Module<?> module, @NonNull Class<? extends Module<?>> moduleClass, @NonNull EventType type);
+    @NonNull ModuleDisableEvent buildModuleDisableEvent(@NonNull Module<?> module, @NonNull Class<? extends Module<?>> moduleClass, @NonNull EventType type);
 }

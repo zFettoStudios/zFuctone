@@ -1,6 +1,7 @@
 package com.zfettostudios.zfuctone.module.integration.miniplaceholders;
 
 import com.zfettostudios.zfuctone.model.config.setting.PermissionSetting;
+import com.zfettostudios.zfuctone.module.Module;
 import com.zfettostudios.zfuctone.provider.ZFuctoneProvider;
 import com.zfettostudios.zfuctone.model.config.IntegrationConfig;
 import com.zfettostudios.zfuctone.module.integration.IntegrationModuleImpl;
@@ -38,5 +39,10 @@ public abstract class MiniPlaceholdersModuleImpl extends IntegrationModuleImpl<M
             audiencePlaceholders(),
             globalPlaceholders()
         );
+    }
+
+    @Override
+    public @NonNull Class<? extends Module<MiniPlaceholdersModule>> moduleClass() {
+        return MiniPlaceholdersModule.class;
     }
 }

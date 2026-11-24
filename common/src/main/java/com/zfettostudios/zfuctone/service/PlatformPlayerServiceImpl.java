@@ -22,13 +22,13 @@ public class PlatformPlayerServiceImpl implements PlatformPlayerService {
     private final PlatformPlayerServiceListener listener = new PlatformPlayerServiceListener(this);
 
     @Override
-    public PlatformPlayerService enable() {
+    public @NonNull PlatformPlayerService enable() {
         listenerRegistry.register(PlatformPlayerService.class, listener);
         return this;
     }
 
     @Override
-    public PlatformPlayerService disable() {
+    public @NonNull PlatformPlayerService disable() {
         listenerRegistry.unregisterAll(PlatformPlayerService.class);
         return this;
     }
@@ -49,19 +49,19 @@ public class PlatformPlayerServiceImpl implements PlatformPlayerService {
     }
 
     @Override
-    public PlatformPlayerService addPlatformPlayer(@NonNull PlatformPlayer platformPlayer) {
+    public @NonNull PlatformPlayerService addPlatformPlayer(@NonNull PlatformPlayer platformPlayer) {
         platformPlayers.put(platformPlayer.uuid(), platformPlayer);
         return this;
     }
 
     @Override
-    public PlatformPlayerService removePlatformPlayer(@NonNull UUID uuid) {
+    public @NonNull PlatformPlayerService removePlatformPlayer(@NonNull UUID uuid) {
         platformPlayers.remove(uuid);
         return this;
     }
 
     @Override
-    public PlatformPlayerService removePlatformPlayer(@NonNull String nickname) {
+    public @NonNull PlatformPlayerService removePlatformPlayer(@NonNull String nickname) {
         platformPlayers.remove(playerAdapter.getUUIDFromNickname(nickname));
         return this;
     }
@@ -72,7 +72,7 @@ public class PlatformPlayerServiceImpl implements PlatformPlayerService {
     }
 
     @Override
-    public PlatformPlayerService reload() {
+    public @NonNull PlatformPlayerService reload() {
         return this;
     }
 }

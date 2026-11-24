@@ -13,5 +13,4 @@ public abstract class IntegrationModuleImpl<T> extends SimpleModule<T> {
     }
 
     public abstract String getName();
-    public abstract boolean isEnable();
 }

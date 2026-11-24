@@ -1,9 +1,11 @@
 package com.zfettostudios.zfuctone.model.event;
 
+import org.jspecify.annotations.NonNull;
+
 public interface Event<T> {
     boolean cancelled();
 
-    T cancelled(boolean cancelled);
+    @NonNull T cancelled(boolean cancelled);
 
     enum Priority {
         LOWEST,

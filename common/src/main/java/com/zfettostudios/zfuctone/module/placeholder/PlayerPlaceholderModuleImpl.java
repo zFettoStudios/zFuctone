@@ -1,5 +1,6 @@
 package com.zfettostudios.zfuctone.module.placeholder;
 
+import com.zfettostudios.zfuctone.module.Module;
 import com.zfettostudios.zfuctone.provider.ZFuctoneProvider;
 import com.zfettostudios.zfuctone.model.config.setting.PermissionSetting;
 import com.zfettostudios.zfuctone.model.config.setting.PlaceholderSetting;
@@ -15,12 +16,7 @@ public class PlayerPlaceholderModuleImpl extends StandardPlaceholderModuleImpl<P
     private final PermissionRegistry permissionRegistry = ZFuctoneProvider.get().permissionRegistry();
 
     @Override
-    public PlayerPlaceholderModule reload() {
-        return disable().enable();
-    }
-
-    @Override
-    public PlayerPlaceholderModule enable() {
+    protected @NonNull PlayerPlaceholderModule onEnable() {
         if (!config().enable()) return this;
 
         register(config().playerNickname(), permission().playerNicknameUse(), player -> emptyToNull(player.getNickname()));
@@ -44,16 +40,33 @@ public class PlayerPlaceholderModuleImpl extends StandardPlaceholderModuleImpl<P
     }
 
     @Override
-    public PlayerPlaceholderModule disable() {
+    protected @NonNull PlayerPlaceholderModule onDisable() {
         placeholderRegistry.unregisterAll(PlayerPlaceholderModule.class);
         permissionRegistry.unregisterAll(PlayerPlaceholderModule.class);
+        return this;
+    }
 
+    @Override
+    protected @NonNull PlayerPlaceholderModule onReload() {
+        onDisable();
+        onEnable();
+
+        return this;
+    }
+
+    @Override
+    public @NonNull PlayerPlaceholderModule disable() {
         return this;
     }
 
     @Override
     public @NonNull PlayerPlaceholderModule get() {
         return this;
+    }
+
+    @Override
+    public @NonNull Class<? extends Module<PlayerPlaceholderModule>> moduleClass() {
+        return PlayerPlaceholderModule.class;
     }
 
     private static String emptyToNull(String value) {

@@ -17,7 +17,7 @@ public class ReflectionResolverImpl implements ReflectionResolver {
     }
 
     @Override
-    public <T extends Annotation> T getAnnotation(@NonNull Class<T> annotationClass, @NonNull Class<?> target) {
+    public <T extends Annotation> @NonNull T getAnnotation(@NonNull Class<T> annotationClass, @NonNull Class<?> target) {
         T annotation = target.getAnnotation(annotationClass);
         if (annotation == null) throw new AnnotationNotFoundException(target, annotationClass);
 
@@ -25,7 +25,7 @@ public class ReflectionResolverImpl implements ReflectionResolver {
     }
 
     @Override
-    public <T extends Annotation> T getAnnotation(@NonNull Class<T> annotationClass, @NonNull Object target) {
+    public <T extends Annotation> @NonNull T getAnnotation(@NonNull Class<T> annotationClass, @NonNull Object target) {
         T annotation = target.getClass().getAnnotation(annotationClass);
         if (annotation == null) throw new AnnotationNotFoundException(target.getClass(), annotationClass);
 

@@ -52,7 +52,7 @@ public class BukkitPlaceholderAPIIntegration extends PlaceholderExpansion implem
     }
 
     @Override
-    public BukkitPlaceholderAPIIntegration hook() {
+    public @NonNull BukkitPlaceholderAPIIntegration hook() {
         identifier = config.identifier();
 
         register();
@@ -60,7 +60,7 @@ public class BukkitPlaceholderAPIIntegration extends PlaceholderExpansion implem
     }
 
     @Override
-    public BukkitPlaceholderAPIIntegration unhook() {
+    public @NonNull BukkitPlaceholderAPIIntegration unhook() {
         unregister();
         return this;
     }

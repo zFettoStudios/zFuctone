@@ -1,5 +1,6 @@
 package com.zfettostudios.zfuctone.module.placeholder;
 
+import com.zfettostudios.zfuctone.module.Module;
 import com.zfettostudios.zfuctone.module.SimpleModule;
 import com.zfettostudios.zfuctone.provider.ZFuctoneProvider;
 import com.zfettostudios.zfuctone.file.FileFacade;
@@ -35,12 +36,12 @@ public class CustomPlaceholderModuleImpl extends SimpleModule<CustomPlaceholderM
     private final PlaceholderAPIModule placeholderAPIModule = ZFuctoneProvider.get().moduleController().get(PlaceholderAPIModule.class);
 
     @Override
-    public CustomPlaceholderModule reload() {
+    public @NonNull CustomPlaceholderModule reload() {
         return disable().enable();
     }
 
     @Override
-    public CustomPlaceholderModule enable() {
+    protected @NonNull CustomPlaceholderModule onEnable() {
         if (!config().enable()) return this;
 
         for (Map.Entry<String, PlaceholderValueSetting> entry : config().values().entrySet()) {
@@ -56,9 +57,17 @@ public class CustomPlaceholderModuleImpl extends SimpleModule<CustomPlaceholderM
     }
 
     @Override
-    public CustomPlaceholderModule disable() {
+    protected @NonNull CustomPlaceholderModule onDisable() {
         placeholderRegistry.unregisterAll(CustomPlaceholderModule.class);
         permissionRegistry.unregisterAll(CustomPlaceholderModule.class);
+
+        return this;
+    }
+
+    @Override
+    protected @NonNull CustomPlaceholderModule onReload() {
+        onDisable();
+        onEnable();
 
         return this;
     }
@@ -76,6 +85,11 @@ public class CustomPlaceholderModuleImpl extends SimpleModule<CustomPlaceholderM
     @Override
     public PermissionConfig.@NonNull Placeholder permission() {
         return fileFacade.permission().placeholder();
+    }
+
+    @Override
+    public @NonNull Class<? extends Module<CustomPlaceholderModule>> moduleClass() {
+        return CustomPlaceholderModule.class;
     }
 
     private Function<PlaceholderContext, String> createHandler(String placeholderKey, PlaceholderValueSetting valueSetting) {

@@ -3,6 +3,7 @@ package com.zfettostudios.zfuctone.module.integration.geyser;
 import lombok.RequiredArgsConstructor;
 
 import com.zfettostudios.zfuctone.model.config.setting.PermissionSetting;
+import com.zfettostudios.zfuctone.module.Module;
 import com.zfettostudios.zfuctone.provider.ZFuctoneProvider;
 import com.zfettostudios.zfuctone.model.config.IntegrationConfig;
 import com.zfettostudios.zfuctone.module.integration.IntegrationModuleImpl;
@@ -15,16 +16,6 @@ import java.util.UUID;
 @RequiredArgsConstructor
 public class GeyserModuleImpl extends IntegrationModuleImpl<GeyserModule> implements GeyserModule {
     @Override
-    public GeyserModule enable() {
-        return this;
-    }
-
-    @Override
-    public GeyserModule disable() {
-        return this;
-    }
-
-    @Override
     public @NonNull String getName() {
         return "Geyser";
     }
@@ -35,6 +26,21 @@ public class GeyserModuleImpl extends IntegrationModuleImpl<GeyserModule> implem
     }
 
     @Override
+    protected @NonNull GeyserModule onEnable() {
+        return this;
+    }
+
+    @Override
+    protected @NonNull GeyserModule onDisable() {
+        return this;
+    }
+
+    @Override
+    protected @NonNull GeyserModule onReload() {
+        return this;
+    }
+
+    @Override
     public IntegrationConfig.@NonNull Geyser config() {
         return ZFuctoneProvider.get().fileFacade().integration().geyser();
     }
@@ -42,6 +48,11 @@ public class GeyserModuleImpl extends IntegrationModuleImpl<GeyserModule> implem
     @Override
     public @NonNull PermissionSetting permission() {
         return ZFuctoneProvider.get().fileFacade().permission().integration().geyser();
+    }
+
+    @Override
+    public @NonNull Class<? extends Module<GeyserModule>> moduleClass() {
+        return GeyserModule.class;
     }
 
     @Override
@@ -57,10 +68,5 @@ public class GeyserModuleImpl extends IntegrationModuleImpl<GeyserModule> implem
         if (connection == null) return -1;
 
         return connection.protocolVersion();
-    }
-
-    @Override
-    public GeyserModule reload() {
-        return this;
     }
 }

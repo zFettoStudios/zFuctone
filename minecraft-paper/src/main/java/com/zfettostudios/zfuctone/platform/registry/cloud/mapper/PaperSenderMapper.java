@@ -12,16 +12,12 @@ import net.minecraft.server.MinecraftServer;
 import org.bukkit.craftbukkit.entity.CraftPlayer;
 import org.bukkit.entity.Player;
 import org.incendo.cloud.SenderMapper;
-import org.incendo.cloud.paper.util.sender.PaperSimpleSenderMapper;
-import org.incendo.cloud.paper.util.sender.Source;
 import org.jspecify.annotations.NonNull;
 
 @RequiredArgsConstructor
 public class PaperSenderMapper implements SenderMapper<CommandSourceStack, PlatformPlayer> {
     private final LazyInstance<PlatformPlayerService> playerService = LazyInstance.build(() -> ZFuctoneProvider.get().playerService());
     private final ZLogger logger = ZFuctoneProvider.get().logger();
-
-    private final SenderMapper<CommandSourceStack, Source> delegate = PaperSimpleSenderMapper.simpleSenderMapper();
 
     @Override
     public @NonNull PlatformPlayer map(@NonNull CommandSourceStack base) {

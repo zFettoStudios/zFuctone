@@ -7,12 +7,6 @@ import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
-/**
- * Указывает код языка в формате {@code ru_ru}.
- *
- * @since 0.1
- * @author RandomShel
- */
 @Retention(RetentionPolicy.RUNTIME)
 @Target(ElementType.TYPE)
 public @interface LocaleName {

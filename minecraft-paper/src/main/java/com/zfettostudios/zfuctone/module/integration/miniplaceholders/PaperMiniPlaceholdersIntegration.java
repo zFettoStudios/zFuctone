@@ -14,6 +14,7 @@ import net.kyori.adventure.identity.Identity;
 import net.kyori.adventure.text.minimessage.Context;
 import net.kyori.adventure.text.minimessage.tag.Tag;
 import net.kyori.adventure.text.minimessage.tag.resolver.ArgumentQueue;
+import org.jspecify.annotations.NonNull;
 
 import java.util.Map;
 import java.util.Optional;
@@ -28,13 +29,13 @@ public class PaperMiniPlaceholdersIntegration implements IntegrationHook<PaperMi
     private final Expansion expansion = createExpansion();
 
     @Override
-    public PaperMiniPlaceholdersIntegration hook() {
+    public @NonNull PaperMiniPlaceholdersIntegration hook() {
         expansion.register();
         return this;
     }
 
     @Override
-    public PaperMiniPlaceholdersIntegration unhook() {
+    public @NonNull PaperMiniPlaceholdersIntegration unhook() {
         expansion.unregister();
         return this;
     }

@@ -21,7 +21,7 @@ public class PlaceholderContextImpl implements PlaceholderContext {
         setRawText(rawText);
     }
 
-    public <T> T set(@NonNull String key, @NonNull T value) {
+    public <T> @NonNull T set(@NonNull String key, @NonNull T value) {
         rawContext.put(key, value);
         return value;
     }
@@ -50,7 +50,7 @@ public class PlaceholderContextImpl implements PlaceholderContext {
         return rawContext.remove(key);
     }
 
-    public PlatformPlayer setSender(@NonNull PlatformPlayer sender) {
+    public @NonNull PlatformPlayer setSender(@NonNull PlatformPlayer sender) {
         return this.sender = sender;
     }
 
@@ -58,7 +58,7 @@ public class PlaceholderContextImpl implements PlaceholderContext {
         return sender;
     }
 
-    public String setRawText(@NonNull String rawText) {
+    public @NonNull String setRawText(@NonNull String rawText) {
         return this.rawText = rawText;
     }
 

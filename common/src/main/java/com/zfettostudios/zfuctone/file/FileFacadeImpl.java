@@ -87,37 +87,37 @@ public class FileFacadeImpl implements FileFacade {
     }
 
     @Override
-    public Config config() {
+    public @NonNull Config config() {
         return files.config();
     }
 
     @Override
-    public MessageConfig message() {
+    public @NonNull MessageConfig message() {
         return files.message();
     }
 
     @Override
-    public CommandConfig command() {
+    public @NonNull CommandConfig command() {
         return files.command();
     }
 
     @Override
-    public PermissionConfig permission() {
+    public @NonNull PermissionConfig permission() {
         return files.permission();
     }
 
     @Override
-    public IntegrationConfig integration() {
+    public @NonNull IntegrationConfig integration() {
         return files.integration();
     }
 
     @Override
-    public PlaceholderConfig placeholder() {
+    public @NonNull PlaceholderConfig placeholder() {
         return files.placeholder();
     }
 
     @Override
-    public Map<String, Localization> localizations() {
+    public @NonNull Map<String, Localization> localizations() {
         return files.localizations();
     }
 
@@ -157,13 +157,13 @@ public class FileFacadeImpl implements FileFacade {
     }
 
     @Override
-    public FileFacade saveFiles() {
+    public @NonNull FileFacade saveFiles() {
         writer.saveAsync(files).join();
         return this;
     }
 
     @Override
-    public FileFacade updateFiles() {
+    public @NonNull FileFacade updateFiles() {
         loader.loadAsync(files).join();
 
         localizationPlayerDefault = localization(config().language().player().type());
@@ -176,7 +176,7 @@ public class FileFacadeImpl implements FileFacade {
     }
 
     @Override
-    public Path getFilePath(@NonNull Object config, @NonNull Path dataPath, @NonNull Path localizationsPath) {
+    public @NonNull Path getFilePath(@NonNull Object config, @NonNull Path dataPath, @NonNull Path localizationsPath) {
         FilePath filePath = reflectionResolver.getAnnotation(FilePath.class, config);
         if (filePath.localization()) return localizationsPath.resolve(filePath.path());
 
@@ -184,17 +184,17 @@ public class FileFacadeImpl implements FileFacade {
     }
 
     @Override
-    public FileFacade enable() {
+    public @NonNull FileFacade enable() {
         return updateFiles();
     }
 
     @Override
-    public FileFacade disable() {
+    public @NonNull FileFacade disable() {
         return saveFiles();
     }
 
     @Override
-    public FileFacade reload() {
+    public @NonNull FileFacade reload() {
         return updateFiles();
     }
 

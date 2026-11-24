@@ -9,10 +9,10 @@ import com.zfettostudios.zfuctone.model.constant.type.EventType;
 import com.zfettostudios.zfuctone.model.event.lifecycle.module.ModuleDisableEvent;
 import com.zfettostudios.zfuctone.model.event.lifecycle.module.ModuleEnableEvent;
 import com.zfettostudios.zfuctone.model.event.lifecycle.module.ModuleReloadEvent;
+import com.zfettostudios.zfuctone.module.Module;
 import com.zfettostudios.zfuctone.module.SimpleModule;
 import com.zfettostudios.zfuctone.platform.entity.PlatformPlayer;
 import com.zfettostudios.zfuctone.platform.registry.CommandRegistry;
-import com.zfettostudios.zfuctone.platform.registry.ListenerRegistry;
 import com.zfettostudios.zfuctone.platform.registry.PermissionRegistry;
 import com.zfettostudios.zfuctone.provider.ZFuctoneProvider;
 import org.incendo.cloud.context.CommandContext;
@@ -25,7 +25,6 @@ import java.util.Optional;
 public class ZFuctoneCommandModuleImpl extends SimpleModule<ZFuctoneCommandModule> implements ZFuctoneCommandModule {
     private final CommandRegistry commandRegistry = ZFuctoneProvider.get().commandRegistry();
     private final PermissionRegistry permissionRegistry = ZFuctoneProvider.get().permissionRegistry();
-    private final ListenerRegistry listenerRegistry = ZFuctoneProvider.get().listenerRegistry();
     private final MessageDispatcher messageDispatcher = ZFuctoneProvider.get().messageDispatcher();
 
     @Override
@@ -39,7 +38,12 @@ public class ZFuctoneCommandModuleImpl extends SimpleModule<ZFuctoneCommandModul
     }
 
     @Override
-    public ZFuctoneCommandModule reload() {
+    public @NonNull Class<? extends Module<ZFuctoneCommandModule>> moduleClass() {
+        return ZFuctoneCommandModule.class;
+    }
+
+    @Override
+    public @NonNull ZFuctoneCommandModule reload() {
         listenerRegistry.run(ModuleReloadEvent.class, ModuleReloadEvent.build(this, ZFuctoneCommandModule.class, EventType.START));
 
         internalDisable();
@@ -50,7 +54,22 @@ public class ZFuctoneCommandModuleImpl extends SimpleModule<ZFuctoneCommandModul
     }
 
     @Override
-    public ZFuctoneCommandModule enable() {
+    protected @NonNull ZFuctoneCommandModule onEnable() {
+        return null;
+    }
+
+    @Override
+    protected @NonNull ZFuctoneCommandModule onDisable() {
+        return null;
+    }
+
+    @Override
+    protected @NonNull ZFuctoneCommandModule onReload() {
+        return null;
+    }
+
+    @Override
+    public @NonNull ZFuctoneCommandModule enable() {
         listenerRegistry.run(ModuleEnableEvent.class, ModuleEnableEvent.build(this, ZFuctoneCommandModule.class, EventType.START));
 
         internalEnable();
@@ -60,7 +79,7 @@ public class ZFuctoneCommandModuleImpl extends SimpleModule<ZFuctoneCommandModul
     }
 
     @Override
-    public ZFuctoneCommandModule disable() {
+    public @NonNull ZFuctoneCommandModule disable() {
         listenerRegistry.run(ModuleDisableEvent.class, ModuleDisableEvent.build(this, ZFuctoneCommandModule.class, EventType.START));
 
         internalDisable();

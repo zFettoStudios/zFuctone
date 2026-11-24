@@ -1,6 +1,7 @@
 package com.zfettostudios.zfuctone.module.placeholder;
 
 import com.github.retrooper.packetevents.PacketEvents;
+import com.zfettostudios.zfuctone.module.Module;
 import com.zfettostudios.zfuctone.provider.ZFuctoneProvider;
 import com.zfettostudios.zfuctone.model.config.setting.PermissionSetting;
 import com.zfettostudios.zfuctone.model.config.setting.PlaceholderSetting;
@@ -18,12 +19,7 @@ public class ServerPlaceholderModuleImpl extends StandardPlaceholderModuleImpl<S
     private final PlatformServerAdapter serverAdapter = ZFuctoneProvider.get().serverAdapter();
 
     @Override
-    public ServerPlaceholderModule reload() {
-        return disable().enable();
-    }
-
-    @Override
-    public ServerPlaceholderModule enable() {
+    protected @NonNull ServerPlaceholderModule onEnable() {
         if (!config().enable()) return this;
 
         register(config().serverType(), permission().serverTypeUse(), _ -> ZFuctoneProvider.get().getPlatformType().name());
@@ -38,7 +34,7 @@ public class ServerPlaceholderModuleImpl extends StandardPlaceholderModuleImpl<S
     }
 
     @Override
-    public ServerPlaceholderModule disable() {
+    protected @NonNull ServerPlaceholderModule onDisable() {
         placeholderRegistry.unregisterAll(ServerPlaceholderModule.class);
         permissionRegistry.unregisterAll(ServerPlaceholderModule.class);
 
@@ -46,8 +42,21 @@ public class ServerPlaceholderModuleImpl extends StandardPlaceholderModuleImpl<S
     }
 
     @Override
+    protected @NonNull ServerPlaceholderModule onReload() {
+        onDisable();
+        onEnable();
+
+        return this;
+    }
+
+    @Override
     public @NonNull ServerPlaceholderModule get() {
         return this;
+    }
+
+    @Override
+    public @NonNull Class<? extends Module<ServerPlaceholderModule>> moduleClass() {
+        return ServerPlaceholderModule.class;
     }
 
     private void register(PlaceholderSetting setting, PermissionSetting permission,

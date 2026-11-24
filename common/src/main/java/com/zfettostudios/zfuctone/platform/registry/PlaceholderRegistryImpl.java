@@ -28,8 +28,8 @@ public class PlaceholderRegistryImpl implements PlaceholderRegistry {
     private final IntegrationConfig.PlaceholderAPI placeholderAPIConfig = fileFacade.integration().placeholderapi();
 
     @Override
-    public PlaceholderRegistry register(@NonNull Class<?> moduleClass, @NonNull String name, @NonNull String permission,
-                                        @NonNull Function<@NonNull PlaceholderContext, @Nullable String> handler) {
+    public @NonNull PlaceholderRegistry register(@NonNull Class<?> moduleClass, @NonNull String name, @NonNull String permission,
+                                                 @NonNull Function<@NonNull PlaceholderContext, @Nullable String> handler) {
         if (!config.enable()) return this;
 
         createPlaceholderAPIPlaceholder(name);
@@ -50,8 +50,8 @@ public class PlaceholderRegistryImpl implements PlaceholderRegistry {
     }
 
     @Override
-    public PlaceholderRegistry register(@NonNull Class<?> moduleClass, @NonNull String name,
-                                        @NonNull Function<@NonNull PlaceholderContext, @Nullable String> handler) {
+    public @NonNull PlaceholderRegistry register(@NonNull Class<?> moduleClass, @NonNull String name,
+                                                 @NonNull Function<@NonNull PlaceholderContext, @Nullable String> handler) {
         if (!config.enable()) return this;
 
         createPlaceholderAPIPlaceholder(name);
@@ -67,7 +67,7 @@ public class PlaceholderRegistryImpl implements PlaceholderRegistry {
     }
 
     @Override
-    public PlaceholderRegistry unregister(@NonNull String name) {
+    public @NonNull PlaceholderRegistry unregister(@NonNull String name) {
         placeholderAPIPlaceholders.remove(name);
         placeholders.values().forEach(modulePlaceholders -> modulePlaceholders.remove(name));
 
@@ -75,7 +75,7 @@ public class PlaceholderRegistryImpl implements PlaceholderRegistry {
     }
 
     @Override
-    public PlaceholderRegistry unregister(@NonNull Class<?> moduleClass, @NonNull String name) {
+    public @NonNull PlaceholderRegistry unregister(@NonNull Class<?> moduleClass, @NonNull String name) {
         Map<String, Function<PlaceholderContext, String>> modulePlaceholders = placeholders.get(moduleClass);
         if (modulePlaceholders == null) return this;
 
@@ -85,14 +85,14 @@ public class PlaceholderRegistryImpl implements PlaceholderRegistry {
     }
 
     @Override
-    public PlaceholderRegistry unregisterAll(@NonNull Class<?> moduleClass) {
+    public @NonNull PlaceholderRegistry unregisterAll(@NonNull Class<?> moduleClass) {
         placeholders.remove(moduleClass);
 
         return this;
     }
 
     @Override
-    public PlaceholderRegistry unregisterAll() {
+    public @NonNull PlaceholderRegistry unregisterAll() {
         placeholderAPIPlaceholders.clear();
         placeholders.clear();
 
@@ -115,19 +115,6 @@ public class PlaceholderRegistryImpl implements PlaceholderRegistry {
         if (modulePlaceholders == null) return null;
 
         return modulePlaceholders.get(name);
-    }
-
-    @Override
-    public boolean contains(@NonNull Class<?> moduleClass, @NonNull String name) {
-        Map<String, Function<PlaceholderContext, String>> modulePlaceholders = placeholders.get(moduleClass);
-        if (modulePlaceholders == null) return false;
-
-        return modulePlaceholders.containsKey(name);
-    }
-
-    @Override
-    public boolean contains(@NonNull String name) {
-        return placeholders.values().stream().anyMatch(modulePlaceholders -> modulePlaceholders.containsKey(name));
     }
 
     @Override

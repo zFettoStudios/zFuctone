@@ -1,7 +1,7 @@
 package com.zfettostudios.zfuctone.module.integration.placeholderapi;
 
 import com.zfettostudios.zfuctone.model.config.PermissionConfig;
-import com.zfettostudios.zfuctone.model.config.setting.PermissionSetting;
+import com.zfettostudios.zfuctone.module.Module;
 import com.zfettostudios.zfuctone.provider.ZFuctoneProvider;
 import com.zfettostudios.zfuctone.model.config.IntegrationConfig;
 import com.zfettostudios.zfuctone.module.integration.IntegrationModuleImpl;
@@ -24,5 +24,10 @@ public abstract class PlaceholderAPIModuleImpl extends IntegrationModuleImpl<Pla
     @Override
     public PermissionConfig.Integration.@NonNull PlaceholderAPI permission() {
         return ZFuctoneProvider.get().fileFacade().permission().integration().placeholderapi();
+    }
+
+    @Override
+    public @NonNull Class<? extends Module<PlaceholderAPIModule>> moduleClass() {
+        return PlaceholderAPIModule.class;
     }
 }

@@ -10,14 +10,14 @@ import java.util.Map;
 import java.util.Set;
 
 public interface ListenerRegistry {
-    ListenerRegistry register(@NonNull Class<?> moduleClass, @NonNull ZFListener listener);
+    @NonNull ListenerRegistry register(@NonNull Class<?> moduleClass, @NonNull ZFListener listener);
 
-    ListenerRegistry unregisterAll(@NonNull Class<?> moduleClass);
-    ListenerRegistry unregisterAll();
+    @NonNull ListenerRegistry unregisterAll(@NonNull Class<?> moduleClass);
+    @NonNull ListenerRegistry unregisterAll();
 
-    <T extends Event<T>> ListenerRegistry run(@NonNull Class<T> eventClass, @NonNull T event);
+    @NonNull <T extends Event<T>> ListenerRegistry run(@NonNull Class<T> eventClass, @NonNull T event);
 
-    @Nullable Set<@NonNull ZFListener> getListeners(@NonNull Class<?> moduleClass);
-    @Nullable Map<Event.@NonNull Priority, @NonNull Set<@NonNull Method>> getListenersByEvent(@NonNull Class<? extends Event<?>> eventClass);
-    @NonNull Map<@NonNull Class<? extends Event<?>> , @NonNull Map<Event.@NonNull Priority, Set<@NonNull Method>>> getListeners();
+    @Nullable Set<ZFListener> getListeners(@NonNull Class<?> moduleClass);
+    @Nullable Map<Event.Priority, Set<Method>> getListenersByEvent(@NonNull Class<? extends Event<?>> eventClass);
+    @NonNull Map<Class<? extends Event<?>>, Map<Event.Priority, Set<Method>>> getListeners();
 }

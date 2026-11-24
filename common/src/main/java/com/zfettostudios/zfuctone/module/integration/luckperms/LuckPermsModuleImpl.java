@@ -1,6 +1,7 @@
 package com.zfettostudios.zfuctone.module.integration.luckperms;
 
 import com.zfettostudios.zfuctone.model.config.setting.PermissionSetting;
+import com.zfettostudios.zfuctone.module.Module;
 import com.zfettostudios.zfuctone.provider.ZFuctoneProvider;
 import com.zfettostudios.zfuctone.model.config.IntegrationConfig;
 import com.zfettostudios.zfuctone.module.integration.IntegrationModuleImpl;
@@ -17,21 +18,6 @@ public class LuckPermsModuleImpl extends IntegrationModuleImpl<LuckPermsModule> 
     }
 
     @Override
-    public LuckPermsModule reload() {
-        return this;
-    }
-
-    @Override
-    public LuckPermsModule enable() {
-        return this;
-    }
-
-    @Override
-    public LuckPermsModule disable() {
-        return this;
-    }
-
-    @Override
     public @NonNull String getName() {
         return "LuckPerms";
     }
@@ -42,6 +28,21 @@ public class LuckPermsModuleImpl extends IntegrationModuleImpl<LuckPermsModule> 
     }
 
     @Override
+    protected @NonNull LuckPermsModule onEnable() {
+        return this;
+    }
+
+    @Override
+    protected @NonNull LuckPermsModule onDisable() {
+        return this;
+    }
+
+    @Override
+    protected @NonNull LuckPermsModule onReload() {
+        return this;
+    }
+
+    @Override
     public IntegrationConfig.@NonNull LuckPerms config() {
         return ZFuctoneProvider.get().fileFacade().integration().luckperms();
     }
@@ -49,6 +50,11 @@ public class LuckPermsModuleImpl extends IntegrationModuleImpl<LuckPermsModule> 
     @Override
     public @NonNull PermissionSetting permission() {
         return ZFuctoneProvider.get().fileFacade().permission().integration().luckperms();
+    }
+
+    @Override
+    public @NonNull Class<? extends Module<LuckPermsModule>> moduleClass() {
+        return LuckPermsModule.class;
     }
 
     @Override

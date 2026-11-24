@@ -43,7 +43,7 @@ public class PlatformPlayerImpl implements PlatformPlayer {
     private final User user;
 
     @Override
-    public <T> T getRawPlayer(@NonNull Class<T> type) {
+    public <T> @NonNull T getRawPlayer(@NonNull Class<T> type) {
         if (type.isInstance(rawPlayer)) return type.cast(rawPlayer);
 
         throw new InvalidTypeException(type);
@@ -173,19 +173,19 @@ public class PlatformPlayerImpl implements PlatformPlayer {
     }
 
     @Override
-    public PlatformPlayer dispatchMessage(@NonNull Component message) {
+    public @NonNull PlatformPlayer dispatchMessage(@NonNull Component message) {
         user.sendMessage(message);
         return this;
     }
 
     @Override
-    public PlatformPlayer executeCommand(@NonNull String command) {
+    public @NonNull PlatformPlayer executeCommand(@NonNull String command) {
         playerAdapter.get().executeCommand(rawPlayer, command);
         return this;
     }
 
     @Override
-    public PlatformPlayer kick(@NonNull Component reason) {
+    public @NonNull PlatformPlayer kick(@NonNull Component reason) {
         user.sendPacket(new WrapperPlayServerDisconnect(reason));
         user.closeConnection();
 

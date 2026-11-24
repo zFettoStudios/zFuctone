@@ -25,15 +25,15 @@ public class MessageDispatcherImpl implements MessageDispatcher {
     private final LazyInstance<PlaceholderAPIModule> placeholderAPI = LazyInstance.build(() -> moduleController.get().get(PlaceholderAPIModule.class));
 
     @Override
-    public MessageDispatcher dispatch(@NonNull PlatformPlayer sender, @NonNull GetMessage getMessage,
-                                      @NonNull PlatformPlayer... recipients) {
+    public @NonNull MessageDispatcher dispatch(@NonNull PlatformPlayer sender, @NonNull GetMessage getMessage,
+                                               @NonNull PlatformPlayer... recipients) {
         for (PlatformPlayer recipient : recipients) dispatchAsyncToPlayer(sender, recipient, getMessage);
 
         return this;
     }
 
     @Override
-    public MessageDispatcher dispatchEveryone(@NonNull PlatformPlayer sender, @NonNull GetMessage getMessage) {
+    public @NonNull MessageDispatcher dispatchEveryone(@NonNull PlatformPlayer sender, @NonNull GetMessage getMessage) {
         List<PlatformPlayer> recipients = playerService.getOnlinePlayers();
 
         taskScheduler.runAsync(() -> {

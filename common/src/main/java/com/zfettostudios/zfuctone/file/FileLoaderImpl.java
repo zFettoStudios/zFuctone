@@ -43,17 +43,17 @@ public class FileLoaderImpl implements FileLoader {
     }
 
     @Override
-    public <T> CompletableFuture<T> loadAsync(@NonNull T file) {
+    public <T> @NonNull CompletableFuture<T> loadAsync(@NonNull T file) {
         return loadAsync(file, fileFacade.getFilePath(file, dataPath, localizationsPath));
     }
 
     @Override
-    public <T> CompletableFuture<T> loadAsync(@NonNull T file, @NonNull Path path) {
+    public <T> @NonNull CompletableFuture<T> loadAsync(@NonNull T file, @NonNull Path path) {
         return CompletableFuture.supplyAsync(() -> load(file, path), executor);
     }
 
     @Override
-    public CompletableFuture<FilePack> loadAsync(@NonNull FilePack files) {
+    public @NonNull CompletableFuture<FilePack> loadAsync(@NonNull FilePack files) {
         return CompletableFuture.allOf(
             loadAsync(files.config()),
             loadAsync(files.command()),

@@ -1,5 +1,6 @@
 package com.zfettostudios.zfuctone.module.placeholder;
 
+import com.zfettostudios.zfuctone.module.Module;
 import com.zfettostudios.zfuctone.provider.ZFuctoneProvider;
 import com.zfettostudios.zfuctone.model.config.setting.PermissionSetting;
 import com.zfettostudios.zfuctone.model.config.setting.PlaceholderSetting;
@@ -16,12 +17,12 @@ public class ProjectPlaceholderModuleImpl extends StandardPlaceholderModuleImpl<
     private final PermissionRegistry permissionRegistry = ZFuctoneProvider.get().permissionRegistry();
 
     @Override
-    public ProjectPlaceholderModule reload() {
+    public @NonNull ProjectPlaceholderModule reload() {
         return disable().enable();
     }
 
     @Override
-    public ProjectPlaceholderModule enable() {
+    protected @NonNull ProjectPlaceholderModule onEnable() {
         if (!config().enable()) return this;
 
         register(config().projectAuthors(), permission().projectAuthorsUse(), _ -> BuildConstant.PROJECT_AUTHORS);
@@ -33,7 +34,7 @@ public class ProjectPlaceholderModuleImpl extends StandardPlaceholderModuleImpl<
     }
 
     @Override
-    public ProjectPlaceholderModule disable() {
+    protected @NonNull ProjectPlaceholderModule onDisable() {
         placeholderRegistry.unregisterAll(ProjectPlaceholderModule.class);
         permissionRegistry.unregisterAll(ProjectPlaceholderModule.class);
 
@@ -41,8 +42,21 @@ public class ProjectPlaceholderModuleImpl extends StandardPlaceholderModuleImpl<
     }
 
     @Override
+    protected @NonNull ProjectPlaceholderModule onReload() {
+        onDisable();
+        onEnable();
+
+        return this;
+    }
+
+    @Override
     public @NonNull ProjectPlaceholderModule get() {
         return this;
+    }
+
+    @Override
+    public @NonNull Class<? extends Module<ProjectPlaceholderModule>> moduleClass() {
+        return ProjectPlaceholderModule.class;
     }
 
     private void register(PlaceholderSetting setting, PermissionSetting permission,

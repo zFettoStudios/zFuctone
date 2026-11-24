@@ -14,7 +14,7 @@ public class PaperServerAdapter implements PlatformServerAdapter {
     }
 
     @Override
-    public PlatformServerAdapter runTask(@NonNull Runnable task) {
+    public @NonNull PlatformServerAdapter runTask(@NonNull Runnable task) {
         Bukkit.getScheduler().runTask(plugin, task);
 
         return this;

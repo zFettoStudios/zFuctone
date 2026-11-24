@@ -1,6 +1,8 @@
 package com.zfettostudios.zfuctone.model.lifecycle;
 
+import org.jspecify.annotations.NonNull;
+
 public interface Toggleable<T> {
-    T enable();
-    T disable();
+    @NonNull T enable();
+    @NonNull T disable();
 }
