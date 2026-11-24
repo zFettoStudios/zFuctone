@@ -65,13 +65,13 @@ public class ModelFactoryImpl implements ModelFactory {
     }
 
     @Override
-    public @NonNull PlayerJoinEvent buildPlayerJoinEvent(@NonNull PlatformPlayer player) {
-        return new PlayerJoinEventImpl(player);
+    public @NonNull PlayerJoinEvent buildPlayerJoinEvent(@NonNull PlatformPlayer player, @NonNull Runnable removeJoinMessage) {
+        return new PlayerJoinEventImpl(player, removeJoinMessage);
     }
 
     @Override
-    public @NonNull PlayerQuitEvent buildPlayerQuitEvent(@NonNull PlatformPlayer player) {
-        return new PlayerQuitEventImpl(player);
+    public @NonNull PlayerQuitEvent buildPlayerQuitEvent(@NonNull PlatformPlayer player, @NonNull Runnable removeQuitMessage) {
+        return new PlayerQuitEventImpl(player, removeQuitMessage);
     }
 
     @Override

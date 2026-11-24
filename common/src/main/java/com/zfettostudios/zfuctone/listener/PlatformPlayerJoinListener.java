@@ -10,13 +10,13 @@ public class PlatformPlayerJoinListener {
     protected final ListenerRegistry listenerRegistry = ZFuctoneProvider.get().listenerRegistry();
     protected final ZLogger logger = ZFuctoneProvider.get().logger();
 
-    protected void execute(Object rawPlayer) {
+    protected void execute(Object rawPlayer, Runnable removeJoinMessage) {
         PlatformPlayer player = PlatformPlayer.build(rawPlayer);
         if (player == null) {
             logger.warn("player is null");
             return;
         }
 
-        listenerRegistry.run(PlayerJoinEvent.class, PlayerJoinEvent.build(player));
+        listenerRegistry.run(PlayerJoinEvent.class, PlayerJoinEvent.build(player, removeJoinMessage));
     }
 }

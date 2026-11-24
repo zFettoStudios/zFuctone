@@ -16,7 +16,7 @@ public class PlatformPlayerQuitListener {
     protected final PlatformPlayerService playerService = ZFuctoneProvider.get().playerService();
     protected final ZLogger logger = ZFuctoneProvider.get().logger();
 
-    protected void execute(Object rawPlayer) {
+    protected void execute(Object rawPlayer, Runnable removeQuitMessage) {
         UUID uuid = playerAdapter.getUUID(rawPlayer);
         if (uuid == null) {
             logger.warn("uuid player is null");
@@ -29,6 +29,6 @@ public class PlatformPlayerQuitListener {
             return;
         }
 
-        listenerRegistry.run(PlayerQuitEvent.class, PlayerQuitEvent.build(player));
+        listenerRegistry.run(PlayerQuitEvent.class, PlayerQuitEvent.build(player, removeQuitMessage));
     }
 }

@@ -29,8 +29,8 @@ public interface ModelFactory {
 
     @NonNull IntegrationHook<?> emptyIntegrationHook();
 
-    @NonNull PlayerJoinEvent buildPlayerJoinEvent(@NonNull PlatformPlayer player);
-    @NonNull PlayerQuitEvent buildPlayerQuitEvent(@NonNull PlatformPlayer player);
+    @NonNull PlayerJoinEvent buildPlayerJoinEvent(@NonNull PlatformPlayer player, @NonNull Runnable removeJoinMessage);
+    @NonNull PlayerQuitEvent buildPlayerQuitEvent(@NonNull PlatformPlayer player, @NonNull Runnable removeQuitMessage);
 
     @NonNull EnableEvent buildEnableEvent(@NonNull ZFuctone zfuctone);
     @NonNull DisableEvent buildDisableEvent(@NonNull ZFuctone zfuctone);
