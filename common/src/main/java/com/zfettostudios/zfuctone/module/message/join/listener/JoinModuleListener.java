@@ -19,6 +19,8 @@ public class JoinModuleListener implements ZFListener {
     public void onPlayerJoin(PlayerJoinEvent event) {
         if (joinModule.isDisable() || !event.player().hasPermission(joinModule.permission().name())) return;
 
+        event.removeJoinMessage();
+
         messageDispatcher.dispatchEveryone(event.player(), GetMessage.ofLocalization(localization -> localization.message().join().format().asString()));
     }
 }

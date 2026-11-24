@@ -19,6 +19,8 @@ public class QuitModuleListener implements ZFListener {
     public void onPlayerQuit(PlayerQuitEvent event) {
         if (quitModule.isDisable() || !event.player().hasPermission(quitModule.permission().name())) return;
 
+        event.removeQuitMessage();
+
         messageDispatcher.dispatchEveryone(event.player(), GetMessage.ofLocalization(localization -> localization.message().quit().format().asString()));
     }
 }
