@@ -40,7 +40,7 @@ public abstract class ExtendedModule<T> extends SimpleModule<T> {
         unregisterAll();
         unregisterListeners();
 
-        listenerRegistry.run(ModuleDisableEvent.class, ModuleDisableEvent.build(this, moduleClass(), EventType.START));
+        listenerRegistry.run(ModuleDisableEvent.class, ModuleDisableEvent.build(this, moduleClass(), EventType.END));
 
         return get();
     }
@@ -55,7 +55,7 @@ public abstract class ExtendedModule<T> extends SimpleModule<T> {
 
         if (isEnable()) registerAll();
 
-        listenerRegistry.run(ModuleReloadEvent.class, ModuleReloadEvent.build(this, moduleClass(), EventType.START));
+        listenerRegistry.run(ModuleReloadEvent.class, ModuleReloadEvent.build(this, moduleClass(), EventType.END));
 
         return get();
     }

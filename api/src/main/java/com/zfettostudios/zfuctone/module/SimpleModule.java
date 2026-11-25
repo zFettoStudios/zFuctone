@@ -38,7 +38,7 @@ public abstract class SimpleModule<T> implements Module<T> {
 
         onDisable();
 
-        listenerRegistry.run(ModuleDisableEvent.class, ModuleDisableEvent.build(this, moduleClass(), EventType.START));
+        listenerRegistry.run(ModuleDisableEvent.class, ModuleDisableEvent.build(this, moduleClass(), EventType.END));
 
         return get();
     }
@@ -49,7 +49,7 @@ public abstract class SimpleModule<T> implements Module<T> {
 
         onReload();
 
-        listenerRegistry.run(ModuleReloadEvent.class, ModuleReloadEvent.build(this, moduleClass(), EventType.START));
+        listenerRegistry.run(ModuleReloadEvent.class, ModuleReloadEvent.build(this, moduleClass(), EventType.END));
 
         return get();
     }
