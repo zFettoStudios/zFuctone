@@ -7,47 +7,12 @@ import com.zfettostudios.zfuctone.model.config.setting.PermissionSetting;
 import com.zfettostudios.zfuctone.model.config.setting.PlaceholderSetting;
 import com.zfettostudios.zfuctone.model.value.PlaceholderContext;
 import com.zfettostudios.zfuctone.platform.adapter.PlatformServerAdapter;
-import com.zfettostudios.zfuctone.platform.registry.PermissionRegistry;
-import com.zfettostudios.zfuctone.platform.registry.PlaceholderRegistry;
 import org.jspecify.annotations.NonNull;
 
 import java.util.function.Function;
 
 public class ServerPlaceholderModuleImpl extends StandardPlaceholderModuleImpl<ServerPlaceholderModule> implements ServerPlaceholderModule {
-    private final PlaceholderRegistry placeholderRegistry = ZFuctoneProvider.get().placeholderRegistry();
-    private final PermissionRegistry permissionRegistry = ZFuctoneProvider.get().permissionRegistry();
     private final PlatformServerAdapter serverAdapter = ZFuctoneProvider.get().serverAdapter();
-
-    @Override
-    protected @NonNull ServerPlaceholderModule onEnable() {
-        if (!config().enable()) return this;
-
-        register(config().serverType(), permission().serverTypeUse(), _ -> ZFuctoneProvider.get().getPlatformType().name());
-        register(config().serverVersion(), permission().serverVersionUse(), _ -> PacketEvents.getAPI().getServerManager().getVersion().getReleaseName());
-        register(config().serverPlayersOnline(), permission().serverPlayersOnlineUse(), _ -> String.valueOf(serverAdapter.getPlayersOnline()));
-        register(config().serverPlayersMax(), permission().serverPlayersMaxUse(), _ -> String.valueOf(serverAdapter.getPlayersMax()));
-        register(config().serverTps1(), permission().serverTps1Use(), _ -> String.valueOf(serverAdapter.getTPS()[0]));
-        register(config().serverTps5(), permission().serverTps5Use(), _ -> String.valueOf(serverAdapter.getTPS()[1]));
-        register(config().serverTps15(), permission().serverTps15Use(), _ -> String.valueOf(serverAdapter.getTPS()[2]));
-
-        return this;
-    }
-
-    @Override
-    protected @NonNull ServerPlaceholderModule onDisable() {
-        placeholderRegistry.unregisterAll(ServerPlaceholderModule.class);
-        permissionRegistry.unregisterAll(ServerPlaceholderModule.class);
-
-        return this;
-    }
-
-    @Override
-    protected @NonNull ServerPlaceholderModule onReload() {
-        onDisable();
-        onEnable();
-
-        return this;
-    }
 
     @Override
     public @NonNull ServerPlaceholderModule get() {
@@ -57,6 +22,27 @@ public class ServerPlaceholderModuleImpl extends StandardPlaceholderModuleImpl<S
     @Override
     public @NonNull Class<? extends Module<ServerPlaceholderModule>> moduleClass() {
         return ServerPlaceholderModule.class;
+    }
+
+    @Override
+    protected void unregisterPermissions() {
+        permissionRegistry.unregisterAll(moduleClass());
+    }
+
+    @Override
+    protected void unregisterPlaceholders() {
+        placeholderRegistry.unregisterAll(moduleClass());
+    }
+
+    @Override
+    protected void onEnable() {
+        register(config().serverType(), permission().serverTypeUse(), _ -> ZFuctoneProvider.get().getPlatformType().name());
+        register(config().serverVersion(), permission().serverVersionUse(), _ -> PacketEvents.getAPI().getServerManager().getVersion().getReleaseName());
+        register(config().serverPlayersOnline(), permission().serverPlayersOnlineUse(), _ -> String.valueOf(serverAdapter.getPlayersOnline()));
+        register(config().serverPlayersMax(), permission().serverPlayersMaxUse(), _ -> String.valueOf(serverAdapter.getPlayersMax()));
+        register(config().serverTps1(), permission().serverTps1Use(), _ -> String.valueOf(serverAdapter.getTPS()[0]));
+        register(config().serverTps5(), permission().serverTps5Use(), _ -> String.valueOf(serverAdapter.getTPS()[1]));
+        register(config().serverTps15(), permission().serverTps15Use(), _ -> String.valueOf(serverAdapter.getTPS()[2]));
     }
 
     private void register(PlaceholderSetting setting, PermissionSetting permission,
