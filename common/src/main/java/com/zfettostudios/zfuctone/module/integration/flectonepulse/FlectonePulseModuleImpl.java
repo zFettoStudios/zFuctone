@@ -55,7 +55,7 @@ public class FlectonePulseModuleImpl extends IntegrationModuleImpl<FlectonePulse
 
     @Override
     public @NonNull FlectonePulseModule disableJoinModule() {
-        if (isDisable() || !config().message().enable() || !config().message().join().disableFlectonePulseModule()) return this;
+        if (isDisable() || !config().message().enable() || !config().message().join().disableFlectonepulseModule()) return this;
 
         FlectonePulse flectonePulse = FlectonePulseAPI.getInstance();
 
@@ -66,7 +66,7 @@ public class FlectonePulseModuleImpl extends IntegrationModuleImpl<FlectonePulse
 
     @Override
     public @NonNull FlectonePulseModule disableQuitModule() {
-        if (isDisable() || !config().message().enable() || !config().message().quit().disableFlectonePulseModule()) return this;
+        if (isDisable() || !config().message().enable() || !config().message().quit().disableFlectonepulseModule()) return this;
 
         FlectonePulse flectonePulse = FlectonePulseAPI.getInstance();
 
@@ -77,8 +77,8 @@ public class FlectonePulseModuleImpl extends IntegrationModuleImpl<FlectonePulse
 
     @Override
     protected void onEnable() {
-        if (config().message().enable() && config().message().join().disableFlectonePulseModule()) disableJoinModule();
-        if (config().message().enable() && config().message().join().disableFlectonePulseModule()) disableQuitModule();
+        if (config().message().enable() && config().message().join().disableFlectonepulseModule()) disableJoinModule();
+        if (config().message().enable() && config().message().join().disableFlectonepulseModule()) disableQuitModule();
     }
 
     @Override

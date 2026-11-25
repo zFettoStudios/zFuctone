@@ -92,7 +92,7 @@ public class IntegrationConfig implements EnableSetting {
         @Getter
         @Setter
         public static class ModuleSetting {
-            private Boolean disableFlectonePulseModule = true;
+            private Boolean disableFlectonepulseModule = true;
             private Boolean disableZfuctoneModule = false;
         }
     }
