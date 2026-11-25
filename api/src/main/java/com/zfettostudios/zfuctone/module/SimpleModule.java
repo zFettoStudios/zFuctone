@@ -59,7 +59,7 @@ public abstract class SimpleModule<T> implements Module<T> {
     protected void onDisable() {
     }
     protected void onReload() {
-        if (isEnable()) onEnable();
         onDisable();
+        if (isEnable()) onEnable();
     }
 }
