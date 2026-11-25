@@ -6,4 +6,5 @@ import lombok.experimental.UtilityClass;
 public class CommandArgumentName {
     public final String FIRST = "argument_first";
     public final String SECOND = "argument_second";
+    public final String THIRD = "argument_third";
 }

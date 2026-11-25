@@ -1,4 +1,4 @@
-package com.zfettostudios.zfuctone.module.command.zfuctone;
+package com.zfettostudios.zfuctone.module.command;
 
 import com.zfettostudios.zfuctone.dispatcher.MessageDispatcher;
 import com.zfettostudios.zfuctone.platform.registry.CommandRegistry;

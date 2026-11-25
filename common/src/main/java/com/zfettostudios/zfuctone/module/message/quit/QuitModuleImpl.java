@@ -4,12 +4,15 @@ import com.zfettostudios.zfuctone.model.config.MessageConfig;
 import com.zfettostudios.zfuctone.model.config.PermissionConfig;
 import com.zfettostudios.zfuctone.module.ExtendedModule;
 import com.zfettostudios.zfuctone.module.Module;
+import com.zfettostudios.zfuctone.module.integration.flectonepulse.FlectonePulseModule;
 import com.zfettostudios.zfuctone.module.message.quit.listener.QuitModuleListener;
 import com.zfettostudios.zfuctone.provider.ZFuctoneProvider;
+import com.zfettostudios.zfuctone.util.LazyInstance;
 import org.jspecify.annotations.NonNull;
 
 public class QuitModuleImpl extends ExtendedModule<QuitModule> implements QuitModule {
     private final QuitModuleListener listener = new QuitModuleListener(this);
+    private final LazyInstance<FlectonePulseModule> flectonePulseModule = LazyInstance.build(() -> ZFuctoneProvider.get().moduleController().get(FlectonePulseModule.class));
 
     @Override
     public @NonNull QuitModule get() {
@@ -34,6 +37,11 @@ public class QuitModuleImpl extends ExtendedModule<QuitModule> implements QuitMo
     @Override
     protected void registerPermissions() {
         permissionRegistry.register(moduleClass(), permission().name(), permission().type());
+    }
+
+    @Override
+    public boolean isEnable() {
+        return config().enable() && !flectonePulseModule.get().shouldZFuctoneQuitModuleDisable();
     }
 
     @Override

@@ -5,7 +5,7 @@ import lombok.experimental.UtilityClass;
 import com.zfettostudios.zfuctone.dispatcher.GetMessage;
 import com.zfettostudios.zfuctone.exception.ReloadException;
 import com.zfettostudios.zfuctone.model.constant.command.CommandArgumentName;
-import com.zfettostudios.zfuctone.module.command.zfuctone.ModuleCommand;
+import com.zfettostudios.zfuctone.module.command.ModuleCommand;
 import com.zfettostudios.zfuctone.module.command.zfuctone.ZFuctoneModule;
 import com.zfettostudios.zfuctone.platform.entity.PlatformPlayer;
 import com.zfettostudios.zfuctone.provider.ZFuctoneProvider;

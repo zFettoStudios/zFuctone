@@ -20,6 +20,8 @@ import com.zfettostudios.zfuctone.module.command.zfuctone.ZFuctoneModule;
 import com.zfettostudios.zfuctone.module.command.zfuctone.ZFuctoneModuleImpl;
 import com.zfettostudios.zfuctone.module.controller.ModuleController;
 import com.zfettostudios.zfuctone.module.controller.ModuleControllerImpl;
+import com.zfettostudios.zfuctone.module.integration.flectonepulse.FlectonePulseModule;
+import com.zfettostudios.zfuctone.module.integration.flectonepulse.FlectonePulseModuleImpl;
 import com.zfettostudios.zfuctone.module.integration.floodgate.FloodgateModule;
 import com.zfettostudios.zfuctone.module.integration.floodgate.FloodgateModuleImpl;
 import com.zfettostudios.zfuctone.module.integration.geyser.GeyserModule;
@@ -204,6 +206,7 @@ public abstract class ZFuctoneImpl implements ZFuctone {
         moduleController.register(LuckPermsModule.class, new LuckPermsModuleImpl());
         moduleController.register(MiniPlaceholdersModule.class, builder.buildMiniPlaceholdersModule());
         moduleController.register(PlaceholderAPIModule.class, builder.buildPlaceholderAPIModule());
+        moduleController.register(FlectonePulseModule.class, new FlectonePulseModuleImpl());
 
         moduleController.register(ProjectPlaceholderModule.class, new ProjectPlaceholderModuleImpl());
         moduleController.register(PlayerPlaceholderModule.class, new PlayerPlaceholderModuleImpl());

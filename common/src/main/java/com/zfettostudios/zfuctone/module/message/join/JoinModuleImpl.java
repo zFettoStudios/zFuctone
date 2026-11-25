@@ -4,12 +4,15 @@ import com.zfettostudios.zfuctone.model.config.MessageConfig;
 import com.zfettostudios.zfuctone.model.config.PermissionConfig;
 import com.zfettostudios.zfuctone.module.ExtendedModule;
 import com.zfettostudios.zfuctone.module.Module;
+import com.zfettostudios.zfuctone.module.integration.flectonepulse.FlectonePulseModule;
 import com.zfettostudios.zfuctone.module.message.join.listener.JoinModuleListener;
 import com.zfettostudios.zfuctone.provider.ZFuctoneProvider;
+import com.zfettostudios.zfuctone.util.LazyInstance;
 import org.jspecify.annotations.NonNull;
 
 public class JoinModuleImpl extends ExtendedModule<JoinModule> implements JoinModule {
     private final JoinModuleListener listener = new JoinModuleListener(this);
+    private final LazyInstance<FlectonePulseModule> flectonePulseModule = LazyInstance.build(() -> ZFuctoneProvider.get().moduleController().get(FlectonePulseModule.class));
 
     @Override
     public @NonNull JoinModule get() {
@@ -29,6 +32,11 @@ public class JoinModuleImpl extends ExtendedModule<JoinModule> implements JoinMo
     @Override
     public @NonNull Class<? extends Module<JoinModule>> moduleClass() {
         return JoinModule.class;
+    }
+
+    @Override
+    public boolean isEnable() {
+        return config().enable() && !flectonePulseModule.get().shouldZFuctoneJoinModuleDisable();
     }
 
     @Override

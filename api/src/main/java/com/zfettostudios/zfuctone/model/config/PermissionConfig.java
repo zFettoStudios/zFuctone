@@ -66,6 +66,7 @@ public class PermissionConfig {
         private final PermissionSetting luckperms = new PermissionSetting("zfuctone.module.integration.luckperms", PermissionType.OP);
         private final MiniPlaceholders miniplaceholders = new MiniPlaceholders();
         private final PermissionSetting viaversion = new PermissionSetting("zfuctone.module.integration.viaversion", PermissionType.OP);
+        private final PermissionSetting flectonepulse = new PermissionSetting("zfuctone.module.integration.flectonepulse", PermissionType.OP);
 
         @Getter
         @Setter
