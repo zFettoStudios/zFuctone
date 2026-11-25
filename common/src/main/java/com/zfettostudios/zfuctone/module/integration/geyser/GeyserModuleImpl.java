@@ -26,21 +26,6 @@ public class GeyserModuleImpl extends IntegrationModuleImpl<GeyserModule> implem
     }
 
     @Override
-    protected @NonNull GeyserModule onEnable() {
-        return this;
-    }
-
-    @Override
-    protected @NonNull GeyserModule onDisable() {
-        return this;
-    }
-
-    @Override
-    protected @NonNull GeyserModule onReload() {
-        return this;
-    }
-
-    @Override
     public IntegrationConfig.@NonNull Geyser config() {
         return ZFuctoneProvider.get().fileFacade().integration().geyser();
     }
@@ -48,6 +33,16 @@ public class GeyserModuleImpl extends IntegrationModuleImpl<GeyserModule> implem
     @Override
     public @NonNull PermissionSetting permission() {
         return ZFuctoneProvider.get().fileFacade().permission().integration().geyser();
+    }
+
+    @Override
+    protected void registerPermissions() {
+        permissionRegistry.register(moduleClass(), permission().name(), permission().type());
+    }
+
+    @Override
+    protected void unregisterPermissions() {
+        permissionRegistry.unregisterAll(moduleClass());
     }
 
     @Override

@@ -7,6 +7,7 @@ import com.zfettostudios.zfuctone.model.value.PlaceholderContext;
 import com.zfettostudios.zfuctone.module.integration.IntegrationHook;
 import com.zfettostudios.zfuctone.platform.entity.PlatformPlayer;
 import com.zfettostudios.zfuctone.platform.registry.PlaceholderRegistry;
+import com.zfettostudios.zfuctone.scheduler.TaskScheduler;
 import com.zfettostudios.zfuctone.service.PlatformPlayerService;
 import me.clip.placeholderapi.expansion.PlaceholderExpansion;
 import org.bukkit.OfflinePlayer;
@@ -22,6 +23,7 @@ import java.util.function.Function;
 public class BukkitPlaceholderAPIIntegration extends PlaceholderExpansion implements IntegrationHook<BukkitPlaceholderAPIIntegration> {
     private final PlaceholderRegistry placeholderRegistry = ZFuctoneProvider.get().placeholderRegistry();
     private final PlatformPlayerService playerService = ZFuctoneProvider.get().playerService();
+    private final TaskScheduler taskScheduler = ZFuctoneProvider.get().taskScheduler();
 
     private final IntegrationConfig.PlaceholderAPI config = ZFuctoneProvider.get().fileFacade().integration().placeholderapi();
     private String identifier;
@@ -55,13 +57,13 @@ public class BukkitPlaceholderAPIIntegration extends PlaceholderExpansion implem
     public @NonNull BukkitPlaceholderAPIIntegration hook() {
         identifier = config.identifier();
 
-        register();
+        taskScheduler.runSync(this::register);
         return this;
     }
 
     @Override
     public @NonNull BukkitPlaceholderAPIIntegration unhook() {
-        unregister();
+        taskScheduler.runSync(this::unregister);
         return this;
     }
 

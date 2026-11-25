@@ -1,6 +1,7 @@
 package com.zfettostudios.zfuctone.module.integration.miniplaceholders;
 
 import com.zfettostudios.zfuctone.model.config.IntegrationConfig;
+import com.zfettostudios.zfuctone.model.config.PermissionConfig;
 import com.zfettostudios.zfuctone.module.integration.IntegrationModule;
 import com.zfettostudios.zfuctone.platform.entity.PlatformPlayer;
 import net.kyori.adventure.text.Component;
@@ -18,4 +19,6 @@ public interface MiniPlaceholdersModule extends IntegrationModule<MiniPlaceholde
                                        @NonNull TagResolver... tagResolvers);
 
     IntegrationConfig.@NonNull MiniPlaceholders config();
+
+    PermissionConfig.Integration.@NonNull MiniPlaceholders permission();
 }

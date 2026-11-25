@@ -53,18 +53,13 @@ public class FloodgateModuleImpl extends IntegrationModuleImpl<FloodgateModule> 
     }
 
     @Override
-    protected @NonNull FloodgateModule onEnable() {
-        return this;
+    protected void registerPermissions() {
+        permissionRegistry.register(moduleClass(), permission().name(), permission().type());
     }
 
     @Override
-    protected @NonNull FloodgateModule onDisable() {
-        return this;
-    }
-
-    @Override
-    protected @NonNull FloodgateModule onReload() {
-        return this;
+    protected void unregisterPermissions() {
+        permissionRegistry.unregisterAll(moduleClass());
     }
 
     @Override

@@ -28,21 +28,6 @@ public class LuckPermsModuleImpl extends IntegrationModuleImpl<LuckPermsModule> 
     }
 
     @Override
-    protected @NonNull LuckPermsModule onEnable() {
-        return this;
-    }
-
-    @Override
-    protected @NonNull LuckPermsModule onDisable() {
-        return this;
-    }
-
-    @Override
-    protected @NonNull LuckPermsModule onReload() {
-        return this;
-    }
-
-    @Override
     public IntegrationConfig.@NonNull LuckPerms config() {
         return ZFuctoneProvider.get().fileFacade().integration().luckperms();
     }
@@ -55,6 +40,16 @@ public class LuckPermsModuleImpl extends IntegrationModuleImpl<LuckPermsModule> 
     @Override
     public @NonNull Class<? extends Module<LuckPermsModule>> moduleClass() {
         return LuckPermsModule.class;
+    }
+
+    @Override
+    protected void registerPermissions() {
+        permissionRegistry.register(moduleClass(), permission().name(), permission().type());
+    }
+
+    @Override
+    protected void unregisterPermissions() {
+        permissionRegistry.unregisterAll(moduleClass());
     }
 
     @Override

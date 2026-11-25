@@ -2,16 +2,12 @@ package com.zfettostudios.zfuctone.module.integration.placeholderapi;
 
 import com.zfettostudios.zfuctone.module.integration.IntegrationHook;
 import com.zfettostudios.zfuctone.platform.entity.PlatformPlayer;
-import com.zfettostudios.zfuctone.provider.ZFuctoneProvider;
-import com.zfettostudios.zfuctone.scheduler.TaskScheduler;
 import me.clip.placeholderapi.PlaceholderAPI;
 import org.bukkit.entity.Player;
 import org.jspecify.annotations.NonNull;
 import org.jspecify.annotations.Nullable;
 
 public class BukkitPlaceholderAPIModule extends PlaceholderAPIModuleImpl {
-    private final TaskScheduler taskScheduler = ZFuctoneProvider.get().taskScheduler();
-
     private final IntegrationHook<?> integration;
 
     public BukkitPlaceholderAPIModule() {
@@ -42,27 +38,12 @@ public class BukkitPlaceholderAPIModule extends PlaceholderAPIModuleImpl {
     }
 
     @Override
-    public @NonNull PlaceholderAPIModule get() {
-        return this;
+    protected void onEnable() {
+        integration.hook();
     }
 
     @Override
-    protected @NonNull PlaceholderAPIModule onEnable() {
-        if (isEnable()) taskScheduler.runSync(integration::hook);
-        return this;
-    }
-
-    @Override
-    protected @NonNull PlaceholderAPIModule onDisable() {
-        if (isPluginExits()) taskScheduler.runSync(integration::unhook);
-        return this;
-    }
-
-    @Override
-    protected @NonNull PlaceholderAPIModule onReload() {
-        onDisable();
-        onEnable();
-
-        return this;
+    protected void onDisable() {
+        if (isPluginExits()) integration.unhook();
     }
 }

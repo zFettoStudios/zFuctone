@@ -1,9 +1,9 @@
 package com.zfettostudios.zfuctone.module.integration;
 
-import com.zfettostudios.zfuctone.module.SimpleModule;
+import com.zfettostudios.zfuctone.module.ExtendedModule;
 import com.zfettostudios.zfuctone.provider.ZFuctoneProvider;
 
-public abstract class IntegrationModuleImpl<T> extends SimpleModule<T> {
+public abstract class IntegrationModuleImpl<T> extends ExtendedModule<T> {
     protected boolean isEnable(boolean enable) {
         return enable && isPluginExits();
     }

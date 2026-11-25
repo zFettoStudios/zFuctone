@@ -1,15 +1,11 @@
 package com.zfettostudios.zfuctone.module.integration.miniplaceholders;
 
 import com.zfettostudios.zfuctone.module.integration.IntegrationHook;
-import com.zfettostudios.zfuctone.provider.ZFuctoneProvider;
-import com.zfettostudios.zfuctone.scheduler.TaskScheduler;
 import io.github.miniplaceholders.api.MiniPlaceholders;
 import net.kyori.adventure.text.minimessage.tag.resolver.TagResolver;
 import org.jspecify.annotations.NonNull;
 
 public class PaperMiniPlaceholdersModule extends MiniPlaceholdersModuleImpl {
-    private final TaskScheduler taskScheduler = ZFuctoneProvider.get().taskScheduler();
-
     private final IntegrationHook<?> integration;
 
     public PaperMiniPlaceholdersModule() {
@@ -36,27 +32,12 @@ public class PaperMiniPlaceholdersModule extends MiniPlaceholdersModuleImpl {
     }
 
     @Override
-    public @NonNull MiniPlaceholdersModule get() {
-        return this;
+    protected void onEnable() {
+        integration.hook();
     }
 
     @Override
-    protected @NonNull MiniPlaceholdersModule onEnable() {
-        if (isEnable()) taskScheduler.runSync(integration::hook);
-        return this;
-    }
-
-    @Override
-    protected @NonNull MiniPlaceholdersModule onDisable() {
-        if (isPluginExits()) taskScheduler.runSync(integration::unhook);
-        return this;
-    }
-
-    @Override
-    protected @NonNull MiniPlaceholdersModule onReload() {
-        onDisable();
-        onEnable();
-
-        return this;
+    protected void onDisable() {
+        if (isPluginExits()) integration.unhook();
     }
 }

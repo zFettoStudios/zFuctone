@@ -30,4 +30,20 @@ public abstract class PlaceholderAPIModuleImpl extends IntegrationModuleImpl<Pla
     public @NonNull Class<? extends Module<PlaceholderAPIModule>> moduleClass() {
         return PlaceholderAPIModule.class;
     }
+
+    @Override
+    public @NonNull PlaceholderAPIModule get() {
+        return this;
+    }
+
+    @Override
+    protected void registerPermissions() {
+        permissionRegistry.register(moduleClass(), permission().name(), permission().type());
+        permissionRegistry.register(moduleClass(), permission().use().name(), permission().use().type());
+    }
+
+    @Override
+    protected void unregisterPermissions() {
+        permissionRegistry.unregisterAll(moduleClass());
+    }
 }

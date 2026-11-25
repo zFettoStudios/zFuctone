@@ -46,6 +46,16 @@ public class ViaVersionModuleImpl extends IntegrationModuleImpl<ViaVersionModule
     }
 
     @Override
+    protected void registerPermissions() {
+        permissionRegistry.register(moduleClass(), permission().name(), permission().type());
+    }
+
+    @Override
+    protected void unregisterPermissions() {
+        permissionRegistry.unregisterAll(moduleClass());
+    }
+
+    @Override
     public @Nullable String getVersion(@NonNull UUID uuid) {
         if (isEnable()) return Via.getAPI().getPlayerProtocolVersion(uuid).getName();
         return null;
@@ -63,20 +73,5 @@ public class ViaVersionModuleImpl extends IntegrationModuleImpl<ViaVersionModule
 
         return fileFacade.localizationOrDefault(player.getLocale(), LocalizationType.PLAYER)
             .message().player().version().java().get(getProtocolVersion(player.uuid())).asString();
-    }
-
-    @Override
-    protected @NonNull ViaVersionModule onEnable() {
-        return this;
-    }
-
-    @Override
-    protected @NonNull ViaVersionModule onDisable() {
-        return this;
-    }
-
-    @Override
-    protected @NonNull ViaVersionModule onReload() {
-        return this;
     }
 }

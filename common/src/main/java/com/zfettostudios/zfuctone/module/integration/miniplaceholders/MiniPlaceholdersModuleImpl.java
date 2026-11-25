@@ -1,5 +1,6 @@
 package com.zfettostudios.zfuctone.module.integration.miniplaceholders;
 
+import com.zfettostudios.zfuctone.model.config.PermissionConfig;
 import com.zfettostudios.zfuctone.model.config.setting.PermissionSetting;
 import com.zfettostudios.zfuctone.module.Module;
 import com.zfettostudios.zfuctone.provider.ZFuctoneProvider;
@@ -26,7 +27,7 @@ public abstract class MiniPlaceholdersModuleImpl extends IntegrationModuleImpl<M
     }
 
     @Override
-    public @NonNull PermissionSetting permission() {
+    public PermissionConfig.Integration.@NonNull MiniPlaceholders permission() {
         return ZFuctoneProvider.get().fileFacade().permission().integration().miniplaceholders();
     }
 
@@ -44,5 +45,21 @@ public abstract class MiniPlaceholdersModuleImpl extends IntegrationModuleImpl<M
     @Override
     public @NonNull Class<? extends Module<MiniPlaceholdersModule>> moduleClass() {
         return MiniPlaceholdersModule.class;
+    }
+
+    @Override
+    public @NonNull MiniPlaceholdersModule get() {
+        return this;
+    }
+
+    @Override
+    protected void registerPermissions() {
+        permissionRegistry.register(moduleClass(), permission().name(), permission().type());
+        permissionRegistry.register(moduleClass(), permission().use().name(), permission().use().type());
+    }
+
+    @Override
+    protected void unregisterPermissions() {
+        permissionRegistry.unregisterAll(moduleClass());
     }
 }

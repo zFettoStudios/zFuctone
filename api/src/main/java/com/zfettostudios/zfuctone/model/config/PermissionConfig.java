@@ -64,7 +64,7 @@ public class PermissionConfig {
         private final PermissionSetting floodgate = new PermissionSetting("zfuctone.module.integration.floodgate", PermissionType.OP);
         private final PermissionSetting geyser = new PermissionSetting("zfuctone.module.integration.geyser", PermissionType.OP);
         private final PermissionSetting luckperms = new PermissionSetting("zfuctone.module.integration.luckperms", PermissionType.OP);
-        private final PermissionSetting miniplaceholders = new PermissionSetting("zfuctone.module.integration.miniplaceholders", PermissionType.OP);
+        private final MiniPlaceholders miniplaceholders = new MiniPlaceholders();
         private final PermissionSetting viaversion = new PermissionSetting("zfuctone.module.integration.viaversion", PermissionType.OP);
 
         @Getter
@@ -74,6 +74,15 @@ public class PermissionConfig {
             private PermissionType type = PermissionType.TRUE;
             private final PermissionSetting use = new PermissionSetting(
                 "zfuctone.module.integration.placeholderapi.use", PermissionType.OP);
+        }
+
+        @Getter
+        @Setter
+        public static class MiniPlaceholders extends PermissionSetting {
+            private String name = "zfuctone.module.integration.miniplaceholders";
+            private PermissionType type = PermissionType.TRUE;
+            private final PermissionSetting use = new PermissionSetting(
+                "zfuctone.module.integration.miniplaceholders.use", PermissionType.OP);
         }
     }
 

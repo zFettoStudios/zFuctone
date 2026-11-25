@@ -7,6 +7,7 @@ import com.zfettostudios.zfuctone.module.integration.IntegrationHook;
 import com.zfettostudios.zfuctone.model.value.PlaceholderContext;
 import com.zfettostudios.zfuctone.platform.entity.PlatformPlayer;
 import com.zfettostudios.zfuctone.platform.registry.PlaceholderRegistry;
+import com.zfettostudios.zfuctone.scheduler.TaskScheduler;
 import com.zfettostudios.zfuctone.service.PlatformPlayerService;
 import io.github.miniplaceholders.api.Expansion;
 import net.kyori.adventure.audience.Audience;
@@ -24,19 +25,20 @@ import java.util.function.Function;
 public class PaperMiniPlaceholdersIntegration implements IntegrationHook<PaperMiniPlaceholdersIntegration> {
     private final PlaceholderRegistry placeholderRegistry = ZFuctoneProvider.get().placeholderRegistry();
     private final PlatformPlayerService playerService = ZFuctoneProvider.get().playerService();
+    private final TaskScheduler taskScheduler = ZFuctoneProvider.get().taskScheduler();
 
     private final IntegrationConfig.MiniPlaceholders config = ZFuctoneProvider.get().fileFacade().integration().miniplaceholders();
     private final Expansion expansion = createExpansion();
 
     @Override
     public @NonNull PaperMiniPlaceholdersIntegration hook() {
-        expansion.register();
+        taskScheduler.runSync(expansion::register);
         return this;
     }
 
     @Override
     public @NonNull PaperMiniPlaceholdersIntegration unhook() {
-        expansion.unregister();
+        taskScheduler.runSync(expansion::unregister);
         return this;
     }
 

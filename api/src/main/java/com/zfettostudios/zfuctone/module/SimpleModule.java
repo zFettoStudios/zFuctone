@@ -9,7 +9,7 @@ import com.zfettostudios.zfuctone.provider.ZFuctoneProvider;
 import org.jspecify.annotations.NonNull;
 
 public abstract class SimpleModule<T> implements Module<T> {
-    protected final ListenerRegistry listenerRegistry = ZFuctoneProvider.get().listenerRegistry();
+    protected static final ListenerRegistry listenerRegistry = ZFuctoneProvider.get().listenerRegistry();
 
     @Override
     public boolean isEnable() {
@@ -25,36 +25,41 @@ public abstract class SimpleModule<T> implements Module<T> {
     public @NonNull T enable() {
         listenerRegistry.run(ModuleEnableEvent.class, ModuleEnableEvent.build(this, moduleClass(), EventType.START));
 
-        T result = onEnable();
+        onEnable();
 
         listenerRegistry.run(ModuleEnableEvent.class, ModuleEnableEvent.build(this, moduleClass(), EventType.END));
 
-        return result;
+        return get();
     }
 
     @Override
     public @NonNull T disable() {
         listenerRegistry.run(ModuleDisableEvent.class, ModuleDisableEvent.build(this, moduleClass(), EventType.START));
 
-        T result = onDisable();
+        onDisable();
 
         listenerRegistry.run(ModuleDisableEvent.class, ModuleDisableEvent.build(this, moduleClass(), EventType.START));
 
-        return result;
+        return get();
     }
 
     @Override
     public @NonNull T reload() {
         listenerRegistry.run(ModuleReloadEvent.class, ModuleReloadEvent.build(this, moduleClass(), EventType.START));
 
-        T result = onReload();
+        onReload();
 
         listenerRegistry.run(ModuleReloadEvent.class, ModuleReloadEvent.build(this, moduleClass(), EventType.START));
 
-        return result;
+        return get();
     }
 
-    protected abstract @NonNull  T onEnable();
-    protected abstract @NonNull T onDisable();
-    protected abstract @NonNull T onReload();
+    protected void onEnable() {
+    }
+    protected void onDisable() {
+    }
+    protected void onReload() {
+        if (isEnable()) onEnable();
+        onDisable();
+    }
 }
