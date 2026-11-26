@@ -54,19 +54,19 @@ public class VelocityZFuctone extends ZFuctoneImpl {
 
     @Override
     protected void registerListeners() {
-        em.register(this, new VelocityPlayerJoinListener());
-        em.register(this, new VelocityPlayerQuitListener());
+        em.register(loader, new VelocityPlayerJoinListener());
+        em.register(loader, new VelocityPlayerQuitListener());
     }
 
     @Override
     protected void unregisterListeners() {
-        em.unregisterListeners(this);
+        em.unregisterListeners(loader);
     }
 
     @Override
     protected void registerTaskScheduler() {
         loader.getServer().getScheduler()
-            .buildTask(this, taskScheduler::onTick)
+            .buildTask(loader, taskScheduler::onTick)
             .delay(Duration.ofMillis(50))
             .repeat(Duration.ofMillis(50))
             .schedule();
