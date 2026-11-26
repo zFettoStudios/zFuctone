@@ -111,7 +111,7 @@ subprojects {
     shadowJar {
         archiveFileName = "$project_name-${getModuleName(project.name)}-${project_version}-raw.jar"
 
-        if (project.name != "minecraft-bukkit") {
+        if (project.name != "minecraft-bukkit" && project.name != "minecraft-velocity") {
             relocate("net.kyori", "${project_path_libraries}")
         }
 
