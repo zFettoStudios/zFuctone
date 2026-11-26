@@ -33,6 +33,8 @@ public abstract class CommandRegistryImpl implements CommandRegistry {
     public @NonNull CommandRegistry register(@NonNull Class<?> moduleClass,
                                              @NonNull Function<@NonNull CommandManager<PlatformPlayer>,
                                         Command.@NonNull Builder<PlatformPlayer>> builder) {
+        if (!commandManager.hasCapability(CloudCapability.StandardCapabilities.ROOT_COMMAND_DELETION)) return this;
+
         Command.Builder<PlatformPlayer> commandBuilder = builder.apply(commandManager);
 
         Permission permission = commandBuilder.commandPermission();
@@ -40,8 +42,6 @@ public abstract class CommandRegistryImpl implements CommandRegistry {
 
         Command<PlatformPlayer> command = commandBuilder.permission(player ->
             PermissionResult.of(player.hasPermission(permissionName), permission)).build();
-
-        if (commandManager.commands().contains(command)) return this;
 
         String commandName = command.rootComponent().name();
 
