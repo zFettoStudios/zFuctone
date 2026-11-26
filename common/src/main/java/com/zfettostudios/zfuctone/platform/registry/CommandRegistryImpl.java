@@ -24,7 +24,8 @@ public abstract class CommandRegistryImpl implements CommandRegistry {
     private final Map<Class<?>, Set<String>> commands = new ConcurrentHashMap<>();
 
     public CommandRegistryImpl() {
-        commandManager.settings().set(ManagerSetting.ALLOW_UNSAFE_REGISTRATION, true)
+        commandManager.settings()
+            .set(ManagerSetting.ALLOW_UNSAFE_REGISTRATION, true)
             .set(ManagerSetting.OVERRIDE_EXISTING_COMMANDS, true);
     }
 
@@ -39,6 +40,8 @@ public abstract class CommandRegistryImpl implements CommandRegistry {
 
         Command<PlatformPlayer> command = commandBuilder.permission(player ->
             PermissionResult.of(player.hasPermission(permissionName), permission)).build();
+
+        if (commandManager.commands().contains(command)) return this;
 
         String commandName = command.rootComponent().name();
 
