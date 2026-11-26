@@ -26,11 +26,12 @@ import java.time.Duration;
 
 public class VelocityZFuctone extends ZFuctoneImpl {
     private final VelocityLoader loader;
-    private final EventManager em = loader.getServer().getEventManager();
+    private final EventManager em;
 
     public VelocityZFuctone(VelocityLoader loader, ReflectionResolver reflectionResolver,
                             PlatformType platformType, LibraryResolver libraryResolver) {
         this.loader = loader;
+        this.em = loader.getServer().getEventManager();
         super(reflectionResolver, platformType, libraryResolver);
     }
 
