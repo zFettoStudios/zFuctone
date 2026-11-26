@@ -1,0 +1,12 @@
+dependencies {
+    implementation project(":api")
+    implementation project(":common")
+
+    compileOnly libraries.cloud.velocity
+
+    compileOnly libraries.packeteventsmodern.velocity
+
+    compileOnly libraries.platform.velocity
+
+    compileOnly libraries.integration.miniplaceholders
+}

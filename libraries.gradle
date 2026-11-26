@@ -7,7 +7,8 @@ ext.libraries = [
     platform: [
         paper: "io.papermc.paper:dev-bundle:$paper_version",
         folia: "dev.folia:dev-bundle:$folia_version",
-        spigot: "org.spigotmc:spigot-api:$spigot_version"
+        spigot: "org.spigotmc:spigot-api:$spigot_version",
+        velocity: "com.velocitypowered:velocity-api:$velocity_version"
     ],
 
     annotation: [
@@ -24,7 +25,8 @@ ext.libraries = [
 
     packeteventsmodern: [
         api: "net.flectone:packeteventsmodern-api:$packeteventsmodern_version",
-        spigot: "net.flectone:packeteventsmodern-spigot:$packeteventsmodern_version"
+        spigot: "net.flectone:packeteventsmodern-spigot:$packeteventsmodern_version",
+        velocity: "net.flectone:packeteventsmodern-velocity:$packeteventsmodern_version"
     ],
 
     libby: [

@@ -35,6 +35,9 @@ jobs:
       - name: Build minecraft-bukkit
         run: ./gradlew :minecraft-bukkit:build
 
+      - name: Build minecraft-velocity
+        run: ./gradlew :minecraft-bukkit:build
+
       - name: Build minecraft-core
         run: ./gradlew :minecraft-core:build
 

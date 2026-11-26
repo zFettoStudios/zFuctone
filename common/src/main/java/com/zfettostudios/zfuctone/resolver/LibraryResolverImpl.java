@@ -286,6 +286,25 @@ public class LibraryResolverImpl extends LibraryManager implements LibraryResolv
 
         loadLibrary(Library.builder()
             .groupId("org{}incendo")
+            .artifactId("cloud-velocity")
+            .version(BuildConstant.CLOUD_MINECRAFT_VERSION)
+            .repository(BuildConstant.MAVEN_REPOSITORY)
+            .resolveTransitiveDependencies(true)
+            .relocate(Relocation.builder()
+                .pattern("org{}incendo{}cloud")
+                .relocatedPattern(BuildConstant.PROJECT_PATH_LIBRARIES + ".cloud")
+                .build()
+            )
+            .relocate(Relocation.builder()
+                .pattern("io{}leangen{}geantyref")
+                .relocatedPattern(BuildConstant.PROJECT_PATH_LIBRARIES + ".geantyref")
+                .build()
+            )
+            .build()
+        );
+
+        loadLibrary(Library.builder()
+            .groupId("org{}incendo")
             .artifactId("cloud-brigadier")
             .version(BuildConstant.CLOUD_MINECRAFT_VERSION)
             .repository(BuildConstant.MAVEN_REPOSITORY)
@@ -345,7 +364,8 @@ public class LibraryResolverImpl extends LibraryManager implements LibraryResolv
         return List.of(
             "packeteventsmodern-api",
             "packeteventsmodern-netty-common",
-            "packeteventsmodern-spigot"
+            "packeteventsmodern-spigot",
+            "packeteventsmodern-velocity"
         );
     }
 }
