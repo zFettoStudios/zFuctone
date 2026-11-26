@@ -224,6 +224,11 @@ public class LibraryResolverImpl extends LibraryManager implements LibraryResolv
                 .relocatedPattern(BuildConstant.PROJECT_PATH_LIBRARIES + ".gson")
                 .build()
             )
+            .relocate(Relocation.builder()
+                .pattern("org{}slf4j")
+                .relocatedPattern(BuildConstant.PROJECT_PATH_LIBRARIES + ".slf4j")
+                .build()
+            )
             .build()
         ));
 
