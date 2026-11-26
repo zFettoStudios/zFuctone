@@ -1,5 +1,6 @@
 package com.zfettostudios.zfuctone.factory;
 
+import com.zfettostudios.zfuctone.ZFuctone;
 import com.zfettostudios.zfuctone.dispatcher.GetMessage;
 import com.zfettostudios.zfuctone.dispatcher.GetMessageImpl;
 import com.zfettostudios.zfuctone.model.config.localization.Localization;
@@ -14,7 +15,12 @@ import java.util.function.Supplier;
 public class UtilFactoryImpl implements UtilFactory {
     @Override
     public @NonNull <T> LazyInstance<T> buildLazyInstance(@NonNull Supplier<T> supplier) {
-        return new LazyInstanceImpl<>(supplier);
+        return new LazyInstanceImpl<>(supplier, null);
+    }
+
+    @Override
+    public @NonNull <T> LazyInstance<T> buildLazyInstance(@NonNull Function<@NonNull ZFuctone, T> function) {
+        return new LazyInstanceImpl<>(null, function);
     }
 
     @Override

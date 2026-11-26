@@ -1,7 +1,6 @@
 package com.zfettostudios.zfuctone.module.integration.miniplaceholders;
 
 import com.zfettostudios.zfuctone.model.config.PermissionConfig;
-import com.zfettostudios.zfuctone.model.config.setting.PermissionSetting;
 import com.zfettostudios.zfuctone.module.Module;
 import com.zfettostudios.zfuctone.provider.ZFuctoneProvider;
 import com.zfettostudios.zfuctone.model.config.IntegrationConfig;

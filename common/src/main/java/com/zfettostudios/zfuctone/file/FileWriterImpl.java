@@ -6,29 +6,23 @@ import com.zfettostudios.zfuctone.exception.FileWriteException;
 import com.zfettostudios.zfuctone.model.config.localization.Localization;
 import com.zfettostudios.zfuctone.model.file.FilePack;
 import org.jspecify.annotations.NonNull;
-import tools.jackson.dataformat.yaml.YAMLMapper;
 
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.Map;
 import java.util.concurrent.CompletableFuture;
-import java.util.concurrent.ExecutorService;
 
 @RequiredArgsConstructor
 public class FileWriterImpl implements FileWriter {
-    private final FileFacade fileFacade;
-    private final Path dataPath;
-    private final Path localizationsPath;
-    private final YAMLMapper mapper;
-    private final ExecutorService executor;
+    private final FileFacadeImpl fileFacade;
 
     private  <T> T save(T file, Path path) {
         try {
             Path parentPath = path.getParent();
             if (parentPath != null && !Files.exists(parentPath)) Files.createDirectories(parentPath);
 
-            mapper.writeValue(path.toFile(), file);
+            fileFacade.mapper().writeValue(path.toFile(), file);
             return file;
         } catch (IOException e) {
             throw new FileWriteException(path, e);
@@ -37,12 +31,12 @@ public class FileWriterImpl implements FileWriter {
 
     @Override
     public <T> @NonNull CompletableFuture<T> saveAsync(@NonNull T file, @NonNull Path pathToFile) {
-        return CompletableFuture.supplyAsync(() -> save(file, pathToFile), executor);
+        return CompletableFuture.supplyAsync(() -> save(file, pathToFile), fileFacade.executor());
     }
 
     @Override
     public  <T> @NonNull CompletableFuture<T> saveAsync(@NonNull T file) {
-        return saveAsync(file, fileFacade.getFilePath(file, dataPath, localizationsPath));
+        return saveAsync(file, fileFacade.getFilePath(file, fileFacade.dataPath(), fileFacade.localizationsPath()));
     }
 
     @Override
@@ -63,8 +57,8 @@ public class FileWriterImpl implements FileWriter {
 
         return CompletableFuture.allOf(localizations.entrySet().stream()
             .map(entry -> {
-                Path filePath = localizationsPath.resolve(resolveFileName(entry.getKey().toLowerCase()));
-                if (!Files.exists(localizationsPath.resolve(filePath))) return CompletableFuture.completedFuture(null);
+                Path filePath = fileFacade.localizationsPath().resolve(resolveFileName(entry.getKey().toLowerCase()));
+                if (!Files.exists(fileFacade.localizationsPath().resolve(filePath))) return CompletableFuture.completedFuture(null);
 
                 return saveAsync(entry.getValue(), filePath);
             })
@@ -72,7 +66,7 @@ public class FileWriterImpl implements FileWriter {
     }
 
     private String resolveFileName(String langKey) {
-        if (Files.exists(localizationsPath.resolve(langKey + ".yaml"))) return langKey + ".yaml";
+        if (Files.exists(fileFacade.localizationsPath().resolve(langKey + ".yaml"))) return langKey + ".yaml";
 
         return langKey + ".yml";
     }

@@ -1,7 +1,6 @@
 package com.zfettostudios.zfuctone.platform.registry.cloud.mapper;
 
-import lombok.RequiredArgsConstructor;
-
+import com.zfettostudios.zfuctone.ZFuctone;
 import com.zfettostudios.zfuctone.logging.ZLogger;
 import com.zfettostudios.zfuctone.platform.entity.PlatformPlayer;
 import com.zfettostudios.zfuctone.provider.ZFuctoneProvider;
@@ -14,9 +13,8 @@ import org.bukkit.entity.Player;
 import org.incendo.cloud.SenderMapper;
 import org.jspecify.annotations.NonNull;
 
-@RequiredArgsConstructor
 public class PaperSenderMapper implements SenderMapper<CommandSourceStack, PlatformPlayer> {
-    private final LazyInstance<PlatformPlayerService> playerService = LazyInstance.build(() -> ZFuctoneProvider.get().playerService());
+    private final LazyInstance<PlatformPlayerService> playerService = LazyInstance.build(ZFuctone::playerService);
     private final ZLogger logger = ZFuctoneProvider.get().logger();
 
     @Override

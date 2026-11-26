@@ -11,8 +11,11 @@ import com.zfettostudios.zfuctone.scheduler.TaskScheduler;
 import org.jspecify.annotations.NonNull;
 import org.jspecify.annotations.Nullable;
 
+import java.util.Collections;
+import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.CopyOnWriteArrayList;
 import java.util.function.Consumer;
 
 @Getter
@@ -22,40 +25,55 @@ public class ModuleControllerImpl implements ModuleController {
     private final TaskScheduler taskScheduler = ZFuctoneProvider.get().taskScheduler();
 
     private final Map<Class<? extends Module<?>>, Module<?>> modules = new ConcurrentHashMap<>();
+    private final List<Class<? extends Module<?>>> registrationOrder = new CopyOnWriteArrayList<>();
 
     @Override
     public @NonNull ModuleController enable() {
-        return executeAllModules(Reloadable::enable);
+        return executeModuleAll(Reloadable::enable);
     }
 
     @Override
     public @NonNull ModuleController disable() {
-        return executeAllModules(Reloadable::disable);
+        return executeModuleAll(Reloadable::enable);
     }
 
     @Override
     public @NonNull ModuleController reload() {
-        return executeAllModules(Reloadable::reload);
+        return executeModuleAll(Reloadable::reload);
     }
 
-    private ModuleController executeAllModules(Consumer<Reloadable<?>> consumer) {
-        for (Module<?> module : modules.values()) consumer.accept(module);
+    private ModuleController executeModuleAll(Consumer<Module<?>> consumer) {
+        for (Class<? extends Module<?>> moduleClass : registrationOrder) {
+            Module<?> module = modules.get(moduleClass);
+            if (module != null) consumer.accept(module);
+        }
 
         return this;
     }
 
     @Override
-    public <T extends Module<T>> @NonNull T register(@NonNull Class<T> moduleClass, Module<T> module) {
-        return moduleClass.cast(modules.put(moduleClass, module));
+    public <T extends Module<T>> @NonNull T register(@NonNull Class<T> moduleClass, @NonNull Module<T> module) {
+        if (modules.containsKey(moduleClass)) return module.get();
+
+        modules.put(moduleClass, module);
+        registrationOrder.add(moduleClass);
+
+        return module.get();
     }
 
     @Override
     public @Nullable <T extends Module<T>> T unregister(@NonNull Class<T> moduleClass) {
+        registrationOrder.remove(moduleClass);
         return moduleClass.cast(modules.remove(moduleClass));
     }
 
     @Override
     public <T extends Module<T>> T get(@NonNull Class<T> moduleClass) {
         return moduleClass.cast(modules.get(moduleClass));
+    }
+
+    @Override
+    public @NonNull Map<Class<? extends Module<?>>, Module<?>> modules() {
+        return Collections.unmodifiableMap(modules);
     }
 }

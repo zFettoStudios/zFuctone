@@ -19,7 +19,7 @@ import org.jspecify.annotations.Nullable;
 import java.util.UUID;
 
 public class FloodgateModuleImpl extends IntegrationModuleImpl<FloodgateModule> implements FloodgateModule {
-    private final LazyInstance<GeyserModule> geyser = LazyInstance.build(() -> ZFuctoneProvider.get().moduleController().get(GeyserModule.class));
+    private final LazyInstance<GeyserModule> geyser = LazyInstance.build(zfuctone -> zfuctone.moduleController().get(GeyserModule.class));
     private final FileFacade fileFacade = ZFuctoneProvider.get().fileFacade();
 
     @Override

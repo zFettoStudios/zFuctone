@@ -1,6 +1,6 @@
 package com.zfettostudios.zfuctone.file.handler;
 
-import com.zfettostudios.zfuctone.provider.ZFuctoneProvider;
+import com.zfettostudios.zfuctone.ZFuctone;
 import com.zfettostudios.zfuctone.logging.ZLogger;
 import com.zfettostudios.zfuctone.util.LazyInstance;
 import tools.jackson.core.JsonParser;
@@ -11,7 +11,7 @@ import tools.jackson.databind.ValueDeserializer;
 import tools.jackson.databind.deser.DeserializationProblemHandler;
 
 public class LoggingProblemHandler extends DeserializationProblemHandler {
-    private final LazyInstance<ZLogger> logger =LazyInstance.build(() -> ZFuctoneProvider.get().logger());
+    private final LazyInstance<ZLogger> logger = LazyInstance.build(ZFuctone::logger);
 
     @Override
     public Object handleWeirdStringValue(DeserializationContext context, Class<?> type, String value, String failureMessage) {

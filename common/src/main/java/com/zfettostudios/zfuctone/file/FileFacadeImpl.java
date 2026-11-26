@@ -1,6 +1,5 @@
 package com.zfettostudios.zfuctone.file;
 
-import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.experimental.Accessors;
 
@@ -70,8 +69,6 @@ public class FileFacadeImpl implements FileFacade {
     private final YAMLMapper mapper = createMapper();
     private final ExecutorService executor = Executors.newVirtualThreadPerTaskExecutor();
     private final ReflectionResolver reflectionResolver = ZFuctoneProvider.get().reflectionResolver();
-
-    @Getter(AccessLevel.NONE)
     private final FilePack files = new FilePack();
 
     private Localization localizationPlayerDefault;
@@ -82,8 +79,8 @@ public class FileFacadeImpl implements FileFacade {
         this.dataPath = dataPath;
         localizationsPath = dataPath.resolve("localizations");
 
-        loader = new FileLoaderImpl(this, dataPath, localizationsPath, mapper, executor);
-        writer = new FileWriterImpl(this, dataPath, localizationsPath, mapper, executor);
+        loader = new FileLoaderImpl(this);
+        writer = new FileWriterImpl(this);
     }
 
     @Override

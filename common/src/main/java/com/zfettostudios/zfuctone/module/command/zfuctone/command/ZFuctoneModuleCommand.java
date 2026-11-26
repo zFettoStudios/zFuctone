@@ -18,7 +18,7 @@ import java.util.Optional;
 
 @UtilityClass
 public class ZFuctoneModuleCommand extends ModuleCommand {
-    private final LazyInstance<ZFuctoneModule> module = LazyInstance.build(() -> ZFuctoneProvider.get().moduleController().get(ZFuctoneModule.class));
+    private final LazyInstance<ZFuctoneModule> module = LazyInstance.build(zfuctone -> zfuctone.moduleController().get(ZFuctoneModule.class));
 
     public void register() {
         commandRegistry.register(module.get().moduleClass(), manager ->

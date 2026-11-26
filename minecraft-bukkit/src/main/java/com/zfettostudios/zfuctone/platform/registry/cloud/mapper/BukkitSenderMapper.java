@@ -1,5 +1,6 @@
 package com.zfettostudios.zfuctone.platform.registry.cloud.mapper;
 
+import com.zfettostudios.zfuctone.ZFuctone;
 import com.zfettostudios.zfuctone.logging.ZLogger;
 import com.zfettostudios.zfuctone.platform.entity.PlatformPlayer;
 import com.zfettostudios.zfuctone.provider.ZFuctoneProvider;
@@ -12,7 +13,7 @@ import org.incendo.cloud.SenderMapper;
 import org.jspecify.annotations.NonNull;
 
 public class BukkitSenderMapper implements SenderMapper<CommandSender, PlatformPlayer> {
-    private final LazyInstance<PlatformPlayerService> playerService = LazyInstance.build(() -> ZFuctoneProvider.get().playerService());
+    private final LazyInstance<PlatformPlayerService> playerService = LazyInstance.build((ZFuctone::playerService));
     private final ZLogger logger = ZFuctoneProvider.get().logger();
 
     @Override

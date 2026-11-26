@@ -5,7 +5,6 @@ import com.zfettostudios.zfuctone.model.config.localization.Localization;
 import com.zfettostudios.zfuctone.model.file.FilePack;
 import lombok.RequiredArgsConstructor;
 import org.jspecify.annotations.NonNull;
-import tools.jackson.dataformat.yaml.YAMLMapper;
 
 import java.io.File;
 import java.io.IOException;
@@ -17,15 +16,10 @@ import java.util.Map;
 import java.util.Optional;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ConcurrentHashMap;
-import java.util.concurrent.ExecutorService;
 
 @RequiredArgsConstructor
 public class FileLoaderImpl implements FileLoader {
-    private final FileFacade fileFacade;
-    private final Path dataPath;
-    private final Path localizationsPath;
-    private final YAMLMapper mapper;
-    private final ExecutorService executor;
+    private final FileFacadeImpl fileFacade;
 
     private <T> T load(T file, Path path) {
         File fileFromPath = path.toFile();
@@ -34,9 +28,9 @@ public class FileLoaderImpl implements FileLoader {
             Path parentPath = path.getParent();
             if (parentPath != null && !Files.exists(parentPath)) Files.createDirectories(parentPath);
 
-            if (!Files.exists(path) || fileFromPath.length() == 0) mapper.writeValue(fileFromPath, file);
+            if (!Files.exists(path) || fileFromPath.length() == 0) fileFacade.mapper().writeValue(fileFromPath, file);
 
-            return mapper.readerForUpdating(file).readValue(fileFromPath);
+            return fileFacade.mapper().readerForUpdating(file).readValue(fileFromPath);
         } catch (IOException e) {
             throw new FileLoadException(path, e);
         }
@@ -44,12 +38,12 @@ public class FileLoaderImpl implements FileLoader {
 
     @Override
     public <T> @NonNull CompletableFuture<T> loadAsync(@NonNull T file) {
-        return loadAsync(file, fileFacade.getFilePath(file, dataPath, localizationsPath));
+        return loadAsync(file, fileFacade.getFilePath(file, fileFacade.dataPath(), fileFacade.localizationsPath()));
     }
 
     @Override
     public <T> @NonNull CompletableFuture<T> loadAsync(@NonNull T file, @NonNull Path path) {
-        return CompletableFuture.supplyAsync(() -> load(file, path), executor);
+        return CompletableFuture.supplyAsync(() -> load(file, path), fileFacade.executor());
     }
 
     @Override
@@ -70,27 +64,27 @@ public class FileLoaderImpl implements FileLoader {
         localizations.forEach((key, value) -> concurrentLocalizations.put(key.toLowerCase(), value));
 
         return CompletableFuture.runAsync(() -> {
-            if (!Files.exists(localizationsPath)) {
+            if (!Files.exists(fileFacade.localizationsPath())) {
                 try {
-                    Files.createDirectories(localizationsPath);
+                    Files.createDirectories(fileFacade.localizationsPath());
                 } catch (IOException e) {
-                    throw new FileLoadException(localizationsPath, e);
+                    throw new FileLoadException(fileFacade.localizationsPath(), e);
                 }
             }
-        }, executor).thenComposeAsync(_ -> {
+        }, fileFacade.executor()).thenComposeAsync(_ -> {
             List<CompletableFuture<Void>> futures = new ArrayList<>(
                 concurrentLocalizations.entrySet().stream()
                     .map(entry -> {
                         String langKey = entry.getKey();
 
                         return loadAsync(entry.getValue(), findExistingFile(langKey)
-                            .orElseGet(() -> localizationsPath.resolve(langKey + ".yml")))
+                            .orElseGet(() -> fileFacade.localizationsPath().resolve(langKey + ".yml")))
                             .thenAccept(loaded -> concurrentLocalizations.put(langKey, loaded));
                     })
                     .toList()
             );
 
-            File[] files = localizationsPath.toFile().listFiles(file -> {
+            File[] files = fileFacade.localizationsPath().toFile().listFiles(file -> {
                 if (!file.isFile()) return false;
 
                 String name = file.getName().toLowerCase();
@@ -112,14 +106,14 @@ public class FileLoaderImpl implements FileLoader {
                     localizations.clear();
                     localizations.putAll(concurrentLocalizations);
                 });
-        }, executor);
+        }, fileFacade.executor());
     }
 
     private Optional<Path> findExistingFile(String langKey) {
-        Path yml = localizationsPath.resolve(langKey + ".yml");
+        Path yml = fileFacade.localizationsPath().resolve(langKey + ".yml");
         if (Files.exists(yml)) return Optional.of(yml);
 
-        Path yaml = localizationsPath.resolve(langKey + ".yaml");
+        Path yaml = fileFacade.localizationsPath().resolve(langKey + ".yaml");
         if (Files.exists(yaml)) return Optional.of(yaml);
 
         return Optional.empty();

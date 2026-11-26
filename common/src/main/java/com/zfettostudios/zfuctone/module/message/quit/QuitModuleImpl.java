@@ -12,7 +12,7 @@ import org.jspecify.annotations.NonNull;
 
 public class QuitModuleImpl extends ExtendedModule<QuitModule> implements QuitModule {
     private final QuitModuleListener listener = new QuitModuleListener(this);
-    private final LazyInstance<FlectonePulseModule> flectonePulseModule = LazyInstance.build(() -> ZFuctoneProvider.get().moduleController().get(FlectonePulseModule.class));
+    private final LazyInstance<FlectonePulseModule> flectonePulseModule = LazyInstance.build(zfuctone -> zfuctone.moduleController().get(FlectonePulseModule.class));
 
     @Override
     public @NonNull QuitModule get() {

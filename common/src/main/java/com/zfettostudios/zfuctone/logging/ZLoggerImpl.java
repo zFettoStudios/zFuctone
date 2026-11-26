@@ -3,14 +3,12 @@ package com.zfettostudios.zfuctone.logging;
 import lombok.Getter;
 import lombok.experimental.Accessors;
 
-import com.zfettostudios.zfuctone.file.FileFacade;
 import com.zfettostudios.zfuctone.model.constant.minecraft.player.PlayerEdition;
 import com.zfettostudios.zfuctone.model.constant.minecraft.player.PlayerGameMode;
 import com.zfettostudios.zfuctone.platform.entity.PlatformPlayer;
 import com.zfettostudios.zfuctone.provider.ZFuctoneProvider;
 import com.zfettostudios.zfuctone.model.config.Config;
 import com.zfettostudios.zfuctone.model.constant.BuildConstant;
-import com.zfettostudios.zfuctone.util.LazyInstance;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.logger.slf4j.ComponentLogger;
 import net.kyori.adventure.text.minimessage.MiniMessage;
@@ -20,8 +18,6 @@ import java.util.UUID;
 
 @Accessors(fluent = true)
 public class ZLoggerImpl implements ZLogger {
-    private final static LazyInstance<FileFacade> fileFacade = LazyInstance.build(() -> ZFuctoneProvider.get().fileFacade());
-
     private final MiniMessage mm = MiniMessage.miniMessage();
 
     @Getter
@@ -128,7 +124,7 @@ public class ZLoggerImpl implements ZLogger {
 
     @Override
     public @NonNull String getLocale() {
-        return fileFacade.get().config().language().console().type();
+        return ZFuctoneProvider.get().fileFacade().config().language().console().type();
     }
 
     @Override

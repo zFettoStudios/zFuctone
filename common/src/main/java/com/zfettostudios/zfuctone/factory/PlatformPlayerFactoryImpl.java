@@ -3,7 +3,7 @@ package com.zfettostudios.zfuctone.factory;
 import com.github.retrooper.packetevents.PacketEvents;
 import com.github.retrooper.packetevents.manager.player.PlayerManager;
 import com.github.retrooper.packetevents.protocol.player.User;
-import com.zfettostudios.zfuctone.provider.ZFuctoneProvider;
+import com.zfettostudios.zfuctone.ZFuctone;
 import com.zfettostudios.zfuctone.platform.adapter.PlatformPlayerAdapter;
 import com.zfettostudios.zfuctone.platform.entity.PlatformPlayer;
 import com.zfettostudios.zfuctone.platform.entity.PlatformPlayerImpl;
@@ -14,7 +14,7 @@ import org.jspecify.annotations.Nullable;
 import java.util.UUID;
 
 public class PlatformPlayerFactoryImpl implements PlatformPlayerFactory {
-    private final LazyInstance<PlatformPlayerAdapter> playerAdapter = LazyInstance.build(() -> ZFuctoneProvider.get().playerAdapter());
+    private final LazyInstance<PlatformPlayerAdapter> playerAdapter = LazyInstance.build(ZFuctone::playerAdapter);
     private final PlayerManager playerManager = PacketEvents.getAPI().getPlayerManager();
 
     @Override

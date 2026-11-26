@@ -7,13 +7,13 @@ import lombok.experimental.Accessors;
 
 import com.github.retrooper.packetevents.protocol.player.User;
 import com.github.retrooper.packetevents.wrapper.play.server.WrapperPlayServerDisconnect;
+import com.zfettostudios.zfuctone.ZFuctone;
 import com.zfettostudios.zfuctone.provider.ZFuctoneProvider;
 import com.zfettostudios.zfuctone.exception.InvalidTypeException;
 import com.zfettostudios.zfuctone.file.FileFacade;
 import com.zfettostudios.zfuctone.model.constant.type.LocalizationType;
 import com.zfettostudios.zfuctone.model.constant.minecraft.player.PlayerGameMode;
 import com.zfettostudios.zfuctone.model.constant.minecraft.player.PlayerEdition;
-import com.zfettostudios.zfuctone.module.controller.ModuleController;
 import com.zfettostudios.zfuctone.module.integration.floodgate.FloodgateModule;
 import com.zfettostudios.zfuctone.module.integration.geyser.GeyserModule;
 import com.zfettostudios.zfuctone.module.integration.luckperms.LuckPermsModule;
@@ -27,13 +27,12 @@ import java.util.UUID;
 
 @RequiredArgsConstructor
 public class PlatformPlayerImpl implements PlatformPlayer {
-    private static final LazyInstance<PlatformPlayerAdapter> playerAdapter = LazyInstance.build(() -> ZFuctoneProvider.get().playerAdapter());
-    private static final LazyInstance<FileFacade> fileFacade = LazyInstance.build(() -> ZFuctoneProvider.get().fileFacade());
-    private static final LazyInstance<ModuleController> moduleController = LazyInstance.build(() -> ZFuctoneProvider.get().moduleController());
-    private static final LazyInstance<FloodgateModule> floodgateModule = LazyInstance.build(() -> moduleController.get().get(FloodgateModule.class));
-    private static final LazyInstance<ViaVersionModule> viaVersionModule = LazyInstance.build(() -> moduleController.get().get(ViaVersionModule.class));
-    private static final LazyInstance<LuckPermsModule> luckPermsModule = LazyInstance.build(() -> moduleController.get().get(LuckPermsModule.class));
-    private static final LazyInstance<GeyserModule> geyserModule = LazyInstance.build(() -> moduleController.get().get(GeyserModule.class));
+    private static final LazyInstance<PlatformPlayerAdapter> playerAdapter = LazyInstance.build(ZFuctone::playerAdapter);
+    private static final LazyInstance<FileFacade> fileFacade = LazyInstance.build(ZFuctone::fileFacade);
+    private static final LazyInstance<FloodgateModule> floodgateModule = LazyInstance.build(zfuctone -> zfuctone.moduleController().get(FloodgateModule.class));
+    private static final LazyInstance<ViaVersionModule> viaVersionModule = LazyInstance.build(zfuctone -> zfuctone.moduleController().get(ViaVersionModule.class));
+    private static final LazyInstance<LuckPermsModule> luckPermsModule = LazyInstance.build(zfuctone -> zfuctone.moduleController().get(LuckPermsModule.class));
+    private static final LazyInstance<GeyserModule> geyserModule = LazyInstance.build(zfuctone -> zfuctone.moduleController().get(GeyserModule.class));
 
     @Getter
     @Accessors(fluent = true)

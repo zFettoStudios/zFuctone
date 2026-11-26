@@ -12,7 +12,7 @@ import org.jspecify.annotations.NonNull;
 
 public class JoinModuleImpl extends ExtendedModule<JoinModule> implements JoinModule {
     private final JoinModuleListener listener = new JoinModuleListener(this);
-    private final LazyInstance<FlectonePulseModule> flectonePulseModule = LazyInstance.build(() -> ZFuctoneProvider.get().moduleController().get(FlectonePulseModule.class));
+    private final LazyInstance<FlectonePulseModule> flectonePulseModule = LazyInstance.build(zfuctone -> zfuctone.moduleController().get(FlectonePulseModule.class));
 
     @Override
     public @NonNull JoinModule get() {
