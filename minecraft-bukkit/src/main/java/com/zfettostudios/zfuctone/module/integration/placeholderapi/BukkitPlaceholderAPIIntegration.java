@@ -57,13 +57,13 @@ public class BukkitPlaceholderAPIIntegration extends PlaceholderExpansion implem
     public @NonNull BukkitPlaceholderAPIIntegration hook() {
         identifier = config.identifier();
 
-        taskScheduler.runSync(this::register);
+        taskScheduler.runSync(this::register).join();
         return this;
     }
 
     @Override
     public @NonNull BukkitPlaceholderAPIIntegration unhook() {
-        taskScheduler.runSync(this::unregister);
+        taskScheduler.runSync(this::unregister).join();
         return this;
     }
 

@@ -1,6 +1,11 @@
 package com.zfettostudios.zfuctone.platform.adapter;
 
+import com.zfettostudios.zfuctone.ZFuctone;
 import com.zfettostudios.zfuctone.model.constant.minecraft.player.PlayerGameMode;
+import com.zfettostudios.zfuctone.model.constant.type.PlatformType;
+import com.zfettostudios.zfuctone.provider.ZFuctoneProvider;
+import com.zfettostudios.zfuctone.scheduler.TaskScheduler;
+import com.zfettostudios.zfuctone.util.LazyInstance;
 import org.bukkit.Bukkit;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.entity.Player;
@@ -10,6 +15,9 @@ import org.jspecify.annotations.Nullable;
 import java.util.UUID;
 
 public class BukkitPlayerAdapter implements PlatformPlayerAdapter {
+    private final LazyInstance<TaskScheduler> taskScheduler = LazyInstance.build(ZFuctone::taskScheduler);
+    private final PlatformType platformType = ZFuctoneProvider.get().getPlatformType();
+
     @Override
     public @Nullable <T> T getPlatformPlayer(@NonNull UUID uuid, @NonNull Class<T> target) {
         return target.cast(Bukkit.getPlayer(uuid));
@@ -117,7 +125,7 @@ public class BukkitPlayerAdapter implements PlatformPlayerAdapter {
     @Override
     public @NonNull PlayerGameMode getGamemode(@NonNull Object platformPlayer) {
         Player player = getPlayerFrom(platformPlayer);
-        if (player == null) return PlayerGameMode.CREATIVE;
+        if (player == null) return PlayerGameMode.UNKNOWN;
 
         return switch (player.getGameMode()) {
             case CREATIVE -> PlayerGameMode.CREATIVE;
@@ -132,7 +140,8 @@ public class BukkitPlayerAdapter implements PlatformPlayerAdapter {
         Player player = getPlayerFrom(platformPlayer);
         if (player == null) return "";
 
-        return player.getWorld().getName();
+        if (platformType == PlatformType.FOLIA) return FoliaPlayerAdapter.getWorldName(player);
+        return taskScheduler.get().runSync(() -> player.getWorld().getName()).join();
     }
 
     @Override
@@ -140,7 +149,8 @@ public class BukkitPlayerAdapter implements PlatformPlayerAdapter {
         Player player = getPlayerFrom(platformPlayer);
         if (player == null) return "";
 
-        return player.getWorld().getEnvironment().name();
+        if (platformType == PlatformType.FOLIA) return FoliaPlayerAdapter.getWorldEnvironment(player);
+        return taskScheduler.get().runSync(() -> player.getWorld().getEnvironment().name()).join();
     }
 
     private @Nullable Player getPlayerFrom(Object object) {

@@ -100,8 +100,8 @@ public abstract class ZFuctoneImpl implements ZFuctone {
 
         builder = builder();
 
-        playerAdapter = builder.buildPlayerAdapter();
         serverAdapter = builder.buildServerAdapter();
+        playerAdapter = builder.buildPlayerAdapter();
 
         logger = new ZLoggerImpl();
         fileFacade = new FileFacadeImpl(getDataPath());

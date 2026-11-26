@@ -32,13 +32,13 @@ public class PaperMiniPlaceholdersIntegration implements IntegrationHook<PaperMi
 
     @Override
     public @NonNull PaperMiniPlaceholdersIntegration hook() {
-        taskScheduler.runSync(expansion::register);
+        taskScheduler.runSync(expansion::register).join();
         return this;
     }
 
     @Override
     public @NonNull PaperMiniPlaceholdersIntegration unhook() {
-        taskScheduler.runSync(expansion::unregister);
+        taskScheduler.runSync(expansion::unregister).join();
         return this;
     }
 

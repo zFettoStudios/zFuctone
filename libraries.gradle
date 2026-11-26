@@ -6,6 +6,7 @@ ext.libraries = [
 
     platform: [
         paper: "io.papermc.paper:dev-bundle:$paper_version",
+        folia: "dev.folia:dev-bundle:$folia_version",
         spigot: "org.spigotmc:spigot-api:$spigot_version"
     ],
 

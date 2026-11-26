@@ -2,6 +2,7 @@ dependencies {
     implementation project(":api")
     implementation project(":common")
     implementation project(":minecraft-paper")
+    implementation project(":minecraft-folia")
 
     compileOnly libraries.cloud.bukkit
 

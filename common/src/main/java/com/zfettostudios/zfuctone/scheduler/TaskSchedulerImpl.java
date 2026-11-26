@@ -246,8 +246,10 @@ public class TaskSchedulerImpl implements TaskScheduler {
         return future;
     }
 
-    private void dispatchTask(TaskEntry task, long scheduledTick) {
-        if (task.isCancelled() || isDisabled()) return;
+    private void dispatchTask(@NonNull TaskEntry task, long scheduledTick) {
+        if (task.isCancelled() || isDisabled()) {
+            return;
+        }
 
         Runnable wrappedRunnable = () -> {
             if (task.isCancelled() || isDisabled()) return;
@@ -255,33 +257,34 @@ public class TaskSchedulerImpl implements TaskScheduler {
             try {
                 task.execute();
             } catch (Throwable throwable) {
-                logger.warn("Error executing task: {}", throwable.getMessage());
+                logger.warn("Error executing task", throwable);
             } finally {
-                if (!task.isRepeating()) task.completeEmpty();
+                if (task.isRepeating()) {
+                    if (!task.isCancelled() && !isDisabled()) {
+                        scheduledTasks
+                            .computeIfAbsent(scheduledTick + task.period(), _ -> new ConcurrentLinkedQueue<>())
+                            .add(task);
+                    }
+                }
+                else task.completeEmpty();
             }
         };
 
         if (task.isAsync()) {
             executorService.submit(() -> {
+                boolean acquired = false;
                 try {
                     semaphore.acquire();
+                    acquired = true;
                     wrappedRunnable.run();
                 } catch (InterruptedException e) {
                     Thread.currentThread().interrupt();
                 } finally {
-                    semaphore.release();
+                    if (acquired) semaphore.release();
                 }
             });
         }
-        else {
-            if (serverAdapter.isPrimaryThread()) wrappedRunnable.run();
-            else serverAdapter.runTask(wrappedRunnable);
-        }
-
-        if (task.isRepeating() && !task.isCancelled() && !isDisabled()) {
-            scheduledTasks.computeIfAbsent(scheduledTick + task.period(), _ ->
-                new ConcurrentLinkedQueue<>()).add(task);
-        }
+        else serverAdapter.runTask(wrappedRunnable);
     }
 
     private interface TaskEntry {
