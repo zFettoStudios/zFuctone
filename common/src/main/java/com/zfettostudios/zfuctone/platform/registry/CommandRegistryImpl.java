@@ -3,6 +3,7 @@ package com.zfettostudios.zfuctone.platform.registry;
 import lombok.Getter;
 
 import com.zfettostudios.zfuctone.platform.entity.PlatformPlayer;
+import org.incendo.cloud.CloudCapability;
 import org.incendo.cloud.Command;
 import org.incendo.cloud.CommandManager;
 import org.incendo.cloud.permission.Permission;
@@ -56,6 +57,8 @@ public abstract class CommandRegistryImpl implements CommandRegistry {
 
     @Override
     public @NonNull CommandRegistry unregister(@NonNull Class<?> moduleClass, @NonNull String commandName) {
+        if (!commandManager.hasCapability(CloudCapability.StandardCapabilities.ROOT_COMMAND_DELETION)) return this;
+
         Set<String> moduleCommands = commands.get(moduleClass);
         if (moduleCommands == null) return this;
 
@@ -67,6 +70,8 @@ public abstract class CommandRegistryImpl implements CommandRegistry {
 
     @Override
     public @NonNull CommandRegistry unregister(@NonNull String commandName) {
+        if (!commandManager.hasCapability(CloudCapability.StandardCapabilities.ROOT_COMMAND_DELETION)) return this;
+
         commands.values().forEach(moduleCommands -> moduleCommands.remove(commandName));
 
         commandManager.deleteRootCommand(commandName);
@@ -76,6 +81,8 @@ public abstract class CommandRegistryImpl implements CommandRegistry {
 
     @Override
     public @NonNull CommandRegistry unregisterAll(@NonNull Class<?> moduleClass) {
+        if (!commandManager.hasCapability(CloudCapability.StandardCapabilities.ROOT_COMMAND_DELETION)) return this;
+
         Set<String> moduleCommands = commands.get(moduleClass);
         if (moduleCommands == null) return this;
 
@@ -87,6 +94,8 @@ public abstract class CommandRegistryImpl implements CommandRegistry {
 
     @Override
     public @NonNull CommandRegistry unregisterAll() {
+        if (!commandManager.hasCapability(CloudCapability.StandardCapabilities.ROOT_COMMAND_DELETION)) return this;
+
         commands.values().forEach(moduleCommands -> moduleCommands.forEach(commandManager::deleteRootCommand));
 
         commands.clear();
