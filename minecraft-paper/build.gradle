@@ -9,6 +9,4 @@ dependencies {
     compileOnly libraries.cloud.paper
 
     paperweightDevelopmentBundle libraries.platform.paper
-
-    compileOnly libraries.integration.miniplaceholders
 }

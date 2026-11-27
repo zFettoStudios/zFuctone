@@ -4,8 +4,6 @@ import com.velocitypowered.api.event.EventManager;
 import com.zfettostudios.zfuctone.exception.InvalidTypeException;
 import com.zfettostudios.zfuctone.listener.VelocityListener;
 import com.zfettostudios.zfuctone.model.constant.type.PlatformType;
-import com.zfettostudios.zfuctone.module.integration.miniplaceholders.MiniPlaceholdersModule;
-import com.zfettostudios.zfuctone.module.integration.miniplaceholders.VelocityMiniPlaceholdersModule;
 import com.zfettostudios.zfuctone.module.integration.placeholderapi.PlaceholderAPIModule;
 import com.zfettostudios.zfuctone.module.integration.placeholderapi.PlaceholderAPiModuleEmpty;
 import com.zfettostudios.zfuctone.platform.adapter.PlatformPlayerAdapter;
@@ -90,11 +88,6 @@ public class VelocityZFuctone extends ZFuctoneImpl {
         @Override
         protected PlatformServerAdapter buildServerAdapter() {
             return new VelocityServerAdapter();
-        }
-
-        @Override
-        protected MiniPlaceholdersModule buildMiniPlaceholdersModule() {
-            return new VelocityMiniPlaceholdersModule();
         }
 
         @Override

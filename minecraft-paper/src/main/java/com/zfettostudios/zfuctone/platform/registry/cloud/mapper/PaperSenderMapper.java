@@ -1,8 +1,8 @@
 package com.zfettostudios.zfuctone.platform.registry.cloud.mapper;
 
 import com.zfettostudios.zfuctone.ZFuctone;
-import com.zfettostudios.zfuctone.logging.ZLogger;
 import com.zfettostudios.zfuctone.platform.entity.PlatformPlayer;
+import com.zfettostudios.zfuctone.provider.ZFuctoneProvider;
 import com.zfettostudios.zfuctone.service.PlatformPlayerService;
 import com.zfettostudios.zfuctone.util.LazyInstance;
 import io.papermc.paper.command.brigadier.CommandSourceStack;
@@ -14,14 +14,13 @@ import org.jspecify.annotations.NonNull;
 
 public class PaperSenderMapper implements SenderMapper<CommandSourceStack, PlatformPlayer> {
     private final LazyInstance<PlatformPlayerService> playerService = LazyInstance.build(ZFuctone::playerService);
-    private final LazyInstance<ZLogger> logger = LazyInstance.build(ZFuctone::logger);
 
     @Override
     public @NonNull PlatformPlayer map(@NonNull CommandSourceStack base) {
-        if (!(base.getSender() instanceof Player player)) return logger.get();
+        if (!(base.getSender() instanceof Player player)) return ZFuctoneProvider.get().logger();
 
         PlatformPlayer platformPlayer = playerService.get().getPlatformPlayer(player.getUniqueId());
-        if (platformPlayer == null) return logger.get();
+        if (platformPlayer == null) return ZFuctoneProvider.get().logger();
 
         return platformPlayer;
     }

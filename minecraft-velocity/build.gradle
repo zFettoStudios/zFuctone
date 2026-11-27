@@ -8,6 +8,4 @@ dependencies {
     compileOnly libraries.cloud.velocity
 
     compileOnly libraries.packeteventsmodern.velocity
-
-    compileOnly libraries.integration.miniplaceholders
 }

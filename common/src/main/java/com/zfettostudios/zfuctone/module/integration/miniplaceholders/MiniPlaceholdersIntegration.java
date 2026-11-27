@@ -1,13 +1,13 @@
 package com.zfettostudios.zfuctone.module.integration.miniplaceholders;
 
 import com.zfettostudios.zfuctone.ZFuctone;
+import com.zfettostudios.zfuctone.provider.ZFuctoneProvider;
 import com.zfettostudios.zfuctone.model.config.IntegrationConfig;
 import com.zfettostudios.zfuctone.model.constant.BuildConstant;
-import com.zfettostudios.zfuctone.model.value.PlaceholderContext;
 import com.zfettostudios.zfuctone.module.integration.IntegrationHook;
+import com.zfettostudios.zfuctone.model.value.PlaceholderContext;
 import com.zfettostudios.zfuctone.platform.entity.PlatformPlayer;
 import com.zfettostudios.zfuctone.platform.registry.PlaceholderRegistry;
-import com.zfettostudios.zfuctone.provider.ZFuctoneProvider;
 import com.zfettostudios.zfuctone.scheduler.TaskScheduler;
 import com.zfettostudios.zfuctone.service.PlatformPlayerService;
 import com.zfettostudios.zfuctone.util.LazyInstance;
@@ -24,7 +24,7 @@ import java.util.Optional;
 import java.util.UUID;
 import java.util.function.Function;
 
-public class VelocityMiniPlaceholdersIntegration implements IntegrationHook<VelocityMiniPlaceholdersIntegration> {
+public class MiniPlaceholdersIntegration implements IntegrationHook<MiniPlaceholdersIntegration> {
     private final LazyInstance<PlaceholderRegistry> placeholderRegistry = LazyInstance.build(ZFuctone::placeholderRegistry);
     private final LazyInstance<PlatformPlayerService> playerService = LazyInstance.build(ZFuctone::playerService);
     private final LazyInstance<TaskScheduler> taskScheduler = LazyInstance.build(ZFuctone::taskScheduler);
@@ -33,13 +33,13 @@ public class VelocityMiniPlaceholdersIntegration implements IntegrationHook<Velo
     private final Expansion expansion = createExpansion();
 
     @Override
-    public @NonNull VelocityMiniPlaceholdersIntegration hook() {
+    public @NonNull MiniPlaceholdersIntegration hook() {
         taskScheduler.get().runSync(expansion::register).join();
         return this;
     }
 
     @Override
-    public @NonNull VelocityMiniPlaceholdersIntegration unhook() {
+    public @NonNull MiniPlaceholdersIntegration unhook() {
         taskScheduler.get().runSync(expansion::unregister).join();
         return this;
     }

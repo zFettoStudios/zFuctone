@@ -2,6 +2,7 @@ package com.zfettostudios.zfuctone.platform.adapter;
 
 import com.zfettostudios.zfuctone.ZFuctone;
 import com.zfettostudios.zfuctone.model.constant.type.PlatformType;
+import com.zfettostudios.zfuctone.provider.ZFuctoneProvider;
 import com.zfettostudios.zfuctone.util.LazyInstance;
 import org.bukkit.Bukkit;
 import org.bukkit.plugin.java.JavaPlugin;

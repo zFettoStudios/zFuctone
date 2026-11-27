@@ -1,10 +1,8 @@
 package com.zfettostudios.zfuctone.module.integration.placeholderapi;
 
-import com.zfettostudios.zfuctone.ZFuctone;
 import com.zfettostudios.zfuctone.module.integration.IntegrationHook;
 import com.zfettostudios.zfuctone.platform.entity.PlatformPlayer;
-import com.zfettostudios.zfuctone.scheduler.TaskScheduler;
-import com.zfettostudios.zfuctone.util.LazyInstance;
+import com.zfettostudios.zfuctone.provider.ZFuctoneProvider;
 import me.clip.placeholderapi.PlaceholderAPI;
 import org.bukkit.entity.Player;
 import org.jspecify.annotations.NonNull;
@@ -12,7 +10,6 @@ import org.jspecify.annotations.Nullable;
 
 public class BukkitPlaceholderAPIModule extends PlaceholderAPIModuleImpl {
     private final IntegrationHook<?> integration;
-    private final LazyInstance<TaskScheduler> taskScheduler = LazyInstance.build(ZFuctone::taskScheduler);
 
     public BukkitPlaceholderAPIModule() {
         if (isEnable()) integration = new BukkitPlaceholderAPIIntegration();
@@ -29,7 +26,7 @@ public class BukkitPlaceholderAPIModule extends PlaceholderAPIModuleImpl {
     }
 
     private String setPlaceholders(Player player, String input) {
-        return taskScheduler.get().runSync(() -> PlaceholderAPI.setPlaceholders(player, setNestedPlaceholders(player, input))).join();
+        return ZFuctoneProvider.get().taskScheduler().runSync(() -> PlaceholderAPI.setPlaceholders(player, setNestedPlaceholders(player, input))).join();
     }
 
     private String setNestedPlaceholders(Player player, String input) {

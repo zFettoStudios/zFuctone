@@ -29,6 +29,7 @@ import com.zfettostudios.zfuctone.module.integration.geyser.GeyserModuleImpl;
 import com.zfettostudios.zfuctone.module.integration.luckperms.LuckPermsModule;
 import com.zfettostudios.zfuctone.module.integration.luckperms.LuckPermsModuleImpl;
 import com.zfettostudios.zfuctone.module.integration.miniplaceholders.MiniPlaceholdersModule;
+import com.zfettostudios.zfuctone.module.integration.miniplaceholders.MiniPlaceholdersModuleImpl;
 import com.zfettostudios.zfuctone.module.integration.placeholderapi.PlaceholderAPIModule;
 import com.zfettostudios.zfuctone.module.integration.viaversion.ViaVersionModule;
 import com.zfettostudios.zfuctone.module.integration.viaversion.ViaVersionModuleImpl;
@@ -214,7 +215,7 @@ public abstract class ZFuctoneImpl implements ZFuctone {
         moduleController.register(GeyserModule.class, new GeyserModuleImpl());
         moduleController.register(FloodgateModule.class, new FloodgateModuleImpl());
         moduleController.register(LuckPermsModule.class, new LuckPermsModuleImpl());
-        moduleController.register(MiniPlaceholdersModule.class, builder.buildMiniPlaceholdersModule());
+        moduleController.register(MiniPlaceholdersModule.class, new MiniPlaceholdersModuleImpl());
         moduleController.register(PlaceholderAPIModule.class, builder.buildPlaceholderAPIModule());
         moduleController.register(FlectonePulseModule.class, new FlectonePulseModuleImpl());
 
@@ -237,7 +238,6 @@ public abstract class ZFuctoneImpl implements ZFuctone {
         protected abstract PlatformPlayerAdapter buildPlayerAdapter();
         protected abstract PlatformServerAdapter buildServerAdapter();
 
-        protected abstract MiniPlaceholdersModule buildMiniPlaceholdersModule();
         protected abstract PlaceholderAPIModule buildPlaceholderAPIModule();
 
         protected abstract CommandRegistry buildCommandRegistry();

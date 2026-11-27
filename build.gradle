@@ -96,6 +96,7 @@ subprojects {
         compileOnly libraries.integration.flectonepulse
         compileOnly libraries.integration.luckperms
         compileOnly libraries.integration.skinsrestorer
+        compileOnly libraries.integration.miniplaceholders
     }
 
     tasks.withType(JavaCompile).configureEach {

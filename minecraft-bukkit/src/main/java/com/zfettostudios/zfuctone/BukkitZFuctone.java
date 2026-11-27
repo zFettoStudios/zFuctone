@@ -3,8 +3,6 @@ package com.zfettostudios.zfuctone;
 import com.zfettostudios.zfuctone.exception.InvalidTypeException;
 import com.zfettostudios.zfuctone.listener.BukkitListener;
 import com.zfettostudios.zfuctone.model.constant.type.PlatformType;
-import com.zfettostudios.zfuctone.module.integration.miniplaceholders.MiniPlaceholdersModule;
-import com.zfettostudios.zfuctone.module.integration.miniplaceholders.PaperMiniPlaceholdersModule;
 import com.zfettostudios.zfuctone.module.integration.placeholderapi.BukkitPlaceholderAPIModule;
 import com.zfettostudios.zfuctone.module.integration.placeholderapi.PlaceholderAPIModule;
 import com.zfettostudios.zfuctone.platform.adapter.BukkitPlayerAdapter;
@@ -96,11 +94,6 @@ public class BukkitZFuctone extends ZFuctoneImpl {
         @Override
         protected PlatformServerAdapter buildServerAdapter() {
             return new BukkitServerAdapter();
-        }
-
-        @Override
-        protected MiniPlaceholdersModule buildMiniPlaceholdersModule() {
-            return new PaperMiniPlaceholdersModule();
         }
 
         @Override
