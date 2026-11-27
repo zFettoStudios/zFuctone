@@ -14,6 +14,8 @@ public class ZFuctoneProvider {
     }
 
     public ZFuctone set(@NonNull ZFuctone zfuctone) {
+        if (instance != null && instance.isEnable()) instance.logger().warn("The zFuctone kernel was overwritten while it was running!");
+
         return instance = zfuctone;
     }
 

@@ -55,4 +55,6 @@ public interface ZFuctone extends Toggleable<ZFuctone> {
     @NonNull ListenerRegistry listenerRegistry();
 
     @NonNull CommandRegistry commandRegistry();
+
+    boolean isEnable();
 }

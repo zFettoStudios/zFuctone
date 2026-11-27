@@ -87,6 +87,8 @@ public abstract class ZFuctoneImpl implements ZFuctone {
     @Getter(AccessLevel.NONE)
     protected final Builder builder;
 
+    protected boolean isEnable;
+
     public ZFuctoneImpl(ReflectionResolver reflectionResolver, PlatformType platformType, LibraryResolver libraryResolver) {
         ZFuctoneProvider.set(this);
         FactoryProviderImpl.init();
@@ -120,6 +122,8 @@ public abstract class ZFuctoneImpl implements ZFuctone {
 
     @Override
     public @NonNull ZFuctone enable() {
+        isEnable = true;
+
         fileFacade.enable();
 
         logger.logEnabling();
@@ -161,6 +165,8 @@ public abstract class ZFuctoneImpl implements ZFuctone {
         taskScheduler.shutdown();
 
         logger.logDisabled();
+
+        isEnable = false;
         return this;
     }
 
@@ -185,7 +191,7 @@ public abstract class ZFuctoneImpl implements ZFuctone {
         return this;
     }
 
-//     if (reflectionResolver.hasClass("net.md_5.bungee.api.ProxyServer")) return PlatformType.BUNGEECORD;
+    //     if (reflectionResolver.hasClass("net.md_5.bungee.api.ProxyServer")) return PlatformType.BUNGEECORD;
 //     if (reflectionResolver.hasClass("org.spongepowered.api.Sponge")) return PlatformType.SPONGE;
 //     if (reflectionResolver.hasClass("net.fabricmc.api.ModInitializer")) return PlatformType.FABRIC;
 //     if (reflectionResolver.hasClass("net.neoforged.fml.common.Mod")) return PlatformType.NEOFORGE;
