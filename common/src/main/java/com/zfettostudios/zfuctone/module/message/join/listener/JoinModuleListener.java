@@ -5,13 +5,12 @@ import lombok.RequiredArgsConstructor;
 import com.zfettostudios.zfuctone.annotation.event.EventHandler;
 import com.zfettostudios.zfuctone.dispatcher.GetMessage;
 import com.zfettostudios.zfuctone.dispatcher.MessageDispatcher;
-import com.zfettostudios.zfuctone.listener.ZFListener;
 import com.zfettostudios.zfuctone.model.event.player.PlayerJoinEvent;
 import com.zfettostudios.zfuctone.module.message.join.JoinModule;
 import com.zfettostudios.zfuctone.provider.ZFuctoneProvider;
 
 @RequiredArgsConstructor
-public class JoinModuleListener implements ZFListener {
+public class JoinModuleListener {
     private final MessageDispatcher messageDispatcher = ZFuctoneProvider.get().messageDispatcher();
     private final JoinModule joinModule;
 
