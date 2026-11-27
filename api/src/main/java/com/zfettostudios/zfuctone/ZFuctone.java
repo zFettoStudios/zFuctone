@@ -13,7 +13,7 @@ import com.zfettostudios.zfuctone.platform.registry.CommandRegistry;
 import com.zfettostudios.zfuctone.platform.registry.ListenerRegistry;
 import com.zfettostudios.zfuctone.platform.registry.PermissionRegistry;
 import com.zfettostudios.zfuctone.platform.registry.PlaceholderRegistry;
-import com.zfettostudios.zfuctone.resolver.LibraryResolver;
+import com.zfettostudios.zfuctone.resolver.library.LibraryResolver;
 import com.zfettostudios.zfuctone.resolver.ReflectionResolver;
 import com.zfettostudios.zfuctone.scheduler.TaskScheduler;
 import com.zfettostudios.zfuctone.service.PlatformPlayerService;

@@ -1,4 +1,4 @@
-package com.zfettostudios.zfuctone.resolver;
+package com.zfettostudios.zfuctone.resolver.library;
 
 import com.zfettostudios.zfuctone.model.lifecycle.Toggleable;
 

@@ -16,7 +16,7 @@ import com.zfettostudios.zfuctone.platform.registry.CommandRegistry;
 import com.zfettostudios.zfuctone.platform.registry.PermissionRegistry;
 import com.zfettostudios.zfuctone.platform.registry.VelocityCommandRegistry;
 import com.zfettostudios.zfuctone.platform.registry.VelocityPermissionRegistry;
-import com.zfettostudios.zfuctone.resolver.LibraryResolver;
+import com.zfettostudios.zfuctone.resolver.library.LibraryResolver;
 import com.zfettostudios.zfuctone.resolver.ReflectionResolver;
 import org.jspecify.annotations.NonNull;
 

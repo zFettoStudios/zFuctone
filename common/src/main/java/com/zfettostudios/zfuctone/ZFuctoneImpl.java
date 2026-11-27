@@ -54,7 +54,7 @@ import com.zfettostudios.zfuctone.platform.registry.PlaceholderRegistry;
 import com.zfettostudios.zfuctone.platform.registry.PlaceholderRegistryImpl;
 import com.zfettostudios.zfuctone.provider.FactoryProviderImpl;
 import com.zfettostudios.zfuctone.provider.ZFuctoneProvider;
-import com.zfettostudios.zfuctone.resolver.LibraryResolver;
+import com.zfettostudios.zfuctone.resolver.library.LibraryResolver;
 import com.zfettostudios.zfuctone.resolver.ReflectionResolver;
 import com.zfettostudios.zfuctone.scheduler.TaskScheduler;
 import com.zfettostudios.zfuctone.scheduler.TaskSchedulerImpl;
@@ -185,7 +185,6 @@ public abstract class ZFuctoneImpl implements ZFuctone {
         return this;
     }
 
-//     if (reflectionResolver.hasClass("com.velocitypowered.api.proxy.ProxyServer")) return PlatformType.VELOCITY;
 //     if (reflectionResolver.hasClass("net.md_5.bungee.api.ProxyServer")) return PlatformType.BUNGEECORD;
 //     if (reflectionResolver.hasClass("org.spongepowered.api.Sponge")) return PlatformType.SPONGE;
 //     if (reflectionResolver.hasClass("net.fabricmc.api.ModInitializer")) return PlatformType.FABRIC;

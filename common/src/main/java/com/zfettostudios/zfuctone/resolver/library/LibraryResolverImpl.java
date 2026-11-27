@@ -1,4 +1,4 @@
-package com.zfettostudios.zfuctone.resolver;
+package com.zfettostudios.zfuctone.resolver.library;
 
 import com.alessiodp.libby.Library;
 import com.alessiodp.libby.LibraryManager;
@@ -9,7 +9,6 @@ import com.alessiodp.libby.logging.adapters.JDKLogAdapter;
 import com.alessiodp.libby.relocation.Relocation;
 import com.zfettostudios.zfuctone.exception.LibraryLoadException;
 import com.zfettostudios.zfuctone.model.constant.BuildConstant;
-import com.zfettostudios.zfuctone.model.constant.type.PlatformType;
 import org.jetbrains.annotations.NotNull;
 import org.jspecify.annotations.NonNull;
 
@@ -23,19 +22,39 @@ import java.security.NoSuchAlgorithmException;
 import java.util.Arrays;
 import java.util.Base64;
 import java.util.Collection;
-import java.util.List;
+import java.util.Set;
+import java.util.concurrent.CopyOnWriteArraySet;
 import java.util.logging.Logger;
 
 import static java.util.Objects.requireNonNull;
 
-public class LibraryResolverImpl extends LibraryManager implements LibraryResolver {
+public abstract class LibraryResolverImpl extends LibraryManager implements LibraryResolver {
+    protected final static Set<String> adventureArtifacts = new CopyOnWriteArraySet<>();
+    protected final static Set<String> packetEventsArtifacts = new CopyOnWriteArraySet<>();
+    protected final static Set<String> cloudArtifacts = new CopyOnWriteArraySet<>();
+
+    static {
+        adventureArtifacts.add("adventure-api");
+        adventureArtifacts.add("adventure-nbt");
+        adventureArtifacts.add("adventure-key");
+        adventureArtifacts.add("adventure-text-minimessage");
+        adventureArtifacts.add("adventure-text-serializer-ansi");
+        adventureArtifacts.add("adventure-text-serializer-plain");
+        adventureArtifacts.add("adventure-text-serializer-legacy");
+        adventureArtifacts.add("adventure-text-serializer-gson");
+        adventureArtifacts.add("adventure-text-logger-slf4j");
+
+        packetEventsArtifacts.add("packeteventsmodern-api");
+        packetEventsArtifacts.add("packeteventsmodern-netty-common");
+
+        cloudArtifacts.add("cloud-core");
+        cloudArtifacts.add("cloud-brigadier");
+    }
+
     private final ClassLoaderHelper classLoaderHelper;
-    private final PlatformType platformType;
 
-    public LibraryResolverImpl(Path dataDirectory, PlatformType platformType) {
+    public LibraryResolverImpl(Path dataDirectory) {
         super(new JDKLogAdapter(Logger.getGlobal()), dataDirectory, "libraries");
-
-        this.platformType = platformType;
 
         ClassLoader classLoader = getClass().getClassLoader();
         if (classLoader instanceof URLClassLoader urlClassLoader) {
@@ -130,11 +149,28 @@ public class LibraryResolverImpl extends LibraryManager implements LibraryResolv
         classLoaderHelper.addToClasspath(path);
     }
 
-    protected void loadLibraries(List<Library> libraries) {
-        libraries.forEach(this::loadLibrary);
+    private void loadLibraries() {
+        loadJackson();
+        loadAdventure();
+        loadCloud();
+        loadPacketEvents();
+        loadPlatformLibraries();
+
+        loadLibrary(Library.builder()
+            .groupId("com{}github{}zfettostudios")
+            .artifactId("zjtime")
+            .version(BuildConstant.ZJTIME_VERSION)
+            .repository(BuildConstant.JITPACK_REPOSITORY)
+            .relocate(Relocation.builder()
+                .pattern("com{}zfettostudios{}zjtime")
+                .relocatedPattern(BuildConstant.PROJECT_PATH_LIBRARIES + ".zjtime")
+                .build()
+            )
+            .build()
+        );
     }
 
-    private void loadLibraries() {
+    private void loadJackson() {
         loadLibrary(Library.builder()
             .groupId("tools{}jackson{}dataformat")
             .artifactId("jackson-dataformat-yaml")
@@ -152,7 +188,7 @@ public class LibraryResolverImpl extends LibraryManager implements LibraryResolv
                 .build()
             )
             .relocate(Relocation.builder()
-                .pattern("org{}snakeyaml")
+                .pattern("org{}snakeyaml{}engine")
                 .relocatedPattern(BuildConstant.PROJECT_PATH_LIBRARIES + ".snakeyaml")
                 .build()
             )
@@ -176,7 +212,7 @@ public class LibraryResolverImpl extends LibraryManager implements LibraryResolv
             .repository(BuildConstant.MAVEN_REPOSITORY)
             .resolveTransitiveDependencies(true)
             .relocate(Relocation.builder()
-                .pattern("org{}snakeyaml")
+                .pattern("org{}snakeyaml{}engine")
                 .relocatedPattern(BuildConstant.PROJECT_PATH_LIBRARIES + ".snakeyaml")
                 .build()
             )
@@ -192,10 +228,11 @@ public class LibraryResolverImpl extends LibraryManager implements LibraryResolv
             )
             .build()
         );
-
-        getAdventureArtifactIds().forEach(artifactId -> loadLibrary(Library.builder()
+    }
+    private void loadAdventure() {
+        adventureArtifacts.forEach(artifact -> loadLibrary(Library.builder()
             .groupId("net{}kyori")
-            .artifactId(artifactId)
+            .artifactId(artifact)
             .version(BuildConstant.ADVENTURE_VERSION)
             .repository(BuildConstant.MAVEN_REPOSITORY)
             .resolveTransitiveDependencies(true)
@@ -206,10 +243,31 @@ public class LibraryResolverImpl extends LibraryManager implements LibraryResolv
             )
             .build()
         ));
-
-        getPacketEventsArtifactIds().forEach(artifactId -> loadLibrary(Library.builder()
+    }
+    private void loadCloud() {
+        cloudArtifacts.forEach(artifact -> loadLibrary(Library.builder()
+            .groupId("org{}incendo")
+            .artifactId(artifact)
+            .version(BuildConstant.CLOUD_CORE_VERSION)
+            .repository(BuildConstant.MAVEN_REPOSITORY)
+            .resolveTransitiveDependencies(true)
+            .relocate(Relocation.builder()
+                .pattern("org{}incendo{}cloud")
+                .relocatedPattern(BuildConstant.PROJECT_PATH_LIBRARIES + ".cloud")
+                .build()
+            )
+            .relocate(Relocation.builder()
+                .pattern("io{}leangen{}geantyref")
+                .relocatedPattern(BuildConstant.PROJECT_PATH_LIBRARIES + ".geantyref")
+                .build()
+            )
+            .build()
+        ));
+    }
+    private void loadPacketEvents() {
+        packetEventsArtifacts.forEach(artifact -> loadLibrary(Library.builder()
             .groupId("net{}flectone")
-            .artifactId(artifactId)
+            .artifactId(artifact)
             .version(BuildConstant.PACKETEVENTSMODERN_VERSION)
             .repository(BuildConstant.MAVEN_REPOSITORY)
             .fallbackRepository(BuildConstant.CODEMC_REPOSITORY)
@@ -235,114 +293,9 @@ public class LibraryResolverImpl extends LibraryManager implements LibraryResolv
             )
             .build()
         ));
+    }
 
-        loadLibrary(Library.builder()
-            .groupId("org{}incendo")
-            .artifactId("cloud-core")
-            .version(BuildConstant.CLOUD_CORE_VERSION)
-            .repository(BuildConstant.MAVEN_REPOSITORY)
-            .resolveTransitiveDependencies(true)
-            .relocate(Relocation.builder()
-                .pattern("org{}incendo{}cloud")
-                .relocatedPattern(BuildConstant.PROJECT_PATH_LIBRARIES + ".cloud")
-                .build()
-            )
-            .relocate(Relocation.builder()
-                .pattern("io{}leangen{}geantyref")
-                .relocatedPattern(BuildConstant.PROJECT_PATH_LIBRARIES + ".geantyref")
-                .build()
-            )
-            .build()
-        );
-
-        loadLibrary(Library.builder()
-            .groupId("org{}incendo")
-            .artifactId("cloud-paper")
-            .version(BuildConstant.CLOUD_MINECRAFT_VERSION)
-            .repository(BuildConstant.MAVEN_REPOSITORY)
-            .resolveTransitiveDependencies(true)
-            .relocate(Relocation.builder()
-                .pattern("org{}incendo{}cloud")
-                .relocatedPattern(BuildConstant.PROJECT_PATH_LIBRARIES + ".cloud")
-                .build()
-            )
-            .relocate(Relocation.builder()
-                .pattern("io{}leangen{}geantyref")
-                .relocatedPattern(BuildConstant.PROJECT_PATH_LIBRARIES + ".geantyref")
-                .build()
-            )
-            .build()
-        );
-
-        loadLibrary(Library.builder()
-            .groupId("org{}incendo")
-            .artifactId("cloud-bukkit")
-            .version(BuildConstant.CLOUD_MINECRAFT_VERSION)
-            .repository(BuildConstant.MAVEN_REPOSITORY)
-            .resolveTransitiveDependencies(true)
-            .relocate(Relocation.builder()
-                .pattern("org{}incendo{}cloud")
-                .relocatedPattern(BuildConstant.PROJECT_PATH_LIBRARIES + ".cloud")
-                .build()
-            )
-            .relocate(Relocation.builder()
-                .pattern("io{}leangen{}geantyref")
-                .relocatedPattern(BuildConstant.PROJECT_PATH_LIBRARIES + ".geantyref")
-                .build()
-            )
-            .build()
-        );
-
-        loadLibrary(Library.builder()
-            .groupId("org{}incendo")
-            .artifactId("cloud-velocity")
-            .version(BuildConstant.CLOUD_MINECRAFT_VERSION)
-            .repository(BuildConstant.MAVEN_REPOSITORY)
-            .resolveTransitiveDependencies(true)
-            .relocate(Relocation.builder()
-                .pattern("org{}incendo{}cloud")
-                .relocatedPattern(BuildConstant.PROJECT_PATH_LIBRARIES + ".cloud")
-                .build()
-            )
-            .relocate(Relocation.builder()
-                .pattern("io{}leangen{}geantyref")
-                .relocatedPattern(BuildConstant.PROJECT_PATH_LIBRARIES + ".geantyref")
-                .build()
-            )
-            .build()
-        );
-
-        loadLibrary(Library.builder()
-            .groupId("org{}incendo")
-            .artifactId("cloud-brigadier")
-            .version(BuildConstant.CLOUD_MINECRAFT_VERSION)
-            .repository(BuildConstant.MAVEN_REPOSITORY)
-            .resolveTransitiveDependencies(true)
-            .relocate(Relocation.builder()
-                .pattern("org{}incendo{}cloud")
-                .relocatedPattern(BuildConstant.PROJECT_PATH_LIBRARIES + ".cloud")
-                .build()
-            )
-            .relocate(Relocation.builder()
-                .pattern("io{}leangen{}geantyref")
-                .relocatedPattern(BuildConstant.PROJECT_PATH_LIBRARIES + ".geantyref")
-                .build()
-            )
-            .build()
-        );
-
-        loadLibrary(Library.builder()
-            .groupId("com{}github{}zfettostudios")
-            .artifactId("zjtime")
-            .version(BuildConstant.ZJTIME_VERSION)
-            .repository(BuildConstant.JITPACK_REPOSITORY)
-            .relocate(Relocation.builder()
-                .pattern("com{}zfettostudios{}zjtime")
-                .relocatedPattern(BuildConstant.PROJECT_PATH_LIBRARIES + ".zjtime")
-                .build()
-            )
-            .build()
-        );
+    protected void loadPlatformLibraries() {
     }
 
     private void resolveRepositories() {
@@ -353,28 +306,5 @@ public class LibraryResolverImpl extends LibraryManager implements LibraryResolv
         addRepository(BuildConstant.OPENCOLLAB_REPOSITORY);
         addRepository(BuildConstant.SPIGOTMC_REPOSITORY);
         addRepository(BuildConstant.PAPERMC_REPOSITORY);
-    }
-
-    private List<String> getAdventureArtifactIds() {
-        return List.of(
-            "adventure-api",
-            "adventure-nbt",
-            "adventure-key",
-            "adventure-text-minimessage",
-            "adventure-text-serializer-ansi",
-            "adventure-text-serializer-plain",
-            "adventure-text-serializer-legacy",
-            "adventure-text-serializer-gson",
-            "adventure-text-logger-slf4j"
-        );
-    }
-
-    private List<String> getPacketEventsArtifactIds() {
-        return List.of(
-            "packeteventsmodern-api",
-            "packeteventsmodern-netty-common",
-            "packeteventsmodern-spigot",
-            "packeteventsmodern-velocity"
-        );
     }
 }

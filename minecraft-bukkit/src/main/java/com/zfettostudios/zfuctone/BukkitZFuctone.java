@@ -15,7 +15,7 @@ import com.zfettostudios.zfuctone.platform.registry.BukkitCommandRegistry;
 import com.zfettostudios.zfuctone.platform.registry.BukkitPermissionRegistry;
 import com.zfettostudios.zfuctone.platform.registry.CommandRegistry;
 import com.zfettostudios.zfuctone.platform.registry.PermissionRegistry;
-import com.zfettostudios.zfuctone.resolver.LibraryResolver;
+import com.zfettostudios.zfuctone.resolver.library.LibraryResolver;
 import com.zfettostudios.zfuctone.resolver.ReflectionResolver;
 import org.bukkit.Bukkit;
 import org.bukkit.event.HandlerList;

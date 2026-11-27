@@ -13,9 +13,9 @@ import com.velocitypowered.api.plugin.annotation.DataDirectory;
 import com.velocitypowered.api.proxy.ProxyServer;
 import com.zfettostudios.zfuctone.model.constant.BuildConstant;
 import com.zfettostudios.zfuctone.model.constant.type.PlatformType;
-import com.zfettostudios.zfuctone.resolver.LibraryResolver;
-import com.zfettostudios.zfuctone.resolver.LibraryResolverImpl;
+import com.zfettostudios.zfuctone.resolver.library.LibraryResolver;
 import com.zfettostudios.zfuctone.resolver.ReflectionResolverImpl;
+import com.zfettostudios.zfuctone.resolver.library.VelocityLibraryResolver;
 import io.github.retrooper.packetevents.velocity.factory.VelocityPacketEventsBuilder;
 
 import java.nio.file.Path;
@@ -33,7 +33,6 @@ public class VelocityLoader {
     private final ProxyServer server;
     private final PluginContainer container;
     private final Path dataDirectory;
-    private final PlatformType platformType = PlatformType.VELOCITY;
 
     private ZFuctone zfuctone;
 
@@ -46,14 +45,13 @@ public class VelocityLoader {
 
     @Subscribe
     public void onProxyInitialize(ProxyInitializeEvent event) {
-        LibraryResolver libraryResolver = new LibraryResolverImpl(dataDirectory, platformType);
-
+        LibraryResolver libraryResolver = new VelocityLibraryResolver(dataDirectory);
         libraryResolver.enable();
 
         PacketEvents.setAPI(VelocityPacketEventsBuilder.build(server, container, null, null));
         PacketEvents.getAPI().load();
 
-        zfuctone = new VelocityZFuctone(this, new ReflectionResolverImpl(), platformType, libraryResolver);
+        zfuctone = new VelocityZFuctone(this, new ReflectionResolverImpl(), PlatformType.VELOCITY, libraryResolver);
         zfuctone.enable();
     }
 

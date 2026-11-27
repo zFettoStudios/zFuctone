@@ -3,8 +3,8 @@ package com.zfettostudios.zfuctone;
 import com.github.retrooper.packetevents.PacketEvents;
 import com.zfettostudios.zfuctone.model.constant.BuildConstant;
 import com.zfettostudios.zfuctone.model.constant.type.PlatformType;
-import com.zfettostudios.zfuctone.resolver.LibraryResolver;
-import com.zfettostudios.zfuctone.resolver.LibraryResolverImpl;
+import com.zfettostudios.zfuctone.resolver.library.BukkitLibraryResolver;
+import com.zfettostudios.zfuctone.resolver.library.LibraryResolver;
 import com.zfettostudios.zfuctone.resolver.ReflectionResolver;
 import com.zfettostudios.zfuctone.resolver.ReflectionResolverImpl;
 import io.github.retrooper.packetevents.factory.spigot.SpigotPacketEventsBuilder;
@@ -22,8 +22,7 @@ public class BukkitLoader extends JavaPlugin {
 
     @Override
     public void onLoad() {
-        libraryResolver = new LibraryResolverImpl(getDataPathInLoad(), platformType);
-
+        libraryResolver = new BukkitLibraryResolver(getDataPathInLoad(), platformType);
         libraryResolver.enable();
 
         PacketEvents.setAPI(SpigotPacketEventsBuilder.build(this));
