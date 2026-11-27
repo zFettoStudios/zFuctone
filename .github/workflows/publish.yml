@@ -72,3 +72,38 @@ jobs:
           path: build/compiled/zFuctone-Core-*.jar
           if-no-files-found: warn
           retention-days: 14
+
+  release:
+    name: Create GitHub Release
+    needs: build
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout sources
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1
+
+      - name: Download compiled artifacts
+        uses: actions/download-artifact@v4
+        with:
+          path: build/compiled
+
+      - name: Check version in gradle.properties
+        id: check_version
+        run: |
+          VERSION=$(grep -E '^version=' gradle.properties | cut -d'=' -f2- | tr -d '[:space:]')
+          echo "version=$VERSION" >> "$GITHUB_OUTPUT"
+          if [[ -n "$VERSION" && "$VERSION" != *"-SNAPSHOT"* ]]; then
+            echo "is_release=true" >> "$GITHUB_OUTPUT"
+          else
+            echo "is_release=false" >> "$GITHUB_OUTPUT"
+          fi
+
+      - name: Create GitHub Release and upload files
+        if: steps.check_version.outputs.is_release == 'true'
+        uses: softprops/action-gh-release@v2
+        with:
+          tag_name: v${{ steps.check_version.outputs.version }}
+          name: Release ${{ steps.check_version.outputs.version }}
+          files: |
+            build/compiled/**/*
+          draft: false
+          prerelease: false
