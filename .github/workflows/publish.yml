@@ -49,15 +49,26 @@ jobs:
           if-no-files-found: warn
           retention-days: 14
 
-      - name: Upload each file as separate artifact
-        env:
-          GH_TOKEN: ${{ github.token }}
-          RUN_ID: ${{ github.run_id }}
-        run: |
-          shopt -s nullglob
-          for file in build/compiled/*; do
-            [ -f "$file" ] || continue
-            base_name=$(basename "$file")
-            artifact_name="${base_name%.*}"
-            gh run upload "$RUN_ID" "$file" --name "$artifact_name"
-          done
+      - name: Upload Bukkit artifact
+        uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9
+        with:
+          name: zFuctone-Bukkit
+          path: build/compiled/zFuctone-Bukkit-*.jar
+          if-no-files-found: warn
+          retention-days: 14
+
+      - name: Upload Velocity artifact
+        uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9
+        with:
+          name: zFuctone-Velocity
+          path: build/compiled/zFuctone-Velocity-*.jar
+          if-no-files-found: warn
+          retention-days: 14
+
+      - name: Upload Core artifact
+        uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9
+        with:
+          name: zFuctone-Core
+          path: build/compiled/zFuctone-Core-*.jar
+          if-no-files-found: warn
+          retention-days: 14
