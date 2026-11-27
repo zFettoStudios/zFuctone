@@ -3,11 +3,13 @@ package com.zfettostudios.zfuctone.scheduler;
 import lombok.Getter;
 import lombok.experimental.NonFinal;
 
-import com.zfettostudios.zfuctone.provider.ZFuctoneProvider;
+import com.zfettostudios.zfuctone.ZFuctone;
 import com.zfettostudios.zfuctone.file.FileFacade;
 import com.zfettostudios.zfuctone.logging.ZLogger;
 import com.zfettostudios.zfuctone.model.config.Config;
 import com.zfettostudios.zfuctone.platform.adapter.PlatformServerAdapter;
+import com.zfettostudios.zfuctone.provider.ZFuctoneProvider;
+import com.zfettostudios.zfuctone.util.LazyInstance;
 import org.jspecify.annotations.NonNull;
 
 import java.time.Duration;
@@ -27,14 +29,14 @@ import java.util.function.Supplier;
 public class TaskSchedulerImpl implements TaskScheduler {
     private final static Duration DEFAULT_AWAIT_TIMEOUT = Duration.ofSeconds(3);
 
-    private final PlatformServerAdapter serverAdapter = ZFuctoneProvider.get().serverAdapter();
-    private final FileFacade fileFacade = ZFuctoneProvider.get().fileFacade();
-    private final ZLogger logger = ZFuctoneProvider.get().logger();
+    private final LazyInstance<PlatformServerAdapter> serverAdapter = LazyInstance.build(ZFuctone::serverAdapter);
+    private final LazyInstance<FileFacade> fileFacade = LazyInstance.build(ZFuctone::fileFacade);
+    private final LazyInstance<ZLogger> logger = LazyInstance.build(ZFuctone::logger);
 
     private final AtomicLong currentTick = new AtomicLong(0L);
     private final ConcurrentNavigableMap<Long, Queue<TaskEntry>> scheduledTasks = new ConcurrentSkipListMap<>();
     private final Semaphore semaphore;
-    private final Config.Executor config = fileFacade.config().executor();
+    private final Config.Executor config = fileFacade.get().config().executor();
 
     @NonFinal @Getter volatile ExecutorService executorService;
     @NonFinal volatile boolean disabled = false;
@@ -83,10 +85,10 @@ public class TaskSchedulerImpl implements TaskScheduler {
         try {
             return future.get(timeout.toMillis(), TimeUnit.MILLISECONDS);
         } catch (TimeoutException e) {
-            logger.warn("Timeout awaiting task \"{}\"", description);
+            logger.get().warn("Timeout awaiting task \"{}\"", description);
             return fallback;
         } catch (Exception e) {
-            logger.warn("Error awaiting task \"{}\"", description);
+            logger.get().warn("Error awaiting task \"{}\"", description);
             return fallback;
         }
     }
@@ -216,7 +218,7 @@ public class TaskSchedulerImpl implements TaskScheduler {
 
     private CompletableFuture<Void> scheduleRunnable(Runnable runnable, long delay, long period, boolean async) {
         if (isDisabled()) {
-            logger.warn("Attempted to schedule task while taskScheduler is disabled");
+            logger.get().warn("Attempted to schedule task while taskScheduler is disabled");
             return CompletableFuture.completedFuture(null);
         }
 
@@ -232,7 +234,7 @@ public class TaskSchedulerImpl implements TaskScheduler {
 
     private <T> CompletableFuture<T> scheduleSupplier(Supplier<T> supplier, long delay, long period, boolean async) {
         if (isDisabled()) {
-            logger.warn("Attempted to schedule supplier while taskScheduler is disabled");
+            logger.get().warn("Attempted to schedule supplier while taskScheduler is disabled");
             return CompletableFuture.completedFuture(null);
         }
 
@@ -257,7 +259,7 @@ public class TaskSchedulerImpl implements TaskScheduler {
             try {
                 task.execute();
             } catch (Throwable throwable) {
-                logger.warn("Error executing task", throwable);
+                logger.get().warn("Error executing task", throwable);
             } finally {
                 if (task.isRepeating()) {
                     if (!task.isCancelled() && !isDisabled()) {
@@ -284,7 +286,7 @@ public class TaskSchedulerImpl implements TaskScheduler {
                 }
             });
         }
-        else serverAdapter.runTask(wrappedRunnable);
+        else serverAdapter.get().runTask(wrappedRunnable);
     }
 
     private interface TaskEntry {

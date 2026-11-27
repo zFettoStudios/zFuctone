@@ -1,8 +1,8 @@
 package com.zfettostudios.zfuctone.module.integration.floodgate;
 
+import com.zfettostudios.zfuctone.ZFuctone;
 import com.zfettostudios.zfuctone.model.config.setting.PermissionSetting;
 import com.zfettostudios.zfuctone.module.Module;
-import com.zfettostudios.zfuctone.provider.ZFuctoneProvider;
 import com.zfettostudios.zfuctone.file.FileFacade;
 import com.zfettostudios.zfuctone.model.config.IntegrationConfig;
 import com.zfettostudios.zfuctone.model.config.localization.Localization;
@@ -20,7 +20,7 @@ import java.util.UUID;
 
 public class FloodgateModuleImpl extends IntegrationModuleImpl<FloodgateModule> implements FloodgateModule {
     private final LazyInstance<GeyserModule> geyser = LazyInstance.build(zfuctone -> zfuctone.moduleController().get(GeyserModule.class));
-    private final FileFacade fileFacade = ZFuctoneProvider.get().fileFacade();
+    private final LazyInstance<FileFacade> fileFacade = LazyInstance.build(ZFuctone::fileFacade);
 
     @Override
     public @NonNull String getName() {
@@ -34,12 +34,12 @@ public class FloodgateModuleImpl extends IntegrationModuleImpl<FloodgateModule> 
 
     @Override
     public IntegrationConfig.@NonNull Floodgate config() {
-        return fileFacade.integration().floodgate();
+        return fileFacade.get().integration().floodgate();
     }
 
     @Override
     public @NonNull PermissionSetting permission() {
-        return fileFacade.permission().integration().floodgate();
+        return fileFacade.get().permission().integration().floodgate();
     }
 
     @Override
@@ -54,12 +54,12 @@ public class FloodgateModuleImpl extends IntegrationModuleImpl<FloodgateModule> 
 
     @Override
     protected void registerPermissions() {
-        permissionRegistry.register(moduleClass(), permission().name(), permission().type());
+        permissionRegistry.get().register(moduleClass(), permission().name(), permission().type());
     }
 
     @Override
     protected void unregisterPermissions() {
-        permissionRegistry.unregisterAll(moduleClass());
+        permissionRegistry.get().unregisterAll(moduleClass());
     }
 
     @Override
@@ -76,7 +76,7 @@ public class FloodgateModuleImpl extends IntegrationModuleImpl<FloodgateModule> 
     public @Nullable String getDisplayEdition(@NonNull PlatformPlayer player) {
         if (!isEnable()) return null;
 
-        Localization.Message.Player.Edition localization = fileFacade.localizationOrDefault(player.getLocale(),
+        Localization.Message.Player.Edition localization = fileFacade.get().localizationOrDefault(player.getLocale(),
             LocalizationType.PLAYER).message().player().edition();
 
         return switch (getEdition(player.uuid())) {
@@ -99,7 +99,7 @@ public class FloodgateModuleImpl extends IntegrationModuleImpl<FloodgateModule> 
         int protocol = geyser.get().getProtocolVersion(player.uuid());
         if (protocol == -1) return null;
 
-        return fileFacade.localizationOrDefault(player.getLocale(), LocalizationType.PLAYER)
+        return fileFacade.get().localizationOrDefault(player.getLocale(), LocalizationType.PLAYER)
             .message().player().version().bedrock().get(protocol).asString();
     }
 

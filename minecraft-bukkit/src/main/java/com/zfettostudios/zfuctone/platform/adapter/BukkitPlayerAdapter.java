@@ -3,7 +3,6 @@ package com.zfettostudios.zfuctone.platform.adapter;
 import com.zfettostudios.zfuctone.ZFuctone;
 import com.zfettostudios.zfuctone.model.constant.minecraft.player.PlayerGameMode;
 import com.zfettostudios.zfuctone.model.constant.type.PlatformType;
-import com.zfettostudios.zfuctone.provider.ZFuctoneProvider;
 import com.zfettostudios.zfuctone.scheduler.TaskScheduler;
 import com.zfettostudios.zfuctone.util.LazyInstance;
 import org.bukkit.Bukkit;
@@ -16,7 +15,7 @@ import java.util.UUID;
 
 public class BukkitPlayerAdapter implements PlatformPlayerAdapter {
     private final LazyInstance<TaskScheduler> taskScheduler = LazyInstance.build(ZFuctone::taskScheduler);
-    private final PlatformType platformType = ZFuctoneProvider.get().getPlatformType();
+    private final LazyInstance<PlatformType> platformType = LazyInstance.build(ZFuctone::getPlatformType);
 
     @Override
     public @Nullable <T> T getPlatformPlayer(@NonNull UUID uuid, @NonNull Class<T> target) {
@@ -140,7 +139,7 @@ public class BukkitPlayerAdapter implements PlatformPlayerAdapter {
         Player player = getPlayerFrom(platformPlayer);
         if (player == null) return "";
 
-        if (platformType == PlatformType.FOLIA) return FoliaPlayerAdapter.getWorldName(player);
+        if (platformType.get() == PlatformType.FOLIA) return FoliaPlayerAdapter.getWorldName(player);
         return taskScheduler.get().runSync(() -> player.getWorld().getName()).join();
     }
 
@@ -149,7 +148,7 @@ public class BukkitPlayerAdapter implements PlatformPlayerAdapter {
         Player player = getPlayerFrom(platformPlayer);
         if (player == null) return "";
 
-        if (platformType == PlatformType.FOLIA) return FoliaPlayerAdapter.getWorldEnvironment(player);
+        if (platformType.get() == PlatformType.FOLIA) return FoliaPlayerAdapter.getWorldEnvironment(player);
         return taskScheduler.get().runSync(() -> player.getWorld().getEnvironment().name()).join();
     }
 

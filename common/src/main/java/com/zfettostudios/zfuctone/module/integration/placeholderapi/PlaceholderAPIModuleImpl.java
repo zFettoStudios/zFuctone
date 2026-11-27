@@ -38,12 +38,12 @@ public abstract class PlaceholderAPIModuleImpl extends IntegrationModuleImpl<Pla
 
     @Override
     protected void registerPermissions() {
-        permissionRegistry.register(moduleClass(), permission().name(), permission().type());
-        permissionRegistry.register(moduleClass(), permission().use().name(), permission().use().type());
+        permissionRegistry.get().register(moduleClass(), permission().name(), permission().type());
+        permissionRegistry.get().register(moduleClass(), permission().use().name(), permission().use().type());
     }
 
     @Override
     protected void unregisterPermissions() {
-        permissionRegistry.unregisterAll(moduleClass());
+        permissionRegistry.get().unregisterAll(moduleClass());
     }
 }

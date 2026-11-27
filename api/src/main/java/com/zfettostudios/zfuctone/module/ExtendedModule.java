@@ -1,5 +1,6 @@
 package com.zfettostudios.zfuctone.module;
 
+import com.zfettostudios.zfuctone.ZFuctone;
 import com.zfettostudios.zfuctone.model.constant.type.EventType;
 import com.zfettostudios.zfuctone.model.event.lifecycle.module.ModuleDisableEvent;
 import com.zfettostudios.zfuctone.model.event.lifecycle.module.ModuleEnableEvent;
@@ -7,17 +8,17 @@ import com.zfettostudios.zfuctone.model.event.lifecycle.module.ModuleReloadEvent
 import com.zfettostudios.zfuctone.platform.registry.CommandRegistry;
 import com.zfettostudios.zfuctone.platform.registry.PermissionRegistry;
 import com.zfettostudios.zfuctone.platform.registry.PlaceholderRegistry;
-import com.zfettostudios.zfuctone.provider.ZFuctoneProvider;
+import com.zfettostudios.zfuctone.util.LazyInstance;
 import org.jspecify.annotations.NonNull;
 
 public abstract class ExtendedModule<T> extends SimpleModule<T> {
-    protected static final PermissionRegistry permissionRegistry = ZFuctoneProvider.get().permissionRegistry();
-    protected static final PlaceholderRegistry placeholderRegistry = ZFuctoneProvider.get().placeholderRegistry();
-    protected static final CommandRegistry commandRegistry = ZFuctoneProvider.get().commandRegistry();
+    protected static final LazyInstance<PermissionRegistry> permissionRegistry = LazyInstance.build(ZFuctone::permissionRegistry);
+    protected static final LazyInstance<PlaceholderRegistry> placeholderRegistry = LazyInstance.build(ZFuctone::placeholderRegistry);
+    protected static final LazyInstance<CommandRegistry> commandRegistry = LazyInstance.build(ZFuctone::commandRegistry);
 
     @Override
     public @NonNull T enable() {
-        listenerRegistry.run(ModuleEnableEvent.class, ModuleEnableEvent.build(this, moduleClass(), EventType.START));
+        listenerRegistry.get().run(ModuleEnableEvent.class, ModuleEnableEvent.build(this, moduleClass(), EventType.START));
 
         if (isEnable()) {
             onEnable();
@@ -26,28 +27,28 @@ public abstract class ExtendedModule<T> extends SimpleModule<T> {
             registerListeners();
         }
 
-        listenerRegistry.run(ModuleEnableEvent.class, ModuleEnableEvent.build(this, moduleClass(), EventType.END));
+        listenerRegistry.get().run(ModuleEnableEvent.class, ModuleEnableEvent.build(this, moduleClass(), EventType.END));
 
         return get();
     }
 
     @Override
     public @NonNull T disable() {
-        listenerRegistry.run(ModuleDisableEvent.class, ModuleDisableEvent.build(this, moduleClass(), EventType.START));
+        listenerRegistry.get().run(ModuleDisableEvent.class, ModuleDisableEvent.build(this, moduleClass(), EventType.START));
 
         onDisable();
 
         unregisterAll();
         unregisterListeners();
 
-        listenerRegistry.run(ModuleDisableEvent.class, ModuleDisableEvent.build(this, moduleClass(), EventType.END));
+        listenerRegistry.get().run(ModuleDisableEvent.class, ModuleDisableEvent.build(this, moduleClass(), EventType.END));
 
         return get();
     }
 
     @Override
     public @NonNull T reload() {
-        listenerRegistry.run(ModuleReloadEvent.class, ModuleReloadEvent.build(this, moduleClass(), EventType.START));
+        listenerRegistry.get().run(ModuleReloadEvent.class, ModuleReloadEvent.build(this, moduleClass(), EventType.START));
 
         unregisterAll();
 
@@ -55,7 +56,7 @@ public abstract class ExtendedModule<T> extends SimpleModule<T> {
 
         if (isEnable()) registerAll();
 
-        listenerRegistry.run(ModuleReloadEvent.class, ModuleReloadEvent.build(this, moduleClass(), EventType.END));
+        listenerRegistry.get().run(ModuleReloadEvent.class, ModuleReloadEvent.build(this, moduleClass(), EventType.END));
 
         return get();
     }

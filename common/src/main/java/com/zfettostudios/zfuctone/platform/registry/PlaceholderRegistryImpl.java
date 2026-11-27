@@ -2,12 +2,13 @@ package com.zfettostudios.zfuctone.platform.registry;
 
 import lombok.Getter;
 
-import com.zfettostudios.zfuctone.provider.ZFuctoneProvider;
+import com.zfettostudios.zfuctone.ZFuctone;
 import com.zfettostudios.zfuctone.file.FileFacade;
 import com.zfettostudios.zfuctone.model.config.IntegrationConfig;
 import com.zfettostudios.zfuctone.model.config.PlaceholderConfig;
 import com.zfettostudios.zfuctone.model.value.PlaceholderContext;
 import com.zfettostudios.zfuctone.platform.entity.PlatformPlayer;
+import com.zfettostudios.zfuctone.util.LazyInstance;
 import org.jspecify.annotations.NonNull;
 import org.jspecify.annotations.Nullable;
 
@@ -18,14 +19,14 @@ import java.util.concurrent.CopyOnWriteArrayList;
 import java.util.function.Function;
 
 public class PlaceholderRegistryImpl implements PlaceholderRegistry {
-    private final FileFacade fileFacade = ZFuctoneProvider.get().fileFacade();
+    private final LazyInstance<FileFacade> fileFacade = LazyInstance.build(ZFuctone::fileFacade);
 
     @Getter
     private final Map<Class<?>, Map<String, Function<PlaceholderContext, String>>> placeholders = new ConcurrentHashMap<>();
     @Getter
     private final List<String> placeholderAPIPlaceholders = new CopyOnWriteArrayList<>();
-    private final PlaceholderConfig config = fileFacade.placeholder();
-    private final IntegrationConfig.PlaceholderAPI placeholderAPIConfig = fileFacade.integration().placeholderapi();
+    private final PlaceholderConfig config = fileFacade.get().placeholder();
+    private final IntegrationConfig.PlaceholderAPI placeholderAPIConfig = fileFacade.get().integration().placeholderapi();
 
     @Override
     public @NonNull PlaceholderRegistry register(@NonNull Class<?> moduleClass, @NonNull String name, @NonNull String permission,

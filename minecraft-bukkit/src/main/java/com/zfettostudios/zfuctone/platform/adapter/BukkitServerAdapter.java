@@ -1,7 +1,8 @@
 package com.zfettostudios.zfuctone.platform.adapter;
 
+import com.zfettostudios.zfuctone.ZFuctone;
 import com.zfettostudios.zfuctone.model.constant.type.PlatformType;
-import com.zfettostudios.zfuctone.provider.ZFuctoneProvider;
+import com.zfettostudios.zfuctone.util.LazyInstance;
 import org.bukkit.Bukkit;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.jspecify.annotations.NonNull;
@@ -9,8 +10,8 @@ import org.jspecify.annotations.NonNull;
 public class BukkitServerAdapter implements PlatformServerAdapter {
     private final static double[] TPSEmpty = new double[0];
 
-    private final JavaPlugin plugin = ZFuctoneProvider.get().getLoader(JavaPlugin.class);
-    private final PlatformType platformType = ZFuctoneProvider.get().getPlatformType();
+    private final LazyInstance<JavaPlugin> plugin = LazyInstance.build(zfuctone -> zfuctone.getLoader(JavaPlugin.class));
+    private final LazyInstance<PlatformType> platformType = LazyInstance.build(ZFuctone::getPlatformType);
 
     @Override
     public boolean isProjectExists(@NonNull String name) {
@@ -21,8 +22,8 @@ public class BukkitServerAdapter implements PlatformServerAdapter {
     public @NonNull PlatformServerAdapter runTask(@NonNull Runnable task) {
         if (isPrimaryThread()) task.run();
         else {
-            if (platformType == PlatformType.FOLIA) FoliaServerAdapter.runTask(task);
-            else Bukkit.getScheduler().runTask(plugin, task);
+            if (platformType.get() == PlatformType.FOLIA) FoliaServerAdapter.runTask(task);
+            else Bukkit.getScheduler().runTask(plugin.get(), task);
         }
 
         return this;
@@ -40,7 +41,7 @@ public class BukkitServerAdapter implements PlatformServerAdapter {
 
     @Override
     public double[] getTPS() {
-        if (platformType == PlatformType.BUKKIT) return TPSEmpty;
+        if (platformType.get() == PlatformType.BUKKIT) return TPSEmpty;
         return PaperServerAdapter.getTPS();
     }
 

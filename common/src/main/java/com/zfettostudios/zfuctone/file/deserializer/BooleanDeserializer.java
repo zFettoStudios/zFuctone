@@ -1,16 +1,15 @@
 package com.zfettostudios.zfuctone.file.deserializer;
 
-import com.zfettostudios.zfuctone.provider.ZFuctoneProvider;
+import com.zfettostudios.zfuctone.ZFuctone;
 import com.zfettostudios.zfuctone.logging.ZLogger;
+import com.zfettostudios.zfuctone.util.LazyInstance;
 import tools.jackson.core.JsonParser;
 import tools.jackson.core.JsonToken;
 import tools.jackson.databind.DeserializationContext;
 import tools.jackson.databind.ValueDeserializer;
 
 public class BooleanDeserializer extends ValueDeserializer<Boolean> {
-    private ZLogger logger() {
-        return ZFuctoneProvider.get().logger();
-    }
+    private final LazyInstance<ZLogger> logger = LazyInstance.build(ZFuctone::logger);
 
     @Override
     public Boolean deserialize(JsonParser parser, DeserializationContext context) {
@@ -30,13 +29,13 @@ public class BooleanDeserializer extends ValueDeserializer<Boolean> {
                 case "true", "yes", "y", "on", "enable", "enabled" -> Boolean.TRUE;
                 case "false", "no", "n", "off", "disable", "disabled" -> Boolean.FALSE;
                 default -> {
-                    logger().warn("Value \"{}\" is not boolean", value);
+                    logger.get().warn("Value \"{}\" is not boolean", value);
                     yield null;
                 }
             };
         }
 
-        logger().warn("Token \"{}\" is not boolean", token);
+        logger.get().warn("Token \"{}\" is not boolean", token);
         return null;
     }
 }

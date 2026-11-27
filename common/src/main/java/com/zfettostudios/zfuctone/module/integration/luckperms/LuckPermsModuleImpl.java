@@ -44,12 +44,12 @@ public class LuckPermsModuleImpl extends IntegrationModuleImpl<LuckPermsModule> 
 
     @Override
     protected void registerPermissions() {
-        permissionRegistry.register(moduleClass(), permission().name(), permission().type());
+        permissionRegistry.get().register(moduleClass(), permission().name(), permission().type());
     }
 
     @Override
     protected void unregisterPermissions() {
-        permissionRegistry.unregisterAll(moduleClass());
+        permissionRegistry.get().unregisterAll(moduleClass());
     }
 
     @Override

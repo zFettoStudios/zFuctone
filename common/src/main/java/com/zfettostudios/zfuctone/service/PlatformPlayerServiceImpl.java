@@ -1,10 +1,11 @@
 package com.zfettostudios.zfuctone.service;
 
+import com.zfettostudios.zfuctone.ZFuctone;
 import com.zfettostudios.zfuctone.platform.registry.ListenerRegistry;
-import com.zfettostudios.zfuctone.provider.ZFuctoneProvider;
 import com.zfettostudios.zfuctone.platform.adapter.PlatformPlayerAdapter;
 import com.zfettostudios.zfuctone.platform.entity.PlatformPlayer;
 import com.zfettostudios.zfuctone.service.listener.PlatformPlayerServiceListener;
+import com.zfettostudios.zfuctone.util.LazyInstance;
 import org.jspecify.annotations.NonNull;
 import org.jspecify.annotations.Nullable;
 
@@ -16,20 +17,20 @@ import java.util.concurrent.ConcurrentHashMap;
 
 public class PlatformPlayerServiceImpl implements PlatformPlayerService {
     private final Map<UUID, PlatformPlayer> platformPlayers = new ConcurrentHashMap<>();
-    private final PlatformPlayerAdapter playerAdapter = ZFuctoneProvider.get().playerAdapter();
-    private final ListenerRegistry listenerRegistry = ZFuctoneProvider.get().listenerRegistry();
+    private final LazyInstance<PlatformPlayerAdapter> playerAdapter = LazyInstance.build(ZFuctone::playerAdapter);
+    private final LazyInstance<ListenerRegistry> listenerRegistry = LazyInstance.build(ZFuctone::listenerRegistry);
 
     private final PlatformPlayerServiceListener listener = new PlatformPlayerServiceListener(this);
 
     @Override
     public @NonNull PlatformPlayerService enable() {
-        listenerRegistry.register(PlatformPlayerService.class, listener);
+        listenerRegistry.get().register(PlatformPlayerService.class, listener);
         return this;
     }
 
     @Override
     public @NonNull PlatformPlayerService disable() {
-        listenerRegistry.unregisterAll(PlatformPlayerService.class);
+        listenerRegistry.get().unregisterAll(PlatformPlayerService.class);
         return this;
     }
 
@@ -40,7 +41,7 @@ public class PlatformPlayerServiceImpl implements PlatformPlayerService {
 
     @Override
     public @Nullable PlatformPlayer getPlatformPlayer(@NonNull String nickname) {
-        return platformPlayers.get(playerAdapter.getUUIDFromNickname(nickname));
+        return platformPlayers.get(playerAdapter.get().getUUIDFromNickname(nickname));
     }
 
     @Override
@@ -62,7 +63,7 @@ public class PlatformPlayerServiceImpl implements PlatformPlayerService {
 
     @Override
     public @NonNull PlatformPlayerService removePlatformPlayer(@NonNull String nickname) {
-        platformPlayers.remove(playerAdapter.getUUIDFromNickname(nickname));
+        platformPlayers.remove(playerAdapter.get().getUUIDFromNickname(nickname));
         return this;
     }
 

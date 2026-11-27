@@ -9,6 +9,7 @@ import com.zfettostudios.zfuctone.platform.entity.PlatformPlayer;
 import com.zfettostudios.zfuctone.provider.ZFuctoneProvider;
 import com.zfettostudios.zfuctone.model.config.Config;
 import com.zfettostudios.zfuctone.model.constant.BuildConstant;
+import com.zfettostudios.zfuctone.util.LazyInstance;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.logger.slf4j.ComponentLogger;
 import net.kyori.adventure.text.minimessage.MiniMessage;
@@ -23,10 +24,7 @@ public class ZLoggerImpl implements ZLogger {
     @Getter
     private final UUID uuid = UUID.randomUUID();
     private final ComponentLogger logger = ComponentLogger.logger("");
-
-    private Config.Logger config() {
-        return ZFuctoneProvider.get().fileFacade().config().logger();
-    }
+    private final LazyInstance<Config.Logger> config = LazyInstance.build(zfuctone -> zfuctone.fileFacade().config().logger());
 
     @Override
     public @NonNull ZLogger logEnabling() {
@@ -60,7 +58,7 @@ public class ZLoggerImpl implements ZLogger {
 
     @Override
     public @NonNull ZLogger logDescription() {
-        config().description().forEach(string ->
+        config.get().description().forEach(string ->
             info(string.replace("<version>", BuildConstant.PROJECT_VERSION)));
 
         return this;
@@ -68,37 +66,37 @@ public class ZLoggerImpl implements ZLogger {
 
     @Override
     public @NonNull ZLogger warn(@NonNull String format, Object... arguments) {
-        logger.warn(mm.deserialize(config().prefix() + config().warn() + format), arguments);
+        logger.warn(mm.deserialize(config.get().prefix() + config.get().warn() + format), arguments);
         return this;
     }
 
     @Override
     public @NonNull ZLogger warn(@NonNull String message) {
-        logger.warn(mm.deserialize(config().prefix() + config().warn() + message));
+        logger.warn(mm.deserialize(config.get().prefix() + config.get().warn() + message));
         return this;
     }
 
     @Override
     public @NonNull ZLogger warn(@NonNull Component message) {
-        logger.warn(mm.deserialize(config().prefix() + config().warn()).append(message));
+        logger.warn(mm.deserialize(config.get().prefix() + config.get().warn()).append(message));
         return this;
     }
 
     @Override
     public @NonNull ZLogger info(@NonNull String format, Object... arguments) {
-        logger.info(mm.deserialize(config().prefix() + config().info() + format), arguments);
+        logger.info(mm.deserialize(config.get().prefix() + config.get().info() + format), arguments);
         return this;
     }
 
     @Override
     public @NonNull ZLogger info(@NonNull String message) {
-        logger.info(mm.deserialize(config().prefix() + config().info() + message));
+        logger.info(mm.deserialize(config.get().prefix() + config.get().info() + message));
         return this;
     }
 
     @Override
     public @NonNull ZLogger info(@NonNull Component message) {
-        logger.info(mm.deserialize(config().prefix() + config().info()).append(message));
+        logger.info(mm.deserialize(config.get().prefix() + config.get().info()).append(message));
         return this;
     }
 

@@ -25,16 +25,6 @@ public class ServerPlaceholderModuleImpl extends StandardPlaceholderModuleImpl<S
     }
 
     @Override
-    protected void unregisterPermissions() {
-        permissionRegistry.unregisterAll(moduleClass());
-    }
-
-    @Override
-    protected void unregisterPlaceholders() {
-        placeholderRegistry.unregisterAll(moduleClass());
-    }
-
-    @Override
     protected void onEnable() {
         register(config().serverType(), permission().serverTypeUse(), _ -> ZFuctoneProvider.get().getPlatformType().name());
         register(config().serverVersion(), permission().serverVersionUse(), _ -> PacketEvents.getAPI().getServerManager().getVersion().getReleaseName());
@@ -43,13 +33,5 @@ public class ServerPlaceholderModuleImpl extends StandardPlaceholderModuleImpl<S
         register(config().serverTps1(), permission().serverTps1Use(), _ -> String.valueOf(serverAdapter.getTPS()[0]));
         register(config().serverTps5(), permission().serverTps5Use(), _ -> String.valueOf(serverAdapter.getTPS()[1]));
         register(config().serverTps15(), permission().serverTps15Use(), _ -> String.valueOf(serverAdapter.getTPS()[2]));
-    }
-
-    private void register(PlaceholderSetting setting, PermissionSetting permission,
-                          Function<PlaceholderContext, String> handler) {
-        if (!setting.enable()) return;
-
-        permissionRegistry.register(ServerPlaceholderModule.class, permission.name(), permission.type());
-        placeholderRegistry.register(ServerPlaceholderModule.class, setting.name(), permission.name(), handler);
     }
 }

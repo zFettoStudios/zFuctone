@@ -1,5 +1,6 @@
 package com.zfettostudios.zfuctone.module.integration.placeholderapi;
 
+import com.zfettostudios.zfuctone.ZFuctone;
 import com.zfettostudios.zfuctone.provider.ZFuctoneProvider;
 import com.zfettostudios.zfuctone.model.config.IntegrationConfig;
 import com.zfettostudios.zfuctone.model.constant.BuildConstant;
@@ -9,6 +10,7 @@ import com.zfettostudios.zfuctone.platform.entity.PlatformPlayer;
 import com.zfettostudios.zfuctone.platform.registry.PlaceholderRegistry;
 import com.zfettostudios.zfuctone.scheduler.TaskScheduler;
 import com.zfettostudios.zfuctone.service.PlatformPlayerService;
+import com.zfettostudios.zfuctone.util.LazyInstance;
 import me.clip.placeholderapi.expansion.PlaceholderExpansion;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.entity.Player;
@@ -21,9 +23,9 @@ import java.util.Map;
 import java.util.function.Function;
 
 public class BukkitPlaceholderAPIIntegration extends PlaceholderExpansion implements IntegrationHook<BukkitPlaceholderAPIIntegration> {
-    private final PlaceholderRegistry placeholderRegistry = ZFuctoneProvider.get().placeholderRegistry();
-    private final PlatformPlayerService playerService = ZFuctoneProvider.get().playerService();
-    private final TaskScheduler taskScheduler = ZFuctoneProvider.get().taskScheduler();
+    private final LazyInstance<PlaceholderRegistry> placeholderRegistry = LazyInstance.build(ZFuctone::placeholderRegistry);
+    private final LazyInstance<PlatformPlayerService> playerService = LazyInstance.build(ZFuctone::playerService);
+    private final LazyInstance<TaskScheduler> taskScheduler = LazyInstance.build(ZFuctone::taskScheduler);
 
     private final IntegrationConfig.PlaceholderAPI config = ZFuctoneProvider.get().fileFacade().integration().placeholderapi();
     private String identifier;
@@ -45,7 +47,7 @@ public class BukkitPlaceholderAPIIntegration extends PlaceholderExpansion implem
 
     @Override
     public @NonNull List<String> getPlaceholders() {
-        return placeholderRegistry.getPlaceholderAPIPlaceholders();
+        return placeholderRegistry.get().getPlaceholderAPIPlaceholders();
     }
 
     @Override
@@ -57,13 +59,13 @@ public class BukkitPlaceholderAPIIntegration extends PlaceholderExpansion implem
     public @NonNull BukkitPlaceholderAPIIntegration hook() {
         identifier = config.identifier();
 
-        taskScheduler.runSync(this::register).join();
+        taskScheduler.get().runSync(this::register).join();
         return this;
     }
 
     @Override
     public @NonNull BukkitPlaceholderAPIIntegration unhook() {
-        taskScheduler.runSync(this::unregister).join();
+        taskScheduler.get().runSync(this::unregister).join();
         return this;
     }
 
@@ -74,12 +76,12 @@ public class BukkitPlaceholderAPIIntegration extends PlaceholderExpansion implem
 
         if (player == null) return null;
 
-        PlatformPlayer platformPlayer = playerService.getPlatformPlayer(player.getUniqueId());
+        PlatformPlayer platformPlayer = playerService.get().getPlatformPlayer(player.getUniqueId());
         if (platformPlayer == null) return null;
 
         context.setSender(platformPlayer);
 
-        for (Map<String, Function<PlaceholderContext, String>> modulePlaceholders : placeholderRegistry.getPlaceholders().values()) {
+        for (Map<String, Function<PlaceholderContext, String>> modulePlaceholders : placeholderRegistry.get().getPlaceholders().values()) {
             for (Map.Entry<String, Function<PlaceholderContext, String>> entry : modulePlaceholders.entrySet())
                 if (params.equals(entry.getKey())) return entry.getValue().apply(context);
         }

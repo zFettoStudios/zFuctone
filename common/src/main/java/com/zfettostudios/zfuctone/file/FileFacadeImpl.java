@@ -8,7 +8,7 @@ import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonSetter;
 import com.fasterxml.jackson.annotation.Nulls;
 import com.fasterxml.jackson.annotation.PropertyAccessor;
-import com.zfettostudios.zfuctone.provider.ZFuctoneProvider;
+import com.zfettostudios.zfuctone.ZFuctone;
 import com.zfettostudios.zfuctone.annotation.config.FilePath;
 import com.zfettostudios.zfuctone.file.deserializer.BooleanDeserializer;
 import com.zfettostudios.zfuctone.file.deserializer.ListDeserializer;
@@ -31,6 +31,7 @@ import com.zfettostudios.zfuctone.model.constant.type.LocalizationType;
 import com.zfettostudios.zfuctone.model.file.FilePack;
 import com.zfettostudios.zfuctone.model.value.ValueString;
 import com.zfettostudios.zfuctone.resolver.ReflectionResolver;
+import com.zfettostudios.zfuctone.util.LazyInstance;
 import com.zfettostudios.zjtime.TimeUnit;
 import org.jspecify.annotations.NonNull;
 import org.jspecify.annotations.Nullable;
@@ -68,7 +69,7 @@ public class FileFacadeImpl implements FileFacade {
     private final FileWriter writer;
     private final YAMLMapper mapper = createMapper();
     private final ExecutorService executor = Executors.newVirtualThreadPerTaskExecutor();
-    private final ReflectionResolver reflectionResolver = ZFuctoneProvider.get().reflectionResolver();
+    private final LazyInstance<ReflectionResolver> reflectionResolver = LazyInstance.build(ZFuctone::reflectionResolver);
     private final FilePack files = new FilePack();
 
     private Localization localizationPlayerDefault;
@@ -174,7 +175,7 @@ public class FileFacadeImpl implements FileFacade {
 
     @Override
     public @NonNull Path getFilePath(@NonNull Object config, @NonNull Path dataPath, @NonNull Path localizationsPath) {
-        FilePath filePath = reflectionResolver.getAnnotation(FilePath.class, config);
+        FilePath filePath = reflectionResolver.get().getAnnotation(FilePath.class, config);
         if (filePath.localization()) return localizationsPath.resolve(filePath.path());
 
         return dataPath.resolve(filePath.path());

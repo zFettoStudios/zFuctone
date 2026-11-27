@@ -191,6 +191,11 @@ public abstract class ZFuctoneImpl implements ZFuctone {
         return this;
     }
 
+    @Override
+    public boolean isEnable() {
+        return isEnable;
+    }
+
     //     if (reflectionResolver.hasClass("net.md_5.bungee.api.ProxyServer")) return PlatformType.BUNGEECORD;
 //     if (reflectionResolver.hasClass("org.spongepowered.api.Sponge")) return PlatformType.SPONGE;
 //     if (reflectionResolver.hasClass("net.fabricmc.api.ModInitializer")) return PlatformType.FABRIC;

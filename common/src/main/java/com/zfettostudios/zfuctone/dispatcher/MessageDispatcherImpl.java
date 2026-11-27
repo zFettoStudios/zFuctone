@@ -1,6 +1,6 @@
 package com.zfettostudios.zfuctone.dispatcher;
 
-import com.zfettostudios.zfuctone.provider.ZFuctoneProvider;
+import com.zfettostudios.zfuctone.ZFuctone;
 import com.zfettostudios.zfuctone.logging.ZLogger;
 import com.zfettostudios.zfuctone.module.integration.miniplaceholders.MiniPlaceholdersModule;
 import com.zfettostudios.zfuctone.module.integration.placeholderapi.PlaceholderAPIModule;
@@ -14,9 +14,9 @@ import org.jspecify.annotations.NonNull;
 import java.util.List;
 
 public class MessageDispatcherImpl implements MessageDispatcher {
-    private final TaskScheduler taskScheduler = ZFuctoneProvider.get().taskScheduler();
-    private final ZLogger logger = ZFuctoneProvider.get().logger();
-    private final PlatformPlayerService playerService = ZFuctoneProvider.get().playerService();
+    private final LazyInstance<TaskScheduler> taskScheduler = LazyInstance.build(ZFuctone::taskScheduler);
+    private final LazyInstance<ZLogger> logger = LazyInstance.build(ZFuctone::logger);
+    private final LazyInstance<PlatformPlayerService> playerService = LazyInstance.build(ZFuctone::playerService);
     private final LazyInstance<MiniPlaceholdersModule> miniPlaceholders = LazyInstance.build(zfuctone -> zfuctone.moduleController().get(MiniPlaceholdersModule.class));
     private final LazyInstance<PlaceholderAPIModule> placeholderAPI = LazyInstance.build(zfuctone -> zfuctone.moduleController().get(PlaceholderAPIModule.class));
 
@@ -30,16 +30,16 @@ public class MessageDispatcherImpl implements MessageDispatcher {
 
     @Override
     public @NonNull MessageDispatcher dispatchEveryone(@NonNull PlatformPlayer sender, @NonNull GetMessage getMessage) {
-        List<PlatformPlayer> recipients = playerService.getOnlinePlayers();
+        List<PlatformPlayer> recipients = playerService.get().getOnlinePlayers();
 
-        taskScheduler.runAsync(() -> {
-            Component component = formatPlaceholders(sender, getMessage.apply(logger));
+        taskScheduler.get().runAsync(() -> {
+            Component component = formatPlaceholders(sender, getMessage.apply(logger.get()));
             if (component == null) {
-                logger.warn("The message component is null for the Console (check the localization configuration)");
+                logger.get().warn("The message component is null for the Console (check the localization configuration)");
                 return;
             }
 
-            logger.info(component);
+            logger.get().info(component);
         });
 
         for (PlatformPlayer recipient : recipients) dispatchAsyncToPlayer(sender, recipient, getMessage);
@@ -48,13 +48,13 @@ public class MessageDispatcherImpl implements MessageDispatcher {
     }
 
     private void dispatchAsyncToPlayer(PlatformPlayer sender, PlatformPlayer recipient, GetMessage getMessage) {
-        taskScheduler.runAsync(() -> {
+        taskScheduler.get().runAsync(() -> {
             String message = getMessage.apply(sender);
 
-            taskScheduler.runSync(() -> {
+            taskScheduler.get().runSync(() -> {
                 Component component = formatPlaceholders(sender, message);
                 if (component == null) {
-                    logger.warn("The message component is null for the recipient \"{}\" (check the localization configuration)",
+                    logger.get().warn("The message component is null for the recipient \"{}\" (check the localization configuration)",
                         recipient.getNickname());
                     return;
                 }

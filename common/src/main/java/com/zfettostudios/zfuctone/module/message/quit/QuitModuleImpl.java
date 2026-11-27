@@ -36,7 +36,7 @@ public class QuitModuleImpl extends ExtendedModule<QuitModule> implements QuitMo
 
     @Override
     protected void registerPermissions() {
-        permissionRegistry.register(moduleClass(), permission().name(), permission().type());
+        permissionRegistry.get().register(moduleClass(), permission().name(), permission().type());
     }
 
     @Override
@@ -46,16 +46,16 @@ public class QuitModuleImpl extends ExtendedModule<QuitModule> implements QuitMo
 
     @Override
     protected void unregisterPermissions() {
-        permissionRegistry.unregisterAll(moduleClass());
+        permissionRegistry.get().unregisterAll(moduleClass());
     }
 
     @Override
     protected void registerListeners() {
-        listenerRegistry.register(moduleClass(), listener);
+        listenerRegistry.get().register(moduleClass(), listener);
     }
 
     @Override
     protected void unregisterListeners() {
-        listenerRegistry.unregisterAll(moduleClass());
+        listenerRegistry.get().unregisterAll(moduleClass());
     }
 }

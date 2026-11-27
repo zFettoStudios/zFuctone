@@ -1,8 +1,8 @@
 package com.zfettostudios.zfuctone.module.placeholder;
 
+import com.zfettostudios.zfuctone.ZFuctone;
 import com.zfettostudios.zfuctone.module.ExtendedModule;
 import com.zfettostudios.zfuctone.module.Module;
-import com.zfettostudios.zfuctone.provider.ZFuctoneProvider;
 import com.zfettostudios.zfuctone.file.FileFacade;
 import com.zfettostudios.zfuctone.logging.ZLogger;
 import com.zfettostudios.zfuctone.model.config.PermissionConfig;
@@ -14,6 +14,7 @@ import com.zfettostudios.zfuctone.model.constant.type.LocalizationType;
 import com.zfettostudios.zfuctone.module.integration.placeholderapi.PlaceholderAPIModule;
 import com.zfettostudios.zfuctone.model.value.PlaceholderContext;
 import com.zfettostudios.zfuctone.platform.entity.PlatformPlayer;
+import com.zfettostudios.zfuctone.util.LazyInstance;
 import org.jspecify.annotations.NonNull;
 
 import java.util.LinkedHashSet;
@@ -26,9 +27,9 @@ public class CustomPlaceholderModuleImpl extends ExtendedModule<CustomPlaceholde
     private static final ThreadLocal<Set<String>> RESOLVING = ThreadLocal.withInitial(LinkedHashSet::new);
     private static final Set<String> REPORTED_CYCLES = ConcurrentHashMap.newKeySet();
 
-    private final FileFacade fileFacade = ZFuctoneProvider.get().fileFacade();
-    private final ZLogger logger = ZFuctoneProvider.get().logger();
-    private final PlaceholderAPIModule placeholderAPIModule = ZFuctoneProvider.get().moduleController().get(PlaceholderAPIModule.class);
+    private final LazyInstance<FileFacade> fileFacade = LazyInstance.build(ZFuctone::fileFacade);
+    private final LazyInstance<ZLogger> logger = LazyInstance.build(ZFuctone::logger);
+    private final LazyInstance<PlaceholderAPIModule> placeholderAPIModule = LazyInstance.build(zfuctone -> zfuctone.moduleController().get(PlaceholderAPIModule.class));
 
     @Override
     protected void onEnable() {
@@ -49,12 +50,12 @@ public class CustomPlaceholderModuleImpl extends ExtendedModule<CustomPlaceholde
 
     @Override
     public @NonNull PlaceholderConfig config() {
-        return fileFacade.placeholder();
+        return fileFacade.get().placeholder();
     }
 
     @Override
     public PermissionConfig.@NonNull Placeholder permission() {
-        return fileFacade.permission().placeholder();
+        return fileFacade.get().permission().placeholder();
     }
 
     @Override
@@ -64,12 +65,12 @@ public class CustomPlaceholderModuleImpl extends ExtendedModule<CustomPlaceholde
 
     @Override
     protected void unregisterPermissions() {
-        permissionRegistry.unregisterAll(moduleClass());
+        permissionRegistry.get().unregisterAll(moduleClass());
     }
 
     @Override
     protected void unregisterPlaceholders() {
-        placeholderRegistry.unregisterAll(moduleClass());
+        placeholderRegistry.get().unregisterAll(moduleClass());
     }
 
     private Function<PlaceholderContext, String> createHandler(String placeholderKey, PlaceholderValueSetting valueSetting) {
@@ -80,18 +81,18 @@ public class CustomPlaceholderModuleImpl extends ExtendedModule<CustomPlaceholde
             Set<String> resolving = RESOLVING.get();
             if (!resolving.add(placeholderKey)) {
                 if (REPORTED_CYCLES.add(placeholderKey))
-                    logger.warn("Placeholder \"{}\" refers to itself. Check your localization.", placeholderKey);
+                    logger.get().warn("Placeholder \"{}\" refers to itself. Check your localization.", placeholderKey);
 
                 return null;
             }
 
             try {
-                Localization localization = fileFacade.localizationOrDefault(sender.getLocale(), LocalizationType.PLAYER);
+                Localization localization = fileFacade.get().localizationOrDefault(sender.getLocale(), LocalizationType.PLAYER);
                 String rawValue = localization != null && localization.placeholder().values().containsKey(placeholderKey)
                     ? localization.placeholder().values().get(placeholderKey).asString()
                     : valueSetting.value().asString();
 
-                return placeholderAPIModule.setPlaceholders(sender, rawValue);
+                return placeholderAPIModule.get().setPlaceholders(sender, rawValue);
             } finally {
                 resolving.remove(placeholderKey);
                 if (resolving.isEmpty()) RESOLVING.remove();
@@ -102,9 +103,9 @@ public class CustomPlaceholderModuleImpl extends ExtendedModule<CustomPlaceholde
     private void register(String placeholderKey, PermissionSetting permission,
                           Function<PlaceholderContext, String> handler) {
         if (permission != null) {
-            permissionRegistry.register(moduleClass(), permission.name(), permission.type());
-            placeholderRegistry.register(moduleClass(), placeholderKey, permission.name(), handler);
+            permissionRegistry.get().register(moduleClass(), permission.name(), permission.type());
+            placeholderRegistry.get().register(moduleClass(), placeholderKey, permission.name(), handler);
         }
-        else placeholderRegistry.register(moduleClass(), placeholderKey, handler);
+        else placeholderRegistry.get().register(moduleClass(), placeholderKey, handler);
     }
 }

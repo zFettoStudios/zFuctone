@@ -4,23 +4,23 @@ import com.velocitypowered.api.proxy.Player;
 import com.velocitypowered.api.proxy.ProxyServer;
 import com.zfettostudios.zfuctone.VelocityLoader;
 import com.zfettostudios.zfuctone.model.constant.minecraft.player.PlayerGameMode;
-import com.zfettostudios.zfuctone.provider.ZFuctoneProvider;
+import com.zfettostudios.zfuctone.util.LazyInstance;
 import org.jspecify.annotations.NonNull;
 import org.jspecify.annotations.Nullable;
 
 import java.util.UUID;
 
 public class VelocityPlayerAdapter implements PlatformPlayerAdapter {
-    private final ProxyServer server = ZFuctoneProvider.get().getLoader(VelocityLoader.class).getServer();
+    private final LazyInstance<ProxyServer> server = LazyInstance.build(zfuctone -> zfuctone.getLoader(VelocityLoader.class).getServer());
 
     @Override
     public @Nullable <T> T getPlatformPlayer(@NonNull UUID uuid, @NonNull Class<T> target) {
-        return target.cast(server.getPlayer(uuid).orElse(null));
+        return target.cast(server.get().getPlayer(uuid).orElse(null));
     }
 
     @Override
     public @Nullable Object getPlatformPlayer(@NonNull UUID uuid) {
-        return server.getPlayer(uuid);
+        return server.get().getPlayer(uuid);
     }
 
     @Override
@@ -30,7 +30,7 @@ public class VelocityPlayerAdapter implements PlatformPlayerAdapter {
 
     @Override
     public @Nullable UUID getUUIDFromNickname(@NonNull String nickname) {
-        Player player = server.getPlayer(nickname).orElse(null);
+        Player player = server.get().getPlayer(nickname).orElse(null);
         if (player == null) return null;
 
         return player.getUniqueId();

@@ -26,13 +26,13 @@ public class ZFuctoneModuleImpl extends ExtendedModule<ZFuctoneModule> implement
 
     @Override
     protected void registerPermissions() {
-        permissionRegistry.register(moduleClass(), permission().name(), permission().type());
-        permissionRegistry.register(moduleClass(), permission().reload().name(), permission().reload().type());
+        permissionRegistry.get().register(moduleClass(), permission().name(), permission().type());
+        permissionRegistry.get().register(moduleClass(), permission().reload().name(), permission().reload().type());
     }
 
     @Override
     protected void unregisterPermissions() {
-        permissionRegistry.unregisterAll(moduleClass());
+        permissionRegistry.get().unregisterAll(moduleClass());
     }
 
     @Override
@@ -42,7 +42,7 @@ public class ZFuctoneModuleImpl extends ExtendedModule<ZFuctoneModule> implement
 
     @Override
     protected void unregisterCommands() {
-        commandRegistry.unregisterAll(moduleClass());
+        commandRegistry.get().unregisterAll(moduleClass());
     }
 
     @Override

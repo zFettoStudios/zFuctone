@@ -21,7 +21,7 @@ public class ZFuctoneModuleCommand extends ModuleCommand {
     private final LazyInstance<ZFuctoneModule> module = LazyInstance.build(zfuctone -> zfuctone.moduleController().get(ZFuctoneModule.class));
 
     public void register() {
-        commandRegistry.register(module.get().moduleClass(), manager ->
+        commandRegistry.get().register(module.get().moduleClass(), manager ->
             manager.commandBuilder(module.get().config().aliases().getFirst(), module.get().config().aliases().toArray(new String[0]))
                 .permission(module.get().permission().name())
                 .optional(CommandArgumentName.FIRST, StringParser.stringParser(), SuggestionProvider.suggestingStrings(module.get().config().reload().aliases().toArray(new String[0])))
@@ -40,12 +40,12 @@ public class ZFuctoneModuleCommand extends ModuleCommand {
             try {
                 ZFuctoneProvider.get().reload();
 
-                messageDispatcher.dispatch(sender, GetMessage.ofLocalization(localization ->
+                messageDispatcher.get().dispatch(sender, GetMessage.ofLocalization(localization ->
                     localization.command().zfuctone().reload().asString()), sender);
             } catch (ReloadException e) {
                 ZFuctoneProvider.get().logger().warn("Reload failed: {}", e.getMessage());
 
-                messageDispatcher.dispatch(sender, GetMessage.ofLocalization(localization ->
+                messageDispatcher.get().dispatch(sender, GetMessage.ofLocalization(localization ->
                     localization.command().zfuctone().failedReload().asString()), sender);
             }
         }

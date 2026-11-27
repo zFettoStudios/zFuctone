@@ -53,12 +53,12 @@ public abstract class MiniPlaceholdersModuleImpl extends IntegrationModuleImpl<M
 
     @Override
     protected void registerPermissions() {
-        permissionRegistry.register(moduleClass(), permission().name(), permission().type());
-        permissionRegistry.register(moduleClass(), permission().use().name(), permission().use().type());
+        permissionRegistry.get().register(moduleClass(), permission().name(), permission().type());
+        permissionRegistry.get().register(moduleClass(), permission().use().name(), permission().use().type());
     }
 
     @Override
     protected void unregisterPermissions() {
-        permissionRegistry.unregisterAll(moduleClass());
+        permissionRegistry.get().unregisterAll(moduleClass());
     }
 }

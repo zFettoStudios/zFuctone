@@ -21,28 +21,10 @@ public class ProjectPlaceholderModuleImpl extends StandardPlaceholderModuleImpl<
     }
 
     @Override
-    protected void unregisterPermissions() {
-        permissionRegistry.unregisterAll(moduleClass());
-    }
-
-    @Override
-    protected void unregisterPlaceholders() {
-        placeholderRegistry.unregisterAll(moduleClass());
-    }
-
-    @Override
     protected void onEnable() {
         register(config().projectAuthors(), permission().projectAuthorsUse(), _ -> BuildConstant.PROJECT_AUTHORS);
         register(config().projectDescription(), permission().projectDescriptionUse(), _ -> BuildConstant.PROJECT_DESCRIPTION);
         register(config().projectWebsite(), permission().projectWebsiteUse(), _ -> BuildConstant.PROJECT_WEBSITE);
         register(config().projectVersion(), permission().projectVersionUse(), _ -> BuildConstant.PROJECT_VERSION);
-    }
-
-    private void register(PlaceholderSetting setting, PermissionSetting permission,
-                          Function<PlaceholderContext, String> handler) {
-        if (!setting.enable()) return;
-
-        permissionRegistry.register(ProjectPlaceholderModule.class, permission.name(), permission.type());
-        placeholderRegistry.register(ProjectPlaceholderModule.class, setting.name(), permission.name(), handler);
     }
 }

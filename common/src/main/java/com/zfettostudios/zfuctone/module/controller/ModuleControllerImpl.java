@@ -4,10 +4,11 @@ import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.experimental.Accessors;
 
-import com.zfettostudios.zfuctone.provider.ZFuctoneProvider;
+import com.zfettostudios.zfuctone.ZFuctone;
 import com.zfettostudios.zfuctone.model.lifecycle.Reloadable;
 import com.zfettostudios.zfuctone.module.Module;
 import com.zfettostudios.zfuctone.scheduler.TaskScheduler;
+import com.zfettostudios.zfuctone.util.LazyInstance;
 import org.jspecify.annotations.NonNull;
 import org.jspecify.annotations.Nullable;
 
@@ -22,7 +23,7 @@ import java.util.function.Consumer;
 @Accessors(fluent = true)
 public class ModuleControllerImpl implements ModuleController {
     @Getter(AccessLevel.NONE)
-    private final TaskScheduler taskScheduler = ZFuctoneProvider.get().taskScheduler();
+    private final LazyInstance<TaskScheduler> taskScheduler = LazyInstance.build(ZFuctone::taskScheduler);
 
     private final Map<Class<? extends Module<?>>, Module<?>> modules = new ConcurrentHashMap<>();
     private final List<Class<? extends Module<?>>> registrationOrder = new CopyOnWriteArrayList<>();

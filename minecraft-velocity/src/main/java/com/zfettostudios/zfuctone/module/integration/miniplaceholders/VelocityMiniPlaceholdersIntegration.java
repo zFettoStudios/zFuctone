@@ -1,5 +1,6 @@
 package com.zfettostudios.zfuctone.module.integration.miniplaceholders;
 
+import com.zfettostudios.zfuctone.ZFuctone;
 import com.zfettostudios.zfuctone.model.config.IntegrationConfig;
 import com.zfettostudios.zfuctone.model.constant.BuildConstant;
 import com.zfettostudios.zfuctone.model.value.PlaceholderContext;
@@ -9,6 +10,7 @@ import com.zfettostudios.zfuctone.platform.registry.PlaceholderRegistry;
 import com.zfettostudios.zfuctone.provider.ZFuctoneProvider;
 import com.zfettostudios.zfuctone.scheduler.TaskScheduler;
 import com.zfettostudios.zfuctone.service.PlatformPlayerService;
+import com.zfettostudios.zfuctone.util.LazyInstance;
 import io.github.miniplaceholders.api.Expansion;
 import net.kyori.adventure.audience.Audience;
 import net.kyori.adventure.identity.Identity;
@@ -23,22 +25,22 @@ import java.util.UUID;
 import java.util.function.Function;
 
 public class VelocityMiniPlaceholdersIntegration implements IntegrationHook<VelocityMiniPlaceholdersIntegration> {
-    private final PlaceholderRegistry placeholderRegistry = ZFuctoneProvider.get().placeholderRegistry();
-    private final PlatformPlayerService playerService = ZFuctoneProvider.get().playerService();
-    private final TaskScheduler taskScheduler = ZFuctoneProvider.get().taskScheduler();
+    private final LazyInstance<PlaceholderRegistry> placeholderRegistry = LazyInstance.build(ZFuctone::placeholderRegistry);
+    private final LazyInstance<PlatformPlayerService> playerService = LazyInstance.build(ZFuctone::playerService);
+    private final LazyInstance<TaskScheduler> taskScheduler = LazyInstance.build(ZFuctone::taskScheduler);
 
     private final IntegrationConfig.MiniPlaceholders config = ZFuctoneProvider.get().fileFacade().integration().miniplaceholders();
     private final Expansion expansion = createExpansion();
 
     @Override
     public @NonNull VelocityMiniPlaceholdersIntegration hook() {
-        taskScheduler.runSync(expansion::register).join();
+        taskScheduler.get().runSync(expansion::register).join();
         return this;
     }
 
     @Override
     public @NonNull VelocityMiniPlaceholdersIntegration unhook() {
-        taskScheduler.runSync(expansion::unregister).join();
+        taskScheduler.get().runSync(expansion::unregister).join();
         return this;
     }
 
@@ -48,13 +50,13 @@ public class VelocityMiniPlaceholdersIntegration implements IntegrationHook<Velo
             .version(BuildConstant.PROJECT_VERSION);
 
         for (Map<String, Function<PlaceholderContext, String>> modulePlaceholders
-            : placeholderRegistry.getPlaceholders().values()) {
+            : placeholderRegistry.get().getPlaceholders().values()) {
             for (Map.Entry<String, Function<PlaceholderContext, String>> placeholder : modulePlaceholders.entrySet()) {
                 builder.audiencePlaceholder(placeholder.getKey(), (Audience audience, ArgumentQueue argument, Context context) -> {
                     Optional<UUID> uuid = audience.get(Identity.UUID);
                     if (uuid.isEmpty()) return Tag.preProcessParsed("");
 
-                    PlatformPlayer sender = playerService.getPlatformPlayer(uuid.get());
+                    PlatformPlayer sender = playerService.get().getPlatformPlayer(uuid.get());
                     if (sender == null) return Tag.preProcessParsed("");
 
                     PlaceholderContext placeholderContext = PlaceholderContext.build();

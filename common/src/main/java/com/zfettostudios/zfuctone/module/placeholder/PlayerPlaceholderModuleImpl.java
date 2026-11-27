@@ -1,12 +1,7 @@
 package com.zfettostudios.zfuctone.module.placeholder;
 
 import com.zfettostudios.zfuctone.module.Module;
-import com.zfettostudios.zfuctone.model.config.setting.PermissionSetting;
-import com.zfettostudios.zfuctone.model.config.setting.PlaceholderSetting;
-import com.zfettostudios.zfuctone.platform.entity.PlatformPlayer;
 import org.jspecify.annotations.NonNull;
-
-import java.util.function.Function;
 
 public class PlayerPlaceholderModuleImpl extends StandardPlaceholderModuleImpl<PlayerPlaceholderModule> implements PlayerPlaceholderModule {
     @Override
@@ -17,16 +12,6 @@ public class PlayerPlaceholderModuleImpl extends StandardPlaceholderModuleImpl<P
     @Override
     public @NonNull Class<? extends Module<PlayerPlaceholderModule>> moduleClass() {
         return PlayerPlaceholderModule.class;
-    }
-
-    @Override
-    protected void unregisterPermissions() {
-        permissionRegistry.unregisterAll(moduleClass());
-    }
-
-    @Override
-    protected void unregisterPlaceholders() {
-        placeholderRegistry.unregisterAll(moduleClass());
     }
 
     @Override
@@ -47,15 +32,6 @@ public class PlayerPlaceholderModuleImpl extends StandardPlaceholderModuleImpl<P
         register(config().playerIsOperator(), permission().playerIsOperatorUse(), player -> String.valueOf(player.isOperator()));
         register(config().playerIsSneaking(), permission().playerIsSneakingUse(), player -> String.valueOf(player.isSneaking()));
         register(config().playerIsDead(), permission().playerIsDeadUse(), player -> String.valueOf(player.isDead()));
-    }
-
-    private void register(PlaceholderSetting setting, PermissionSetting permission,
-                          Function<PlatformPlayer, String> handler) {
-        if (!setting.enable()) return;
-
-        permissionRegistry.register(PlayerPlaceholderModule.class, permission.name(), permission.type());
-        placeholderRegistry.register(PlayerPlaceholderModule.class, setting.name(), permission.name(), context ->
-            handler.apply(context.getSender()));
     }
 
     private static String emptyToNull(String value) {
