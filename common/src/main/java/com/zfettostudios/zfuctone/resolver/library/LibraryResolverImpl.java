@@ -47,7 +47,6 @@ public abstract class LibraryResolverImpl extends LibraryManager implements Libr
         packetEventsArtifacts.add("packeteventsmodern-api");
         packetEventsArtifacts.add("packeteventsmodern-netty-common");
 
-        cloudArtifacts.add("cloud-core");
         cloudArtifacts.add("cloud-brigadier");
     }
 
@@ -245,10 +244,28 @@ public abstract class LibraryResolverImpl extends LibraryManager implements Libr
         ));
     }
     private void loadCloud() {
+        loadLibrary(Library.builder()
+            .groupId("org{}incendo")
+            .artifactId("cloud-core")
+            .version(BuildConstant.CLOUD_CORE_VERSION)
+            .repository(BuildConstant.MAVEN_REPOSITORY)
+            .resolveTransitiveDependencies(true)
+            .relocate(Relocation.builder()
+                .pattern("org{}incendo{}cloud")
+                .relocatedPattern(BuildConstant.PROJECT_PATH_LIBRARIES + ".cloud")
+                .build()
+            )
+            .relocate(Relocation.builder()
+                .pattern("io{}leangen{}geantyref")
+                .relocatedPattern(BuildConstant.PROJECT_PATH_LIBRARIES + ".geantyref")
+                .build()
+            )
+            .build());
+
         cloudArtifacts.forEach(artifact -> loadLibrary(Library.builder()
             .groupId("org{}incendo")
             .artifactId(artifact)
-            .version(BuildConstant.CLOUD_CORE_VERSION)
+            .version(BuildConstant.CLOUD_MINECRAFT_VERSION)
             .repository(BuildConstant.MAVEN_REPOSITORY)
             .resolveTransitiveDependencies(true)
             .relocate(Relocation.builder()
