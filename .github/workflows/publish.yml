@@ -36,7 +36,7 @@ jobs:
         run: ./gradlew :minecraft-bukkit:build
 
       - name: Build minecraft-velocity
-        run: ./gradlew :minecraft-bukkit:build
+        run: ./gradlew :minecraft-velocity:build
 
       - name: Build minecraft-core
         run: ./gradlew :minecraft-core:build
@@ -48,3 +48,16 @@ jobs:
           path: build/compiled
           if-no-files-found: warn
           retention-days: 14
+
+      - name: Upload each file as separate artifact
+        env:
+          GH_TOKEN: ${{ github.token }}
+          RUN_ID: ${{ github.run_id }}
+        run: |
+          shopt -s nullglob
+          for file in build/compiled/*; do
+            [ -f "$file" ] || continue
+            base_name=$(basename "$file")
+            artifact_name="${base_name%.*}"
+            gh run upload "$RUN_ID" "$file" --name "$artifact_name"
+          done
