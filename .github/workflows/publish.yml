@@ -89,7 +89,7 @@ jobs:
       - name: Check version in gradle.properties
         id: check_version
         run: |
-          VERSION=$(grep -E '^version=' gradle.properties | cut -d'=' -f2- | tr -d '[:space:]')
+          VERSION=$(grep -E '^project_version=' gradle.properties | cut -d'=' -f2- | tr -d '[:space:]')
           echo "version=$VERSION" >> "$GITHUB_OUTPUT"
           if [[ -n "$VERSION" && "$VERSION" != *"-SNAPSHOT"* ]]; then
             echo "is_release=true" >> "$GITHUB_OUTPUT"
