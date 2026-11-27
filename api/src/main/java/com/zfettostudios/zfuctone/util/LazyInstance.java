@@ -17,4 +17,12 @@ public interface LazyInstance<T> {
     static @NonNull <I> LazyInstance<I> build(@NonNull Function<@NonNull ZFuctone, @NonNull I> function) {
         return FactoryProvider.utilFactory().buildLazyInstance(function);
     }
+
+    static @NonNull <I> LazyInstance<I> build(@NonNull Supplier<@NonNull I> supplier, boolean update) {
+        return FactoryProvider.utilFactory().buildLazyInstance(supplier, update);
+    }
+
+    static @NonNull <I> LazyInstance<I> build(@NonNull Function<@NonNull ZFuctone, @NonNull I> function, boolean update) {
+        return FactoryProvider.utilFactory().buildLazyInstance(function, update);
+    }
 }

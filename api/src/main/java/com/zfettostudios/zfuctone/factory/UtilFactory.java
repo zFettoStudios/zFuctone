@@ -13,6 +13,8 @@ import java.util.function.Supplier;
 public interface UtilFactory {
     @NonNull <T> LazyInstance<T> buildLazyInstance(@NonNull Supplier<@NonNull T> supplier);
     @NonNull <T> LazyInstance<T> buildLazyInstance(@NonNull Function<@NonNull ZFuctone, @NonNull T> function);
+    @NonNull <T> LazyInstance<T> buildLazyInstance(@NonNull Supplier<@NonNull T> supplier, boolean update);
+    @NonNull <T> LazyInstance<T> buildLazyInstance(@NonNull Function<@NonNull ZFuctone, @NonNull T> function, boolean update);
 
     @NonNull GetMessage buildGetMessageOfPlayer(@NonNull Function<@NonNull PlatformPlayer, @NonNull String> function);
     @NonNull GetMessage buildGetMessageOfLocalization(@NonNull Function<@NonNull Localization, @NonNull String> function);

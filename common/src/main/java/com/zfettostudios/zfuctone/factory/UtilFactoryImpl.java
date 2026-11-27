@@ -15,12 +15,22 @@ import java.util.function.Supplier;
 public class UtilFactoryImpl implements UtilFactory {
     @Override
     public @NonNull <T> LazyInstance<T> buildLazyInstance(@NonNull Supplier<T> supplier) {
-        return new LazyInstanceImpl<>(supplier, null);
+        return new LazyInstanceImpl<>(supplier, null, true);
     }
 
     @Override
     public @NonNull <T> LazyInstance<T> buildLazyInstance(@NonNull Function<@NonNull ZFuctone, T> function) {
-        return new LazyInstanceImpl<>(null, function);
+        return new LazyInstanceImpl<>(null, function, true);
+    }
+
+    @Override
+    public @NonNull <T> LazyInstance<T> buildLazyInstance(@NonNull Supplier<T> supplier, boolean update) {
+        return new LazyInstanceImpl<>(supplier, null, update);
+    }
+
+    @Override
+    public @NonNull <T> LazyInstance<T> buildLazyInstance(@NonNull Function<@NonNull ZFuctone, T> function, boolean update) {
+        return new LazyInstanceImpl<>(null, function, update);
     }
 
     @Override
