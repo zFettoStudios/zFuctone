@@ -1,7 +1,6 @@
 package com.zfettostudios.zfuctone.platform.registry;
 
 import com.zfettostudios.zfuctone.annotation.event.EventHandler;
-import com.zfettostudios.zfuctone.listener.ZFListener;
 import com.zfettostudios.zfuctone.model.event.Event;
 import lombok.Getter;
 
@@ -28,11 +27,11 @@ public class ListenerRegistryImpl implements ListenerRegistry {
 
     @Getter
     private final Map<Class<? extends Event<?>>, Map<Event.Priority, Set<Method>>> listeners = new ConcurrentHashMap<>();
-    private final Map<Class<?>, Set<ZFListener>> listenersModuleClass = new ConcurrentHashMap<>();
-    private final Map<Method, ZFListener> methodOwners = new ConcurrentHashMap<>();
+    private final Map<Class<?>, Set<Object>> listenersModuleClass = new ConcurrentHashMap<>();
+    private final Map<Method, Object> methodOwners = new ConcurrentHashMap<>();
 
     @Override
-    public @NonNull ListenerRegistry register(@NonNull Class<?> moduleClass, @NonNull ZFListener listener) {
+    public @NonNull ListenerRegistry register(@NonNull Class<?> moduleClass, @NonNull Object listener) {
         boolean registeredAny = false;
 
         for (Method method : listener.getClass().getDeclaredMethods()) {
@@ -66,7 +65,7 @@ public class ListenerRegistryImpl implements ListenerRegistry {
 
     @Override
     public @NonNull ListenerRegistry unregisterAll(@NonNull Class<?> moduleClass) {
-        Set<ZFListener> moduleListeners = listenersModuleClass.remove(moduleClass);
+        Set<Object> moduleListeners = listenersModuleClass.remove(moduleClass);
         if (moduleListeners == null || moduleListeners.isEmpty()) return this;
 
         Set<Method> methodsToRemove = ConcurrentHashMap.newKeySet();
@@ -102,7 +101,7 @@ public class ListenerRegistryImpl implements ListenerRegistry {
             if (methods == null || methods.isEmpty()) continue;
 
             for (Method method : methods) {
-                ZFListener owner = methodOwners.get(method);
+                Object owner = methodOwners.get(method);
                 if (owner == null) continue;
 
                 EventHandler handler = method.getAnnotation(EventHandler.class);
@@ -120,7 +119,7 @@ public class ListenerRegistryImpl implements ListenerRegistry {
     }
 
     @Override
-    public @Nullable Set<ZFListener> getListeners(@NonNull Class<?> moduleClass) {
+    public @Nullable Set<Object> getListeners(@NonNull Class<?> moduleClass) {
         return listenersModuleClass.get(moduleClass);
     }
 

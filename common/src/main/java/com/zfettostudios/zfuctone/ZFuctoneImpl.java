@@ -53,7 +53,7 @@ import com.zfettostudios.zfuctone.platform.registry.PermissionRegistry;
 import com.zfettostudios.zfuctone.platform.registry.PlaceholderRegistry;
 import com.zfettostudios.zfuctone.platform.registry.PlaceholderRegistryImpl;
 import com.zfettostudios.zfuctone.provider.FactoryProviderImpl;
-import com.zfettostudios.zfuctone.provider.ZFuctoneProviderImpl;
+import com.zfettostudios.zfuctone.provider.ZFuctoneProvider;
 import com.zfettostudios.zfuctone.resolver.LibraryResolver;
 import com.zfettostudios.zfuctone.resolver.ReflectionResolver;
 import com.zfettostudios.zfuctone.scheduler.TaskScheduler;
@@ -88,7 +88,7 @@ public abstract class ZFuctoneImpl implements ZFuctone {
     protected final Builder builder;
 
     public ZFuctoneImpl(ReflectionResolver reflectionResolver, PlatformType platformType, LibraryResolver libraryResolver) {
-        ZFuctoneProviderImpl.set(this);
+        ZFuctoneProvider.set(this);
         FactoryProviderImpl.init();
 
         this.reflectionResolver = reflectionResolver;

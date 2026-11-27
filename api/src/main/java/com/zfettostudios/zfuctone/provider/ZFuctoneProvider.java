@@ -1,15 +1,24 @@
 package com.zfettostudios.zfuctone.provider;
 
+import lombok.NonNull;
+import lombok.experimental.UtilityClass;
+
 import com.zfettostudios.zfuctone.ZFuctone;
 
-public abstract class ZFuctoneProvider {
-    protected static ZFuctone instance;
+@UtilityClass
+public class ZFuctoneProvider {
+    private ZFuctone instance;
 
-    public static ZFuctone get() {
+    public ZFuctone get() {
         return instance;
     }
 
-    public static boolean isReady() {
+    public ZFuctone set(@NonNull ZFuctone zfuctone) {
+        return instance = zfuctone;
+    }
+
+    public boolean isReady() {
         return instance != null;
     }
+
 }

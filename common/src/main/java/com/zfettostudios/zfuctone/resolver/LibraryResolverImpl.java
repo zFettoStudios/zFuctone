@@ -9,6 +9,7 @@ import com.alessiodp.libby.logging.adapters.JDKLogAdapter;
 import com.alessiodp.libby.relocation.Relocation;
 import com.zfettostudios.zfuctone.exception.LibraryLoadException;
 import com.zfettostudios.zfuctone.model.constant.BuildConstant;
+import com.zfettostudios.zfuctone.model.constant.type.PlatformType;
 import org.jetbrains.annotations.NotNull;
 import org.jspecify.annotations.NonNull;
 
@@ -29,9 +30,12 @@ import static java.util.Objects.requireNonNull;
 
 public class LibraryResolverImpl extends LibraryManager implements LibraryResolver {
     private final ClassLoaderHelper classLoaderHelper;
+    private final PlatformType platformType;
 
-    public LibraryResolverImpl(@NonNull Path dataDirectory) {
+    public LibraryResolverImpl(Path dataDirectory, PlatformType platformType) {
         super(new JDKLogAdapter(Logger.getGlobal()), dataDirectory, "libraries");
+
+        this.platformType = platformType;
 
         ClassLoader classLoader = getClass().getClassLoader();
         if (classLoader instanceof URLClassLoader urlClassLoader) {

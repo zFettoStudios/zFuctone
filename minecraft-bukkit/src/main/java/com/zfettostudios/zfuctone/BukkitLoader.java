@@ -22,7 +22,7 @@ public class BukkitLoader extends JavaPlugin {
 
     @Override
     public void onLoad() {
-        libraryResolver = new LibraryResolverImpl(getDataPathInLoad());
+        libraryResolver = new LibraryResolverImpl(getDataPathInLoad(), platformType);
 
         libraryResolver.enable();
 

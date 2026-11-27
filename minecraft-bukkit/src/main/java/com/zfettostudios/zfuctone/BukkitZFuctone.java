@@ -1,8 +1,7 @@
 package com.zfettostudios.zfuctone;
 
 import com.zfettostudios.zfuctone.exception.InvalidTypeException;
-import com.zfettostudios.zfuctone.listener.BukkitPlayerJoinListener;
-import com.zfettostudios.zfuctone.listener.BukkitPlayerQuitListener;
+import com.zfettostudios.zfuctone.listener.BukkitListener;
 import com.zfettostudios.zfuctone.model.constant.type.PlatformType;
 import com.zfettostudios.zfuctone.module.integration.miniplaceholders.MiniPlaceholdersModule;
 import com.zfettostudios.zfuctone.module.integration.miniplaceholders.PaperMiniPlaceholdersModule;
@@ -60,8 +59,7 @@ public class BukkitZFuctone extends ZFuctoneImpl {
     protected void registerListeners() {
         listeners.clear();
 
-        register(new BukkitPlayerJoinListener());
-        register(new BukkitPlayerQuitListener());
+        register(new BukkitListener());
     }
 
     private void register(Listener listener) {

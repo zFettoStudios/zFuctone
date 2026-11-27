@@ -33,6 +33,7 @@ public class VelocityLoader {
     private final ProxyServer server;
     private final PluginContainer container;
     private final Path dataDirectory;
+    private final PlatformType platformType = PlatformType.VELOCITY;
 
     private ZFuctone zfuctone;
 
@@ -45,14 +46,14 @@ public class VelocityLoader {
 
     @Subscribe
     public void onProxyInitialize(ProxyInitializeEvent event) {
-        LibraryResolver libraryResolver = new LibraryResolverImpl(dataDirectory);
+        LibraryResolver libraryResolver = new LibraryResolverImpl(dataDirectory, platformType);
 
         libraryResolver.enable();
 
-        PacketEvents.setAPI(VelocityPacketEventsBuilder.build(server, container, null , null));
+        PacketEvents.setAPI(VelocityPacketEventsBuilder.build(server, container, null, null));
         PacketEvents.getAPI().load();
 
-        zfuctone = new VelocityZFuctone(this, new ReflectionResolverImpl(), PlatformType.VELOCITY, libraryResolver);
+        zfuctone = new VelocityZFuctone(this, new ReflectionResolverImpl(), platformType, libraryResolver);
         zfuctone.enable();
     }
 

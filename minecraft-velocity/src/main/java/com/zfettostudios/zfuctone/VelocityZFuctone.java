@@ -2,8 +2,7 @@ package com.zfettostudios.zfuctone;
 
 import com.velocitypowered.api.event.EventManager;
 import com.zfettostudios.zfuctone.exception.InvalidTypeException;
-import com.zfettostudios.zfuctone.listener.VelocityPlayerJoinListener;
-import com.zfettostudios.zfuctone.listener.VelocityPlayerQuitListener;
+import com.zfettostudios.zfuctone.listener.VelocityListener;
 import com.zfettostudios.zfuctone.model.constant.type.PlatformType;
 import com.zfettostudios.zfuctone.module.integration.miniplaceholders.MiniPlaceholdersModule;
 import com.zfettostudios.zfuctone.module.integration.miniplaceholders.VelocityMiniPlaceholdersModule;
@@ -54,8 +53,7 @@ public class VelocityZFuctone extends ZFuctoneImpl {
 
     @Override
     protected void registerListeners() {
-        em.register(loader, new VelocityPlayerJoinListener());
-        em.register(loader, new VelocityPlayerQuitListener());
+        em.register(loader, new VelocityListener());
     }
 
     @Override
