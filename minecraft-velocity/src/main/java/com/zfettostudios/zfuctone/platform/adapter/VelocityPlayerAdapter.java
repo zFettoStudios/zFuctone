@@ -58,14 +58,6 @@ public class VelocityPlayerAdapter implements PlatformPlayerAdapter {
     }
 
     @Override
-    public int getPing(@NonNull Object platformPlayer) {
-        Player player = getPlayerFrom(platformPlayer);
-        if (player == null) return -1;
-
-        return Math.toIntExact(player.getPing());
-    }
-
-    @Override
     public @NonNull String getLocale(@NonNull Object platformPlayer) {
         return "";
     }

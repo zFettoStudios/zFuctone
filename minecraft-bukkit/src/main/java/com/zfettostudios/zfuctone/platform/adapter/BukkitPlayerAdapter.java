@@ -63,14 +63,6 @@ public class BukkitPlayerAdapter implements PlatformPlayerAdapter {
     }
 
     @Override
-    public int getPing(@NonNull Object platformPlayer) {
-        Player player = getPlayerFrom(platformPlayer);
-        if (player == null) return -1;
-
-        return player.getPing();
-    }
-
-    @Override
     public @NonNull String getLocale(@NonNull Object platformPlayer) {
         Player player = getPlayerFrom(platformPlayer);
         if (player == null) return "";

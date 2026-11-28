@@ -99,7 +99,10 @@ public abstract class ZFuctoneImpl implements ZFuctone {
         this.libraryResolver = libraryResolver;
 
         PacketEvents.getAPI().init();
-        PacketEvents.getAPI().getSettings().reEncodeByDefault(false).checkForUpdates(false).debug(false);
+        PacketEvents.getAPI().getSettings()
+            .reEncodeByDefault(false)
+            .checkForUpdates(false)
+            .debug(false);
 
         builder = builder();
 

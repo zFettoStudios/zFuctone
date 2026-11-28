@@ -5,6 +5,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.Setter;
 import lombok.experimental.Accessors;
 
+import com.github.retrooper.packetevents.PacketEvents;
 import com.github.retrooper.packetevents.protocol.player.User;
 import com.github.retrooper.packetevents.wrapper.play.server.WrapperPlayServerDisconnect;
 import com.zfettostudios.zfuctone.ZFuctone;
@@ -146,7 +147,7 @@ public class PlatformPlayerImpl implements PlatformPlayer {
 
     @Override
     public int getPing() {
-        return playerAdapter.get().getPing(rawPlayer);
+        return PacketEvents.getAPI().getPlayerManager().getPing(rawPlayer);
     }
 
     @Override

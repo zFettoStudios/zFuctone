@@ -21,8 +21,6 @@ public interface PlatformPlayerAdapter {
 
     @Nullable UUID getUUID(@NonNull Object platformPlayer);
 
-    int getPing(@NonNull Object platformPlayer);
-
     @NonNull String getLocale(@NonNull Object platformPlayer);
 
     boolean isOperator(@NonNull Object platformPlayer);
